@@ -15,4 +15,38 @@ export async function fetchUserOrders(email: string) {
     createdAt: order.createdAt
   })));
   return orders;
+}
+
+// Fetch user profile by email
+export async function fetchUserProfile(email: string) {
+  const user = await client.fetch(
+    `*[_type == "user" && email == $email][0]{
+      _id,
+      email,
+      name,
+      image,
+      emailVerified,
+      accountStatus,
+      shippingAddresses
+    }`,
+    { email }
+  );
+  // Check for linked Google account
+  const googleAccount = await client.fetch(
+    `*[_type == "account" && provider == "google" && user->email == $email][0]`,
+    { email }
+  );
+  const linkedAccounts = ["email"];
+  if (googleAccount) linkedAccounts.push("google");
+  return { ...user, linkedAccounts };
+}
+
+// Fetch user shipping addresses by email
+export async function fetchUserAddresses(email: string) {
+  const addresses = await client.fetch(
+    `*[_type == "user" && email == $email][0].shippingAddresses`,
+    { email }
+  );
+  console.log('🔎 fetchUserAddresses:', { email, addresses });
+  return addresses || [];
 } 
