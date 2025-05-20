@@ -5,16 +5,25 @@ import nodemailer from "nodemailer";
 
 const EMAIL_FROM = process.env.SMTP_USER || "no-reply@example.com";
 
+interface SanityParams {
+  token: string;
+  now: string | number;
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const token = searchParams.get("token");
   if (!token) return NextResponse.json({ message: "Missing token." }, { status: 400 });
 
   const now = new Date().toISOString();
-  const nowNum = typeof now === 'number' ? now : Date.now();
+  const params: SanityParams = {
+    token: String(token),
+    now: now
+  };
+
   const user = await client.fetch(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{email}`,
-    { token: String(token), now: nowNum } as any
+    params
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });
@@ -29,9 +38,14 @@ export async function POST(req: Request) {
   }
 
   const now = new Date().toISOString();
+  const params: SanityParams = {
+    token: String(token),
+    now: now
+  };
+
   const user = await client.fetch(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{_id, email, name}`,
-    { token, now }
+    params
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });
