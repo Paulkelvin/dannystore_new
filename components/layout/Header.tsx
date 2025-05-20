@@ -88,7 +88,7 @@ export default function Header() {
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           isHomePage 
             ? isScrolled 
-              ? 'bg-white text-[#333333] shadow-md' 
+              ? 'bg-[#42A5F5] text-white shadow-md' 
               : 'bg-transparent text-white'
             : 'bg-white text-[#333333] shadow-md'
         }`}
@@ -98,13 +98,15 @@ export default function Header() {
             <button 
               onClick={toggleMobileMenu}
               className={`md:hidden p-2 rounded-lg transition-colors ${
-                isHomePage && !isScrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'
+                isHomePage && !isScrolled ? 'hover:bg-white/10' : 'hover:bg-white/20'
               }`}
               aria-label="Toggle menu"
             >
               <Menu className="w-6 h-6" />
             </button>
-            <Link href="/" className="flex items-center">
+            <Link href="/" className={`flex items-center p-2 rounded-lg transition-all duration-300 ${
+              isHomePage && isScrolled ? 'bg-white shadow-sm' : ''
+            }`}>
               <Image
                 src="/images/dannystore_logo.png"
                 alt="DannyStore Logo"
@@ -115,11 +117,11 @@ export default function Header() {
               />
             </Link>
             <nav className="hidden md:flex gap-6 ml-8 text-base font-medium">
-              <Link href="/" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-[#333333]'}`}>Home</Link>
-              <Link href="/products" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-[#333333]'}`}>Shop All</Link>
-              <Link href="/#categories" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-[#333333]'}`}>Categories</Link>
-              <Link href="/about" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-[#333333]'}`}>About Us</Link>
-              <Link href="/contact" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-[#333333]'}`}>Contact</Link>
+              <Link href="/" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Home</Link>
+              <Link href="/products" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Shop All</Link>
+              <Link href="/#categories" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Categories</Link>
+              <Link href="/about" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>About Us</Link>
+              <Link href="/contact" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Contact</Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
