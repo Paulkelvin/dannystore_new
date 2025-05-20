@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/lib/sanity';
-import { urlFor } from '@/lib/sanityImage';
+import { urlFor } from '@/lib/sanityClient';
 
 export async function GET(
   request: Request,
