@@ -1,5 +1,6 @@
 'use client';
 
+// Updated for Vercel deployment
 import { useSearchParams } from 'next/navigation';
 
 const errorMessages: Record<string, string> = {
