@@ -7,7 +7,7 @@ console.log('Startup: NEXT_PUBLIC_BASE_URL is', process.env.NEXT_PUBLIC_BASE_URL
 
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-04-30.basil',
 });
 
 // This is your Stripe webhook secret for testing your endpoint locally.

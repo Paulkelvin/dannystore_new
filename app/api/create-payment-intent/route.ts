@@ -13,8 +13,8 @@ if (!stripeKey) {
 
 console.log('🔑 Stripe key prefix:', stripeKey.substring(0, 7) + '...');
 
-const stripe = new Stripe(stripeKey, {
-  apiVersion: '2023-10-16',
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-04-30.basil',
 });
 
 export async function POST(request: Request) {
