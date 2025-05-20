@@ -2,7 +2,7 @@ import { sanityClientPublic } from '@/lib/sanityClient';
 import { urlFor } from '@/lib/sanityClient';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PortableTextRenderer } from '@/components/PortableTextRenderer';
+import PortableTextRenderer from '@/components/PortableTextRenderer';
 import { notFound } from 'next/navigation';
 
 interface BlogPost {
