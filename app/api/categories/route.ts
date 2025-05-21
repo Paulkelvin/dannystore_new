@@ -14,11 +14,13 @@ export async function GET() {
 
     const categories = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
-    // Transform categories to include image URLs
-    const transformedCategories = (categories || []).map((category: any) => ({
-      ...category,
-      image: category?.image ? urlFor(category.image).url() : null,
-    }));
+    // Filter out any null categories before mapping
+    const transformedCategories = (categories || [])
+      .filter((category: any) => !!category)
+      .map((category: any) => ({
+        ...category,
+        image: category.image ? urlFor(category.image).url() : null,
+      }));
 
     return NextResponse.json(transformedCategories);
   } catch (error) {
