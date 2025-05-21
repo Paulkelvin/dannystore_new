@@ -15,9 +15,9 @@ export async function GET() {
     const categories = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
     // Transform categories to include image URLs
-    const transformedCategories = categories.map((category: any) => ({
+    const transformedCategories = (categories || []).map((category: any) => ({
       ...category,
-      image: category.image ? urlFor(category.image).url() : null,
+      image: category && category.image ? urlFor(category.image).url() : null,
     }));
 
     return NextResponse.json(transformedCategories);
