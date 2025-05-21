@@ -118,9 +118,7 @@ export default function Header() {
           }
         }`;
 
-        const results = await client.fetch<SearchResult[]>(searchQuery, {
-          query: `*${query}*`
-        } as { query: string });
+        const results = await client.fetch<SearchResult[]>(searchQuery, { query: `*${query}*` } as any);
         console.log('Search results:', results); // Add logging
         setSearchResults(results || []);
       } catch (error) {
