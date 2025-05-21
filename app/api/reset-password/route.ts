@@ -2,13 +2,9 @@ import { NextResponse } from "next/server";
 import { sanityClientPublic as client } from "@/lib/sanityClient";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
+import type { QueryParams } from "@sanity/client";
 
 const EMAIL_FROM = process.env.SMTP_USER || "no-reply@example.com";
-
-interface SanityParams {
-  token: string;
-  now: string;
-}
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -16,14 +12,14 @@ export async function GET(req: Request) {
   if (!token) return NextResponse.json({ message: "Missing token." }, { status: 400 });
 
   const now = new Date().toISOString();
-  const params: SanityParams = {
+  const params: QueryParams = {
     token,
     now
   };
 
   const user = await client.fetch<{ email: string }>(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{email}`,
-    params as any // Type assertion needed due to Sanity client type limitations
+    params
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });
@@ -38,14 +34,14 @@ export async function POST(req: Request) {
   }
 
   const now = new Date().toISOString();
-  const params: SanityParams = {
+  const params: QueryParams = {
     token: String(token),
     now
   };
 
   const user = await client.fetch<{ _id: string; email: string; name?: string }>(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{_id, email, name}`,
-    params as any // Type assertion needed due to Sanity client type limitations
+    params
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });
