@@ -17,7 +17,7 @@ export async function GET() {
     // Transform categories to include image URLs
     const transformedCategories = (categories || []).map((category: any) => ({
       ...category,
-      image: category && category.image ? urlFor(category.image).url() : null,
+      image: category?.image ? urlFor(category.image).url() : null,
     }));
 
     return NextResponse.json(transformedCategories);
