@@ -152,7 +152,7 @@ export default function Header() {
             ? isScrolled 
               ? 'bg-[#42A5F5] text-white shadow-md' 
               : 'bg-transparent text-white'
-            : 'bg-white text-[#333333] shadow-md'
+            : 'bg-[#42A5F5] text-white shadow-md'
         }`}
       >
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">

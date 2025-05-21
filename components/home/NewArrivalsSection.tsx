@@ -205,11 +205,11 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
         <div className="relative w-full">
           <Swiper
             modules={[Navigation]}
-            spaceBetween={12}
+            spaceBetween={16}
             slidesPerView={1.5}
             centeredSlides={shouldCenter}
-            slidesOffsetBefore={8}
-            slidesOffsetAfter={8}
+            slidesOffsetBefore={0}
+            slidesOffsetAfter={0}
             navigation={{
               prevEl: '.swiper-button-prev',
               nextEl: '.swiper-button-next',
@@ -217,23 +217,24 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             breakpoints={{
               640: {
                 slidesPerView: 2.2,
-                slidesOffsetBefore: 16,
-                slidesOffsetAfter: 16,
+                slidesOffsetBefore: 0,
+                slidesOffsetAfter: 0,
                 spaceBetween: 16,
               },
               768: {
                 slidesPerView: 3.2,
-                slidesOffsetBefore: 24,
-                slidesOffsetAfter: 24,
+                slidesOffsetBefore: 0,
+                slidesOffsetAfter: 0,
                 spaceBetween: 20,
               },
               1024: {
                 slidesPerView: 4.2,
-                slidesOffsetBefore: 32,
-                slidesOffsetAfter: 32,
+                slidesOffsetBefore: 0,
+                slidesOffsetAfter: 0,
                 spaceBetween: 24,
               },
             }}
+            className="newarrivals-swiper px-1"
           >
             {products.map((product) => {
               let imageUrl = '/images/placeholder.png';
@@ -297,9 +298,9 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
               );
             })}
           </Swiper>
-          {/* Navigation buttons absolutely inside slider */}
-          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity" />
-          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity" />
+          {/* Navigation buttons absolutely inside slider, styled round and with brand color */}
+          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
+          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
         </div>
       </div>
 

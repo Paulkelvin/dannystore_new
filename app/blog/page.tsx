@@ -96,16 +96,16 @@ function BlogGrid({ posts }: { posts: BlogPost[] }) {
   return (
     <>
       {/* Featured Post */}
-      <div className="mb-8 flex flex-col md:flex-row gap-6">
-        <div className="relative w-full md:w-1/2 h-64 md:h-72 rounded-lg overflow-hidden">
+      <div className="mb-8 flex flex-col md:flex-row gap-0 md:gap-0 rounded-lg shadow-lg overflow-hidden bg-white">
+        <div className="relative w-full md:w-1/2 h-64 md:h-72">
           <Image
             src={urlFor(featured.mainImage).url()}
             alt={featured.title}
             fill
-            className="object-cover"
+            className="object-cover h-full w-full rounded-none md:rounded-l-lg md:rounded-r-none"
           />
         </div>
-        <div className="flex-1 flex flex-col justify-center bg-white rounded-lg shadow p-6">
+        <div className="flex-1 flex flex-col justify-center p-6">
           <div className="mb-2">
             {featured.blogCategories.map((cat) => (
               <span

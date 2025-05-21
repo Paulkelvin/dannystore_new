@@ -250,7 +250,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                       e.stopPropagation();
                       handleNavigation('/category/best-sellers');
                     }}
-                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-md text-sm font-semibold tracking-wide shadow hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
                   >
                     View Collection
                   </button>
@@ -291,7 +291,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                       e.stopPropagation();
                       handleNavigation('/category/latest-arrivals');
                     }}
-                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-md text-sm font-semibold tracking-wide shadow hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
                   >
                     Shop Now
                   </button>
@@ -301,6 +301,29 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           </SwiperSlide>
         </Swiper>
       </div>
+      {/* If Swiper navigation buttons are present, style them as perfect circles */}
+      <style jsx global>{`
+        .category-swiper .swiper-button-prev,
+        .category-swiper .swiper-button-next {
+          width: 56px !important;
+          height: 56px !important;
+          border-radius: 9999px !important;
+          background: #FFC300 !important;
+          color: #333 !important;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          opacity: 0.9;
+          transition: opacity 0.2s;
+        }
+        .category-swiper .swiper-button-prev:hover,
+        .category-swiper .swiper-button-next:hover {
+          opacity: 1;
+          background: #FFD54F !important;
+        }
+      `}</style>
     </section>
   );
 } 
