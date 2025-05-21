@@ -55,11 +55,11 @@ export async function GET(
     // Transform the product to include image URLs
     const transformedProduct = {
       ...product,
-      image: product.image ? urlFor(product.image).url() : null,
-      images: product.images?.map((img: any) => urlFor(img).url()) || [],
-      variants: product.variants?.map((variant: any) => ({
+      image: product?.image ? urlFor(product.image).url() : null,
+      images: product?.images?.map((img: any) => urlFor(img).url()) || [],
+      variants: product?.variants?.map((variant: any) => ({
         ...variant,
-        image: variant.image ? urlFor(variant.image).url() : null,
+        image: variant?.image ? urlFor(variant.image).url() : null,
       })) || [],
     };
 
