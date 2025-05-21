@@ -23,7 +23,13 @@ export async function POST(request: Request) {
   try {
     // Get session but never require it - default to guest
     let userId = 'guest';
-    let userDoc = null;
+    let userDoc: {
+      _id: string;
+      _type: string;
+      email: string;
+      name?: string;
+      shippingAddresses: any[];
+    } | null = null;
     try {
       const session = await getServerSession(authOptions);
       if (session?.user) {
