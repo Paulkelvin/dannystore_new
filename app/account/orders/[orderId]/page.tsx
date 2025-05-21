@@ -2,6 +2,29 @@ import { getServerSession } from 'next-auth';
 import { sanityClientPublic } from '@/lib/sanityClient';
 import { redirect } from 'next/navigation';
 
+// Add Order interface for type safety
+interface Order {
+  orderNumber: string;
+  createdAt: string;
+  paymentStatus: string;
+  totalAmount: number;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+    image?: any;
+  }>;
+  shippingAddress?: {
+    name?: string;
+    line1?: string;
+    line2?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
+}
+
 export default async function OrderDetailsPage({ params }: { params: { orderId: string } }) {
   const { orderId } = params;
   const session = await getServerSession();
@@ -23,7 +46,7 @@ export default async function OrderDetailsPage({ params }: { params: { orderId: 
   }
 
   // Fetch the order using all possible user associations
-  let order = null;
+  let order: Order | null = null;
   try {
     order = await sanityClientPublic.fetch(
       `*[_type == "order" && _id == $id && (
