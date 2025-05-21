@@ -62,12 +62,18 @@ function CategoryImageWithSkeleton({ src, alt }) {
   );
 }
 
-// Add this helper function before the component
+// Update the getImageUrl helper to include optimization parameters
 const getImageUrl = (image: any): string => {
   if (!image) return '/images/placeholder.png';
   if (typeof image === 'string') return image;
   try {
-    return urlFor(image).width(600).height(750).url();
+    // Add quality and format optimization
+    return urlFor(image)
+      .width(600)
+      .height(750)
+      .quality(85) // Optimize quality
+      .format('webp') // Use modern format
+      .url();
   } catch (error) {
     console.error('Error generating image URL:', error);
     return '/images/placeholder.png';
@@ -186,13 +192,19 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           className="category-swiper pb-8 px-4"
         >
           {/* Strategic Categories */}
-          {strategicCategories.map((category) => (
+          {strategicCategories.map((category, index) => (
             <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
               <Link href={`/category/${category.slug}`} className="block group h-full">
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                  <CategoryImageWithSkeleton
+                  <Image
                     src={getImageUrl(category.image)}
                     alt={category.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    priority={index < 2} // Prioritize loading for first two images
+                    quality={85}
+                    loading={index < 2 ? 'eager' : 'lazy'}
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                   <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
@@ -211,9 +223,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
             <Link href="/products?filter=best-sellers" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
-                  <CategoryImageWithSkeleton
+                  <Image
                     src={getImageUrl(featuredImages.bestSeller)}
                     alt="Best Sellers"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    priority={true}
+                    quality={85}
+                    loading="eager"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
@@ -246,9 +264,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
             <Link href="/products?filter=latest" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.latest ? (
-                  <CategoryImageWithSkeleton
+                  <Image
                     src={getImageUrl(featuredImages.latest)}
                     alt="Latest Arrivals"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    priority={true}
+                    quality={85}
+                    loading="eager"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">

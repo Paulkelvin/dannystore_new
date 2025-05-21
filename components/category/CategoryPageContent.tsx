@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
-import { Product } from '@/types';
+import { Product, ProductVariantColor, ProductVariantSize } from '@/types';
 import ProductFilters, { ProductFilterState } from '@/components/products/ProductFilters';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
@@ -18,9 +18,11 @@ interface Category {
 
 interface CategoryPageContentProps {
   category: Category;
+  colors: ProductVariantColor[];
+  sizes: ProductVariantSize[];
 }
 
-export default function CategoryPageContent({ category }: CategoryPageContentProps) {
+export default function CategoryPageContent({ category, colors, sizes }: CategoryPageContentProps) {
   const [filterState, setFilterState] = useState<ProductFilterState>({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [dragStartY, setDragStartY] = useState(0);
@@ -31,8 +33,6 @@ export default function CategoryPageContent({ category }: CategoryPageContentPro
 
   // Extract filter options from products
   const products = category.products || [];
-  const colors = Array.from(new Set(products.flatMap(p => (p.variants || []).map(v => v.color)).filter(Boolean)));
-  const sizes = Array.from(new Set(products.flatMap(p => (p.variants || []).map(v => v.size)).filter(Boolean)));
   let minPrice = Math.min(...products.map(p => p.price).concat(products.flatMap(p => (p.variants || []).map(v => v.price)).filter(Boolean)));
   let maxPrice = Math.max(...products.map(p => p.price).concat(products.flatMap(p => (p.variants || []).map(v => v.price)).filter(Boolean)));
   if (!isFinite(minPrice)) minPrice = 0;
@@ -203,8 +203,8 @@ export default function CategoryPageContent({ category }: CategoryPageContentPro
               <div className="max-w-2xl mx-auto">
                 <ProductFilters
                   categories={[]}
-                  colors={colors}
-                  sizes={sizes}
+                  colors={colors.map(color => color.value)}
+                  sizes={sizes.map(size => size.value)}
                   minPrice={minPrice}
                   maxPrice={maxPrice}
                   onChange={setFilterState}
@@ -241,8 +241,8 @@ export default function CategoryPageContent({ category }: CategoryPageContentPro
         <aside className="hidden lg:block max-w-[260px] bg-white rounded-xl shadow p-6 space-y-6 mb-8 lg:mb-0 self-start">
           <ProductFilters
             categories={[]}
-            colors={colors}
-            sizes={sizes}
+            colors={colors.map(color => color.value)}
+            sizes={sizes.map(size => size.value)}
             minPrice={minPrice}
             maxPrice={maxPrice}
             onChange={setFilterState}

@@ -1,6 +1,7 @@
-import { createClient } from 'next-sanity';
+import { createClient, SanityClient } from 'next-sanity';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { QueryParams } from '@sanity/client';
 
 // Validate required environment variables
 if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
@@ -16,8 +17,8 @@ const sanityConfig = {
   token: process.env.SANITY_API_TOKEN,
 };
 
-// Create the client
-const sanityClient = createClient(sanityConfig);
+// Create the client with proper typing
+const sanityClient: SanityClient = createClient(sanityConfig);
 
 // Create the image URL builder
 const builder = imageUrlBuilder(sanityConfig);
@@ -36,8 +37,13 @@ export function urlFor(source: SanityImageSource) {
 // Export a single client instance
 export const sanityClientWrite = sanityClient;
 
-// Export a public client for read-only operations
-export const sanityClientPublic = createClient({
+// Export a public client for read-only operations with proper typing
+export const sanityClientPublic: SanityClient = createClient({
   ...sanityConfig,
   useCdn: true,
-}); 
+});
+
+// Helper function to ensure proper parameter typing
+export async function fetchWithParams<T>(query: string, params: QueryParams = {}): Promise<T> {
+  return sanityClientPublic.fetch<T>(query, params);
+} 

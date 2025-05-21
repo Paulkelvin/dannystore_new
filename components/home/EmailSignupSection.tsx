@@ -2,7 +2,7 @@ import { ShieldCheck, Lightbulb } from 'lucide-react';
 
 export default function EmailSignupSection() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#42A5F5] py-24 px-4 sm:px-8 mb-16">
+    <section className="relative isolate overflow-hidden bg-[#42A5F5] py-24 px-4 sm:px-8">
       <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         {/* Left: Main Text Content */}
         <div>

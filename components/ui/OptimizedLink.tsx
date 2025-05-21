@@ -87,41 +87,41 @@ export default function OptimizedLink({
   }, []);
 
   // Prefetch a path and its related paths
-  const prefetchPath = useCallback((path: string, priority = false) => {
+  const prefetchPath = useCallback((path: string) => {
     // Prefetch the main path
-    router.prefetch(path, { priority });
+    router.prefetch(path);
     
     // Prefetch related paths
     getRelatedPaths(path).forEach(relatedPath => {
-      router.prefetch(relatedPath, { priority: false });
+      router.prefetch(relatedPath);
     });
   }, [router, getRelatedPaths]);
 
   // Always prefetch critical paths
   useEffect(() => {
     if (isCriticalPath || isCriticalJourney) {
-      prefetchPath(path, true);
+      prefetchPath(path);
     }
   }, [path, isCriticalPath, isCriticalJourney, prefetchPath]);
 
   // Handle prefetch on mount for non-critical paths
   useEffect(() => {
     if (prefetchOnMount && !isCriticalPath && !isCriticalJourney) {
-      prefetchPath(path, false);
+      prefetchPath(path);
     }
   }, [path, prefetchOnMount, isCriticalPath, isCriticalJourney, prefetchPath]);
 
   // Handle hover prefetching
   useEffect(() => {
     if (isHovered && prefetchOnHover && !isCriticalPath && !isCriticalJourney) {
-      prefetchPath(path, false);
+      prefetchPath(path);
     }
   }, [isHovered, path, prefetchOnHover, isCriticalPath, isCriticalJourney, prefetchPath]);
 
   // Handle preloading on hover
   useEffect(() => {
     if (isHovered && preloadOnHover) {
-      prefetchPath(path, true);
+      prefetchPath(path);
     }
   }, [isHovered, path, preloadOnHover, prefetchPath]);
 
@@ -130,7 +130,7 @@ export default function OptimizedLink({
     if (currentPath && isCriticalPath) {
       const relatedPaths = getRelatedPaths(currentPath);
       relatedPaths.forEach(relatedPath => {
-        router.prefetch(relatedPath, { priority: false });
+        router.prefetch(relatedPath);
       });
     }
   }, [currentPath, isCriticalPath, router, getRelatedPaths]);

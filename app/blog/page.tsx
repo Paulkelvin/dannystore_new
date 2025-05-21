@@ -2,7 +2,7 @@ import { sanityClientPublic } from '@/lib/sanityClient';
 import { urlFor } from '@/lib/sanityClient';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PortableTextRenderer } from '@/components/PortableTextRenderer';
+import { useState } from 'react';
 
 interface BlogPost {
   _id: string;
@@ -19,6 +19,11 @@ interface BlogPost {
     title: string;
     slug: { current: string };
   }[];
+}
+
+interface BlogCategory {
+  title: string;
+  slug: { current: string };
 }
 
 async function getBlogPosts() {
@@ -41,78 +46,183 @@ async function getBlogPosts() {
   return sanityClientPublic.fetch<BlogPost[]>(query);
 }
 
+async function getBlogCategories() {
+  const query = `*[_type == "blogCategory"] | order(title asc) {
+    title,
+    slug
+  }`;
+  return sanityClientPublic.fetch<BlogCategory[]>(query);
+}
+
 export default async function BlogPage() {
   const posts = await getBlogPosts();
+  const categories = await getBlogCategories();
+  const recentPosts = posts.slice(0, 5);
+
+  // The search will be handled client-side for instant feedback
+  // (If you want server-side, let me know)
 
   return (
     <main className="pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-[#333333] mb-8">Blog</h1>
-        
-        {posts.length === 0 ? (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold text-gray-600 mb-4">No blog posts yet</h2>
-            <p className="text-gray-500">Check back soon for new content!</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
-                <Link href={`/blog/${post.slug.current}`}>
-                  <div className="relative h-48 w-full">
-                    <Image
-                      src={urlFor(post.mainImage).url()}
-                      alt={post.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex gap-2 mb-3">
-                      {post.blogCategories.map((category) => (
-                        <span
-                          key={category.slug.current}
-                          className="text-xs font-medium text-[#42A5F5] bg-[#42A5F5]/10 px-2 py-1 rounded-full"
-                        >
-                          {category.title}
-                        </span>
-                      ))}
-                    </div>
-                    <h2 className="text-xl font-bold text-[#333333] mb-2 line-clamp-2">
-                      {post.title}
-                    </h2>
-                    <p className="text-gray-600 mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {post.author.image && (
-                          <div className="relative w-8 h-8 rounded-full overflow-hidden">
-                            <Image
-                              src={urlFor(post.author.image).url()}
-                              alt={post.author.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        )}
-                        <span className="text-sm text-gray-600">{post.author.name}</span>
-                      </div>
-                      <time className="text-sm text-gray-500">
-                        {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </time>
-                    </div>
-                  </div>
-                </Link>
-              </article>
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row gap-8">
+        {/* Main Content */}
+        <div className="w-full lg:w-3/4">
+          <h1 className="text-4xl font-bold text-[#333333] mb-8">Our Blog</h1>
+          <BlogGrid posts={posts} />
+        </div>
+        {/* Sidebar */}
+        <aside className="w-full lg:w-1/4 flex-shrink-0">
+          <BlogSidebar categories={categories} recentPosts={recentPosts} allPosts={posts} />
+        </aside>
+      </div>
+    </main>
+  );
+}
+
+// BlogGrid component
+function BlogGrid({ posts }: { posts: BlogPost[] }) {
+  if (posts.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-semibold text-gray-600 mb-4">No blog posts yet</h2>
+        <p className="text-gray-500">Check back soon for new content!</p>
+      </div>
+    );
+  }
+  // First post is featured
+  const [featured, ...rest] = posts;
+  return (
+    <>
+      {/* Featured Post */}
+      <div className="mb-8 flex flex-col md:flex-row gap-6">
+        <div className="relative w-full md:w-1/2 h-64 md:h-72 rounded-lg overflow-hidden">
+          <Image
+            src={urlFor(featured.mainImage).url()}
+            alt={featured.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex-1 flex flex-col justify-center bg-white rounded-lg shadow p-6">
+          <div className="mb-2">
+            {featured.blogCategories.map((cat) => (
+              <span
+                key={cat.slug.current}
+                className="inline-block text-xs font-medium text-[#42A5F5] bg-[#42A5F5]/10 px-2 py-1 rounded-full mr-2 mb-2"
+              >
+                {cat.title}
+              </span>
             ))}
+          </div>
+          <Link href={`/blog/${featured.slug.current}`} className="block">
+            <h2 className="text-2xl font-bold text-[#333333] mb-2 line-clamp-2">{featured.title}</h2>
+            <p className="text-gray-600 mb-4 line-clamp-3">{featured.excerpt}</p>
+            <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+              <span>{new Date(featured.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span className="mx-2">·</span>
+              <span className="text-[#42A5F5]">{featured.author.name}</span>
+            </div>
+            <span className="text-[#42A5F5] font-medium hover:underline">Read More &rarr;</span>
+          </Link>
+        </div>
+      </div>
+      {/* Grid of other posts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {rest.map((post) => (
+          <Link key={post._id} href={`/blog/${post.slug.current}`} className="block bg-white rounded-lg shadow overflow-hidden hover:scale-[1.02] transition-transform">
+            <div className="relative h-48 w-full">
+              <Image
+                src={urlFor(post.mainImage).url()}
+                alt={post.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-4">
+              <div className="flex gap-2 mb-2">
+                {post.blogCategories.map((cat) => (
+                  <span
+                    key={cat.slug.current}
+                    className="text-xs font-medium text-[#42A5F5] bg-[#42A5F5]/10 px-2 py-1 rounded-full"
+                  >
+                    {cat.title}
+                  </span>
+                ))}
+              </div>
+              <h3 className="text-lg font-bold text-[#333333] mb-1 line-clamp-2">{post.title}</h3>
+              <p className="text-gray-600 mb-2 line-clamp-2">{post.excerpt}</p>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span className="mx-2">·</span>
+                <span className="text-[#42A5F5]">{post.author.name}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// BlogSidebar component
+function BlogSidebar({ categories, recentPosts, allPosts }: { categories: BlogCategory[]; recentPosts: BlogPost[]; allPosts: BlogPost[] }) {
+  // Client-side search state
+  const [search, setSearch] = useState('');
+  const filteredPosts = search.length < 2
+    ? allPosts
+    : allPosts.filter(post =>
+        post.title.toLowerCase().includes(search.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(search.toLowerCase())
+      );
+  return (
+    <div className="space-y-8">
+      {/* Search */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <input
+          type="text"
+          placeholder="Search blog..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#42A5F5]"
+        />
+        {search.length >= 2 && (
+          <div className="mt-4 space-y-2 max-h-60 overflow-y-auto">
+            {filteredPosts.length > 0 ? (
+              filteredPosts.slice(0, 6).map(post => (
+                <Link key={post._id} href={`/blog/${post.slug.current}`} className="block text-sm text-[#42A5F5] hover:underline">
+                  {post.title}
+                </Link>
+              ))
+            ) : (
+              <div className="text-sm text-gray-500">No results found.</div>
+            )}
           </div>
         )}
       </div>
-    </main>
+      {/* Categories */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <h3 className="font-semibold mb-2">Categories</h3>
+        <div className="flex flex-col gap-2">
+          {categories.map(cat => (
+            <Link key={cat.slug.current} href={`/blog/category/${cat.slug.current}`} className="text-[#42A5F5] hover:underline text-sm">
+              {cat.title}
+            </Link>
+          ))}
+        </div>
+      </div>
+      {/* Recent Posts */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <h3 className="font-semibold mb-2">Recent Posts</h3>
+        <ul className="space-y-2">
+          {recentPosts.map(post => (
+            <li key={post._id}>
+              <Link href={`/blog/${post.slug.current}`} className="text-sm hover:underline">
+                {post.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 } 

@@ -2,8 +2,9 @@
 
 // Updated for Vercel deployment
 import { useSearchParams } from 'next/navigation';
+import { ReactNode } from 'react';
 
-const errorMessages: Record<string, string> = {
+const errorMessages: Record<string, string | ReactNode> = {
   AccountNotLinked: (
     <>
       <strong>This email is already registered.</strong>

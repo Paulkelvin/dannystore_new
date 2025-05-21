@@ -2,7 +2,7 @@ import { groq } from 'next-sanity';
 import { sanityFetch } from '@/lib/sanity';
 import { unstable_cache } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Product, Category } from '@/types';
+import { Product, Category, ProductVariantColor, ProductVariantSize } from '@/types';
 import CategoryPageContent from '@/components/category/CategoryPageContent';
 
 // GROQ queries
@@ -22,6 +22,19 @@ const categoryQuery = groq`*[_type == "category" && slug.current == $slug][0] {
     specifications,
     variants[]
   }
+}`;
+
+// Add queries for colors and sizes
+const colorsQuery = groq`*[_type == "color"] {
+  _id,
+  name,
+  value
+}`;
+
+const sizesQuery = groq`*[_type == "size"] {
+  _id,
+  name,
+  value
 }`;
 
 const bestSellersQuery = groq`*[_type == "product"] | order(salesCount desc, rating desc)[0...12]{
@@ -57,6 +70,29 @@ const getCachedCategory = unstable_cache(
   { revalidate: 3600 }
 );
 
+// Add cache functions for colors and sizes
+const getCachedColors = unstable_cache(
+  async () => {
+    return sanityFetch<ProductVariantColor[]>({
+      query: colorsQuery,
+      tags: ['colors'],
+    });
+  },
+  ['colors'],
+  { revalidate: 3600 }
+);
+
+const getCachedSizes = unstable_cache(
+  async () => {
+    return sanityFetch<ProductVariantSize[]>({
+      query: sizesQuery,
+      tags: ['sizes'],
+    });
+  },
+  ['sizes'],
+  { revalidate: 3600 }
+);
+
 const getCachedBestSellers = unstable_cache(
   async () => {
     return sanityFetch<Product[]>({
@@ -88,6 +124,10 @@ interface CategoryPageProps {
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
   let category;
+  const [colors, sizes] = await Promise.all([
+    getCachedColors(),
+    getCachedSizes()
+  ]);
 
   if (slug === 'best-sellers') {
     const products = await getCachedBestSellers();
@@ -113,7 +153,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  return <CategoryPageContent category={category} />;
+  return <CategoryPageContent category={category} colors={colors} sizes={sizes} />;
 }
 
 // Generate static params for all categories

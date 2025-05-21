@@ -30,6 +30,7 @@ export interface ProductVariantColor {
 export interface ProductVariantSize {
   _id: string;
   name: string;
+  value: string;
   stock: number;
   price?: number;
 }
@@ -123,4 +124,13 @@ export interface CartItem {
   color?: string;
   size?: string;
   quantity?: number;
+}
+
+// --- User Type for Auth ---
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
+  emailVerified?: string | null;
 }

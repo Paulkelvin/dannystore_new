@@ -8,6 +8,18 @@ import { urlFor } from '@/lib/sanityClient';
 import { Product } from '@/types';
 import { sanityClientPublic as client } from '@/lib/sanityClient';
 
+interface SearchResult {
+  _id: string;
+  name: string;
+  price: number;
+  slug: { current: string };
+  mainImage: any;
+  category: {
+    _id: string;
+    name: string;
+  };
+}
+
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
@@ -47,8 +59,18 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           }
         }`;
 
-        const results = await client.fetch(searchQuery, { query: `*${query}*` });
-        setResults(results);
+        const results = await client.fetch(searchQuery, { query: `*${query}*` } as Record<string, any>);
+        setResults(results.map((result: SearchResult) => ({
+          _id: result._id,
+          name: result.name,
+          price: result.price,
+          slug: result.slug.current,
+          mainImage: result.mainImage,
+          category: {
+            _id: result.category._id,
+            name: result.category.name
+          }
+        })));
       } catch (error) {
         console.error('Search error:', error);
       } finally {
@@ -61,7 +83,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
   }, [query]);
 
   const handleProductClick = (slug: string) => {
-    router.push(`/products/${slug}`);
+    router.push(`/product/${slug}`);
     onClose();
   };
 
@@ -114,7 +136,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
               {results.map((product) => (
                 <button
                   key={product._id}
-                  onClick={() => handleProductClick(product.slug)}
+                  onClick={() => handleProductClick(typeof product.slug === 'string' ? product.slug : product.slug.current)}
                   className="flex items-center gap-4 rounded-lg border p-4 text-left hover:bg-gray-50"
                 >
                   <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">

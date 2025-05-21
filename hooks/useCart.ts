@@ -24,14 +24,16 @@ export function useCart() {
       
       // Create cart item
       const cartItem: CartItem = {
-        id: `${productId}-${variant?.color || 'default'}-${variant?.size || 'default'}`,
         productId,
+        variantId: `${productId}-${variant?.color || 'default'}-${variant?.size || 'default'}`,
         name: product.name,
         price: product.price,
-        quantity,
+        sku: product.sku || `${productId}-${variant?.color || 'default'}-${variant?.size || 'default'}`,
         image: product.mainImage,
-        variant,
-        stock: product.stock,
+        color: variant?.color,
+        size: variant?.size,
+        quantity: quantity,
+        variantTitle: variant ? `${variant.color || ''} ${variant.size || ''}`.trim() : undefined
       };
 
       // Add to cart

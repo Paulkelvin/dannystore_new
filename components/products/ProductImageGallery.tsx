@@ -15,8 +15,8 @@ interface ProductImageGalleryProps {
   productName: string; // For alt text fallbacks
 }
 
-function SkeletonBox({ className = '' }) {
-  return <div className={`bg-gray-200 animate-pulse ${className}`} />;
+function SkeletonBox({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={`bg-gray-200 animate-pulse ${className}`} style={style} />;
 }
 
 export default function ProductImageGallery({ mainImage, gallery = [], productName }: ProductImageGalleryProps) {

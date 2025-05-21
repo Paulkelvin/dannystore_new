@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaCreditCard, FaLock } from 'react-icons/fa';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, PaymentIntentResult } from '@stripe/stripe-js';
 import {
   Elements,
   PaymentElement,
@@ -57,18 +57,19 @@ function PaymentForm({ onComplete, orderTotal, email, cartItems, shippingAddress
     setErrorMessage(null);
     try {
       // Confirm the payment using the existing payment intent
-      const { error, paymentIntent } = await stripe.confirmPayment({
+      const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/checkout/success?payment_intent=${paymentIntentId}`,
         },
         redirect: 'always',
-      });
-      if (error) {
-        setErrorMessage(error.message || 'An error occurred during payment.');
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      }) as PaymentIntentResult;
+
+      if ('error' in result) {
+        setErrorMessage(result.error.message || 'An error occurred during payment.');
+      } else if ('paymentIntent' in result && result.paymentIntent && result.paymentIntent.status === 'succeeded') {
         clearOrderNumber();
-        onComplete(paymentIntent.id);
+        onComplete(result.paymentIntent.id);
       }
     } catch (err) {
       setErrorMessage('An unexpected error occurred. Please try again.');

@@ -224,8 +224,18 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
           if (existingAddress) {
             setSelectedAddress(existingAddress);
           } else {
-            // If initial address doesn't exist in the list, use it as is
-            setSelectedAddress(initialData);
+            // If initial address doesn't exist in the list, map it to ShippingAddress format
+            const mappedAddress: ShippingAddress = {
+              name: initialData.fullName,
+              line1: initialData.address1,
+              line2: initialData.address2,
+              city: initialData.city,
+              state: initialData.state,
+              postalCode: initialData.zipCode,
+              country: 'US', // Default to US as per the existing logic
+              lastUsed: new Date()
+            };
+            setSelectedAddress(mappedAddress);
           }
         } else if (sortedAddresses.length > 0) {
           // If no initial address, use the most recently used address

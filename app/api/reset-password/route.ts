@@ -7,7 +7,7 @@ const EMAIL_FROM = process.env.SMTP_USER || "no-reply@example.com";
 
 interface SanityParams {
   token: string;
-  now: string | number;
+  now: string;
 }
 
 export async function GET(req: Request) {
@@ -17,13 +17,13 @@ export async function GET(req: Request) {
 
   const now = new Date().toISOString();
   const params: SanityParams = {
-    token: String(token),
-    now: now
+    token,
+    now
   };
 
-  const user = await client.fetch(
+  const user = await client.fetch<{ email: string }>(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{email}`,
-    params
+    params as any // Type assertion needed due to Sanity client type limitations
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });
@@ -40,12 +40,12 @@ export async function POST(req: Request) {
   const now = new Date().toISOString();
   const params: SanityParams = {
     token: String(token),
-    now: now
+    now
   };
 
-  const user = await client.fetch(
+  const user = await client.fetch<{ _id: string; email: string; name?: string }>(
     `*[_type == "user" && resetToken == $token && resetTokenExpiry > $now][0]{_id, email, name}`,
-    params
+    params as any // Type assertion needed due to Sanity client type limitations
   );
   if (!user) {
     return NextResponse.json({ message: "Invalid or expired token." }, { status: 400 });

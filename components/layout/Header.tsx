@@ -7,6 +7,20 @@ import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { sanityClientPublic as client } from '@/lib/sanityClient';
+import { urlFor } from '@/lib/sanityClient';
+
+interface SearchResult {
+  _id: string;
+  name: string;
+  price: number;
+  slug: { current: string };
+  mainImage: any;
+  category: {
+    _id: string;
+    name: string;
+  };
+}
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -16,12 +30,15 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Handle scroll effect
   useEffect(() => {
@@ -66,13 +83,60 @@ export default function Header() {
     await signOut({ callbackUrl: '/' });
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setIsSearchOpen(false);
-      setSearchQuery('');
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Set a new timeout for search
+    searchTimeoutRef.current = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const searchQuery = `*[_type == "product" && (
+          name match $query || 
+          description match $query || 
+          category->name match $query || 
+          tags[] match $query
+        )] | order(_createdAt desc)[0...5] {
+          _id,
+          name,
+          price,
+          "slug": slug.current,
+          mainImage,
+          category-> {
+            _id,
+            name
+          }
+        }`;
+
+        const results = await client.fetch<SearchResult[]>(searchQuery, {
+          query: `*${query}*`
+        } as { query: string });
+        console.log('Search results:', results); // Add logging
+        setSearchResults(results || []);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+  };
+
+  const handleResultClick = (slug: string) => {
+    router.push(`/product/${slug}`);
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
   };
 
   const toggleSearch = () => {
@@ -125,19 +189,95 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <button 
-              onClick={toggleSearch}
-              className={`transition-colors ${
-                isSearchOpen 
-                  ? 'text-[#42A5F5]' 
-                  : isHomePage && !isScrolled 
-                    ? 'text-white hover:text-white/80' 
-                    : 'text-[#333333] hover:text-[#42A5F5]'
-              }`}
-              aria-label="Search"
-            >
-              <Search className="w-6 h-6" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={toggleSearch}
+                className={`transition-colors ${
+                  isSearchOpen 
+                    ? 'text-[#42A5F5]' 
+                    : isHomePage && !isScrolled 
+                      ? 'text-white hover:text-white/80' 
+                      : 'text-white hover:text-white/80'
+                }`}
+                aria-label="Search"
+              >
+                <Search className="w-6 h-6" />
+              </button>
+              
+              {/* Search Dropdown */}
+              <div 
+                className={`absolute right-0 top-full mt-2 w-[400px] bg-white rounded-lg shadow-lg transition-all duration-200 ${
+                  isSearchOpen 
+                    ? 'opacity-100 translate-y-0 pointer-events-auto' 
+                    : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}
+              >
+                <div className="p-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      placeholder="Search products..."
+                      className="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:border-[#42A5F5] focus:outline-none focus:ring-1 focus:ring-[#42A5F5]"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => {
+                          setSearchQuery('');
+                          setSearchResults([]);
+                          if (searchInputRef.current) {
+                            searchInputRef.current.focus();
+                          }
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Search Results */}
+                  <div className="mt-4 max-h-[400px] overflow-y-auto">
+                    {isSearching ? (
+                      <div className="flex justify-center py-4">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#42A5F5] border-t-transparent"></div>
+                      </div>
+                    ) : searchResults.length > 0 ? (
+                      <div className="space-y-2">
+                        {searchResults.map((result) => (
+                          <button
+                            key={result._id}
+                            onClick={() => handleResultClick(result.slug.current)}
+                            className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                          >
+                            <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                              {result.mainImage && (
+                                <Image
+                                  src={urlFor(result.mainImage).width(48).height(48).url()}
+                                  alt={result.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium text-gray-900 truncate">{result.name}</h3>
+                              <p className="text-sm text-gray-500 truncate">{result.category?.name}</p>
+                              <p className="text-sm font-medium text-[#42A5F5]">${result.price?.toFixed(2)}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : searchQuery.length >= 2 ? (
+                      <p className="text-center text-gray-500 py-4">No products found</p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={handleUserMenuClick}
@@ -194,48 +334,6 @@ export default function Header() {
                 </span>
               )}
             </Link>
-          </div>
-        </div>
-
-        {/* Search Overlay */}
-        <div 
-          className={`fixed inset-0 bg-white z-50 transition-all duration-300 ${
-            isSearchOpen 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 -translate-y-full pointer-events-none'
-          }`}
-        >
-          <div className="container mx-auto px-4 h-full flex flex-col">
-            <div className="flex items-center justify-between h-16">
-              <h2 className="text-xl font-semibold text-gray-900">Search</h2>
-              <button 
-                onClick={toggleSearch}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                aria-label="Close search"
-              >
-                <X className="w-6 h-6 text-gray-900" />
-              </button>
-            </div>
-            <form onSubmit={handleSearch} className="flex-1 flex flex-col">
-              <div className="relative flex-1 flex items-center">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for products..."
-                  className="w-full h-16 text-xl px-4 border-b-2 border-gray-200 focus:border-[#42A5F5] focus:outline-none"
-                  aria-label="Search input"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-4 p-2 text-gray-500 hover:text-[#42A5F5] transition-colors"
-                  aria-label="Submit search"
-                >
-                  <Search className="w-6 h-6" />
-                </button>
-              </div>
-            </form>
           </div>
         </div>
 

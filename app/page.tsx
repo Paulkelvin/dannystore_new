@@ -14,7 +14,7 @@ import CategoryGridSection from '@/components/categories/CategoryGridSection';
 import LifestyleMarquee from '@/components/collections/LifestyleMarquee';
 import ReviewSection from '@/components/home/ReviewSection';
 import EmailSignupSection from '@/components/home/EmailSignupSection';
-import CollectionMarqueeSection from '@/components/home/CollectionMarqueeSection';
+import CollectionMarqueeSection from '@/components/collections/CollectionMarqueeSection';
 
 // GROQ queries
 const categoriesQuery = groq`*[_type == "category"] {
@@ -208,7 +208,7 @@ export default async function HomePage() {
     }
 
     return (
-      <div className="space-y-12">
+      <div className="space-y-0">
         <HeroCarousel />
         <CategorySection categories={categories} />
         <BestsellersSection products={bestSellers} />

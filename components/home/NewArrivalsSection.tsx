@@ -202,15 +202,15 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}
-        <div className="relative">
-          <div className="swiper-container">
+        <div className="relative -mx-2 sm:-mx-3 lg:-mx-4">
+          <div className="swiper-container !px-0">
             <Swiper
               modules={[Navigation]}
-              spaceBetween={24}
-              slidesPerView={1.2}
+              spaceBetween={12}
+              slidesPerView={1.5}
               centeredSlides={shouldCenter}
-              slidesOffsetBefore={16}
-              slidesOffsetAfter={16}
+              slidesOffsetBefore={8}
+              slidesOffsetAfter={8}
               navigation={{
                 prevEl: '.swiper-button-prev',
                 nextEl: '.swiper-button-next',
@@ -218,20 +218,20 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
               breakpoints={{
                 640: {
                   slidesPerView: 2.2,
-                  slidesOffsetBefore: 24,
-                  slidesOffsetAfter: 24,
-                  spaceBetween: 24,
+                  slidesOffsetBefore: 16,
+                  slidesOffsetAfter: 16,
+                  spaceBetween: 16,
                 },
                 768: {
                   slidesPerView: 3.2,
-                  slidesOffsetBefore: 32,
-                  slidesOffsetAfter: 32,
-                  spaceBetween: 24,
+                  slidesOffsetBefore: 24,
+                  slidesOffsetAfter: 24,
+                  spaceBetween: 20,
                 },
                 1024: {
                   slidesPerView: 4.2,
-                  slidesOffsetBefore: 40,
-                  slidesOffsetAfter: 40,
+                  slidesOffsetBefore: 32,
+                  slidesOffsetAfter: 32,
                   spaceBetween: 24,
                 },
               }}
@@ -299,10 +299,10 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
               })}
             </Swiper>
 
-            {/* Updated navigation buttons with proper positioning */}
+            {/* Navigation buttons */}
             <div className="hidden md:block">
-              <button className="swiper-button-prev !w-10 !h-10 !bg-white !rounded-full !shadow-lg !border !border-gray-200 !text-gray-600 hover:!bg-gray-50 disabled:!opacity-50 disabled:!cursor-not-allowed !-left-5 !top-1/2 !-translate-y-1/2 !z-10" />
-              <button className="swiper-button-next !w-10 !h-10 !bg-white !rounded-full !shadow-lg !border !border-gray-200 !text-gray-600 hover:!bg-gray-50 disabled:!opacity-50 disabled:!cursor-not-allowed !-right-5 !top-1/2 !-translate-y-1/2 !z-10" />
+              <button className="swiper-button-prev !w-10 !h-10 !bg-[#FFC300] !text-[#333] !rounded-full !shadow-lg !border-none hover:!bg-[#FFD54F] disabled:!opacity-50 disabled:!cursor-not-allowed !-left-6 !top-1/2 !-translate-y-1/2 !z-10 opacity-80 hover:opacity-100 transition-opacity" />
+              <button className="swiper-button-next !w-10 !h-10 !bg-[#FFC300] !text-[#333] !rounded-full !shadow-lg !border-none hover:!bg-[#FFD54F] disabled:!opacity-50 disabled:!cursor-not-allowed !-right-6 !top-1/2 !-translate-y-1/2 !z-10 opacity-80 hover:opacity-100 transition-opacity" />
             </div>
           </div>
         </div>
@@ -311,58 +311,47 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
       {/* Updated styles */}
       <style jsx global>{`
         .swiper-container {
-          position: relative;
-          width: 100%;
-          padding: 0 1rem;
+          width: 100vw;
+          max-width: none;
+          margin-left: 50%;
+          transform: translateX(-50%);
+          padding: 0;
         }
-
         @media (min-width: 640px) {
           .swiper-container {
-            padding: 0 1.5rem;
+            padding: 0;
           }
         }
-
         @media (min-width: 1024px) {
           .swiper-container {
-            padding: 0 2rem;
+            padding: 0;
           }
         }
-
         .swiper-button-prev,
         .swiper-button-next {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 10;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
+          box-shadow: none;
+          border: none;
+          opacity: 0.8;
+          background: #FFC300 !important;
+          color: #333 !important;
+          transition: opacity 0.2s;
         }
-
-        .swiper-button-prev::after,
-        .swiper-button-next::after {
-          font-size: 1.25rem !important;
+        .swiper-button-prev:hover,
+        .swiper-button-next:hover {
+          opacity: 1;
+          background: #FFD54F !important;
         }
-
         .swiper-button-disabled {
           opacity: 0.5;
           cursor: not-allowed;
         }
-
-        /* Ensure slides don't touch the edges */
         .swiper-slide {
           transition: transform 0.3s ease;
         }
-
-        /* Add padding to the first and last slides */
-        .swiper-slide:first-child {
-          padding-left: 0;
-        }
-
-        .swiper-slide:last-child {
-          padding-right: 0;
+        .swiper-slide > div {
+          width: 100%;
+          max-width: 340px;
+          margin: 0 auto;
         }
       `}</style>
 

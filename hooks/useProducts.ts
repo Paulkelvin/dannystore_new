@@ -68,12 +68,13 @@ export async function prefetchProducts(options: UseProductsOptions = {}) {
     variants[]
   }`;
 
-  return batchFetchProducts(
-    (await fetch('/api/products?' + new URLSearchParams({
-      query,
-      ...options,
-    })).json()).map((p: any) => p._id)
-  );
+  const response = await fetch('/api/products?' + new URLSearchParams(
+    Object.entries({ query, ...options })
+      .filter(([_, v]) => v !== undefined && v !== null)
+      .reduce((acc, [k, v]) => ({ ...acc, [k]: String(v) }), {})
+  ));
+  const data = await response.json();
+  return batchFetchProducts(data.map((p: any) => p._id));
 }
 
 // Hook for fetching a single product

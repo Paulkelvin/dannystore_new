@@ -19,7 +19,8 @@ export default function ProductVariantWrapper({
     <ProductVariantSelector
       variants={variants}
       basePrice={basePrice}
-      onVariantSelected={setSelectedVariant}
+      selectedVariant={selectedVariant}
+      onVariantSelect={setSelectedVariant}
     />
   );
 } 

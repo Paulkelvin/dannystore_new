@@ -1,57 +1,42 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-// Create reusable transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
-
-export async function GET(request: Request) {
-  const requestId = Math.random().toString(36).substring(7);
-  console.log(`[${requestId}] 📧 Testing email configuration`);
-
+export async function GET() {
   try {
-    // Verify SMTP connection
-    console.log(`[${requestId}] 🔍 Verifying SMTP connection...`);
+    const transporter = nodemailer.createTransport(process.env.EMAIL_SERVER!);
+    
+    // Test the connection
     await transporter.verify();
-    console.log(`[${requestId}] ✅ SMTP connection verified`);
+    console.log('✅ SMTP connection verified');
 
-    // Send test email
-    console.log(`[${requestId}] 📧 Sending test email to:`, process.env.SMTP_USER);
+    // Send a test email
+    const testEmail = process.env.EMAIL_FROM;
+    console.log('📧 Testing email configuration');
+    console.log('🔍 Verifying SMTP connection...');
+    
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: process.env.SMTP_USER,
+      from: process.env.EMAIL_FROM,
+      to: testEmail,
       subject: 'Test Email from Danny\'s Store',
-      html: `
-        <h1>Test Email</h1>
-        <p>This is a test email sent at ${new Date().toISOString()}</p>
-        <p>If you receive this, your email configuration is working correctly!</p>
-      `,
+      text: 'This is a test email to verify the email configuration.',
+      html: '<p>This is a test email to verify the email configuration.</p>',
     });
 
-    console.log(`[${requestId}] ✅ Test email sent:`, info.messageId);
+    console.log('✅ Test email sent:', info.messageId);
+    
     return NextResponse.json({ 
       success: true, 
-      messageId: info.messageId,
-      timestamp: new Date().toISOString()
+      message: 'Email configuration is working',
+      messageId: info.messageId 
     });
   } catch (error) {
-    console.error(`[${requestId}] ❌ Error testing email:`, error);
-    if (error instanceof Error) {
-      console.error(`[${requestId}] ❌ Error details:`, {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
-    }
+    console.error('❌ Email configuration error:', error);
     return NextResponse.json(
-      { error: 'Failed to send test email', details: error instanceof Error ? error.message : 'Unknown error' },
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to send test email',
+        details: error
+      },
       { status: 500 }
     );
   }

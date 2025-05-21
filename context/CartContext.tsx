@@ -11,8 +11,8 @@ export interface CartItem {
   variantTitle?: string;
   price: number;
   sku: string;
-  image?: SanityImageReference | null;
-  quantity?: number;
+  image: SanityImageReference;
+  quantity: number;
   color?: string;
   size?: string;
 }
@@ -166,4 +166,7 @@ export function useCart() {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-} 
+}
+
+// Export useCartContext as an alias for useCart
+export const useCartContext = useCart; 

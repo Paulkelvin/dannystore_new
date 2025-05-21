@@ -7,12 +7,14 @@ interface ProductVariantSelectorProps {
   variants: ProductVariant[];
   selectedVariant: ProductVariant | null;
   onVariantSelect: (variant: ProductVariant) => void;
+  basePrice?: number;
 }
 
 export default function ProductVariantSelector({
   variants,
   selectedVariant,
   onVariantSelect,
+  basePrice,
 }: ProductVariantSelectorProps) {
   // Local state for selected color and size
   const [selectedColor, setSelectedColor] = useState<string>('');

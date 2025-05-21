@@ -1,5 +1,6 @@
 import { Adapter } from "next-auth/adapters";
 import { sanityClientWrite } from "./sanityClient";
+import { QueryParams } from "@sanity/client";
 
 export function SanityAdapter(): Adapter {
   return {
@@ -23,7 +24,7 @@ export function SanityAdapter(): Adapter {
       if (guestOrders && guestOrders.length > 0) {
         const transaction = sanityClientWrite.transaction();
         guestOrders.forEach((order: any) => {
-          transaction.patch(order._id).set({ user: { _type: 'reference', _ref: user._id } });
+          transaction.patch(order._id, { set: { user: { _type: 'reference', _ref: user._id } } });
         });
         await transaction.commit();
         console.log(`Linked ${guestOrders.length} guest orders to user ${user._id}`);
@@ -243,7 +244,7 @@ export function SanityAdapter(): Adapter {
     async useVerificationToken({ identifier, token }) {
       const verificationToken = await sanityClientWrite.fetch(
         `*[_type == "verificationToken" && identifier == $identifier && token == $token][0]`,
-        { identifier, token }
+        { identifier, token } as unknown as QueryParams
       );
       console.log('SanityAdapter.useVerificationToken:', verificationToken);
       if (!verificationToken) return null;
