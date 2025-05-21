@@ -49,7 +49,21 @@ export async function GET(request: Request) {
 
     // If there's a payment intent ID, check its status in Stripe
     let paymentIntentStatus: string | null = null;
-    let paymentIntentDetails = null;
+    let paymentIntentDetails: {
+      status: Stripe.PaymentIntent.Status;
+      amount: number;
+      currency: string;
+      created: string;
+      metadata: Stripe.Metadata;
+      last_payment_error: Stripe.PaymentIntent.LastPaymentError | null;
+      charges: Array<{
+        id: string;
+        status: string;
+        created: string;
+        failure_message: string | null;
+        failure_code: string | null;
+      }>;
+    } | null = null;
     if (latestOrder.paymentIntentId) {
       try {
         const intent = await stripe.paymentIntents.retrieve(latestOrder.paymentIntentId);
