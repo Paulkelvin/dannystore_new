@@ -286,109 +286,104 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}
-        <div className="relative -mx-2 sm:-mx-3 lg:-mx-4">
-          <div className="swiper-container !px-0">
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={12}
-              slidesPerView={1.5}
-              centeredSlides={shouldCenter}
-              slidesOffsetBefore={8}
-              slidesOffsetAfter={8}
-              navigation={{
-                prevEl: '.swiper-button-prev',
-                nextEl: '.swiper-button-next',
-              }}
-              breakpoints={{
-                640: {
-                  slidesPerView: 2.2,
-                  slidesOffsetBefore: 16,
-                  slidesOffsetAfter: 16,
-                  spaceBetween: 16,
-                },
-                768: {
-                  slidesPerView: 3.2,
-                  slidesOffsetBefore: 24,
-                  slidesOffsetAfter: 24,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 4.2,
-                  slidesOffsetBefore: 32,
-                  slidesOffsetAfter: 32,
-                  spaceBetween: 24,
-                },
-              }}
-            >
-              {products.map((product) => {
-                let imageUrl = '/images/placeholder.png';
-                if (product.mainImage && product.mainImage.asset) {
-                  const url = urlFor(product.mainImage).width(800).height(800).url();
-                  if (url) imageUrl = url;
-                }
-                return (
-                  <SwiperSlide key={product._id}>
-                    <div className="group relative px-2 sm:px-3">
-                      <Link href={`/products/${product.slug}`} className="block">
-                        <div className="aspect-square w-full overflow-hidden rounded-lg bg-gray-200 relative group" style={{ position: 'relative' }}>
-                          {/* Best Seller Badge */}
-                          <span className="absolute top-2 right-2 z-10 inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-[#FFC300] text-[#333333] rounded">
-                            Best Seller
-                          </span>
-                          <ProductImageWithSkeleton
-                            src={imageUrl}
-                            alt={product.name}
-                            width={800}
-                            height={800}
-                          />
-                          {/* Add to Cart Button */}
-                          <button
-                            onClick={(e) => handleAddToCart(product, e)}
-                            disabled={isAddingToCart === product._id}
-                            className="absolute bottom-0 left-0 right-0 bg-black/80 text-white py-2 px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+        <div className="relative w-full">
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={12}
+            slidesPerView={1.5}
+            centeredSlides={shouldCenter}
+            slidesOffsetBefore={8}
+            slidesOffsetAfter={8}
+            navigation={{
+              prevEl: '.swiper-button-prev',
+              nextEl: '.swiper-button-next',
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2.2,
+                slidesOffsetBefore: 16,
+                slidesOffsetAfter: 16,
+                spaceBetween: 16,
+              },
+              768: {
+                slidesPerView: 3.2,
+                slidesOffsetBefore: 24,
+                slidesOffsetAfter: 24,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 4.2,
+                slidesOffsetBefore: 32,
+                slidesOffsetAfter: 32,
+                spaceBetween: 24,
+              },
+            }}
+          >
+            {products.map((product) => {
+              let imageUrl = '/images/placeholder.png';
+              if (product.mainImage && product.mainImage.asset) {
+                const url = urlFor(product.mainImage).width(800).height(800).url();
+                if (url) imageUrl = url;
+              }
+              return (
+                <SwiperSlide key={product._id}>
+                  <div className="group relative px-2 sm:px-3">
+                    <Link href={`/products/${product.slug}`} className="block">
+                      <div className="aspect-square w-full overflow-hidden rounded-lg bg-gray-200 relative group" style={{ position: 'relative' }}>
+                        {/* Best Seller Badge */}
+                        <span className="absolute top-2 right-2 z-10 inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-[#FFC300] text-[#333333] rounded">
+                          Best Seller
+                        </span>
+                        <ProductImageWithSkeleton
+                          src={imageUrl}
+                          alt={product.name}
+                          width={800}
+                          height={800}
+                        />
+                        {/* Add to Cart Button */}
+                        <button
+                          onClick={(e) => handleAddToCart(product, e)}
+                          disabled={isAddingToCart === product._id}
+                          className="absolute bottom-0 left-0 right-0 bg-black/80 text-white py-2 px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                        >
+                          {isAddingToCart === product._id ? 'Adding...' : 'Add to Cart'}
+                        </button>
+                      </div>
+                    </Link>
+                    <div className="mt-3">
+                      {/* Product Name */}
+                      <h3 className="text-sm sm:text-base font-semibold text-[#333333] line-clamp-2">
+                        <Link href={`/products/${product.slug}`} className="hover:text-[#42A5F5] transition-colors">
+                          {product.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                        </Link>
+                      </h3>
+                      {/* Price and View Details */}
+                      <div className="flex flex-col items-start mt-1 sm:mt-2">
+                        <p className="text-base sm:text-lg font-medium text-[#333333] mb-1 sm:mb-2">${product.price.toFixed(2)}</p>
+                        <div className="flex gap-2">
+                          <Link
+                            href={`/products/${product.slug}`}
+                            className="text-xs sm:text-sm font-semibold text-[#42A5F5] hover:underline focus:underline transition-colors"
                           >
-                            {isAddingToCart === product._id ? 'Adding...' : 'Add to Cart'}
-                          </button>
-                        </div>
-                      </Link>
-                      <div className="mt-3">
-                        {/* Product Name */}
-                        <h3 className="text-sm sm:text-base font-semibold text-[#333333] line-clamp-2">
-                          <Link href={`/products/${product.slug}`} className="hover:text-[#42A5F5] transition-colors">
-                            {product.name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                            View Details
                           </Link>
-                        </h3>
-                        {/* Price and View Details */}
-                        <div className="flex flex-col items-start mt-1 sm:mt-2">
-                          <p className="text-base sm:text-lg font-medium text-[#333333] mb-1 sm:mb-2">${product.price.toFixed(2)}</p>
-                          <div className="flex gap-2">
-                            <Link
-                              href={`/products/${product.slug}`}
-                              className="text-xs sm:text-sm font-semibold text-[#42A5F5] hover:underline focus:underline transition-colors"
-                            >
-                              View Details
-                            </Link>
-                            <button
-                              onClick={() => handleQuickView(product)}
-                              className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-[#42A5F5] transition-colors"
-                            >
-                              Quick View
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => handleQuickView(product)}
+                            className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-[#42A5F5] transition-colors"
+                          >
+                            Quick View
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-
-            {/* Updated navigation buttons with proper positioning */}
-            <div className="hidden md:block">
-              <button className="swiper-button-prev !w-10 !h-10 !bg-[#FFC300] !text-[#333] !rounded-full !shadow-lg !border-none hover:!bg-[#FFD54F] disabled:!opacity-50 disabled:!cursor-not-allowed !-left-6 !top-1/2 !-translate-y-1/2 !z-10 opacity-80 hover:opacity-100 transition-opacity" />
-              <button className="swiper-button-next !w-10 !h-10 !bg-[#FFC300] !text-[#333] !rounded-full !shadow-lg !border-none hover:!bg-[#FFD54F] disabled:!opacity-50 disabled:!cursor-not-allowed !-right-6 !top-1/2 !-translate-y-1/2 !z-10 opacity-80 hover:opacity-100 transition-opacity" />
-            </div>
-          </div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+          {/* Navigation buttons absolutely inside slider */}
+          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity" />
+          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity" />
         </div>
       </div>
 
@@ -400,6 +395,7 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
           margin: 0;
           transform: none;
           padding: 0;
+          overflow: visible;
         }
         @media (min-width: 640px) {
           .swiper-container {
@@ -419,6 +415,9 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
           background: #FFC300 !important;
           color: #333 !important;
           transition: opacity 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .swiper-button-prev:hover,
         .swiper-button-next:hover {
