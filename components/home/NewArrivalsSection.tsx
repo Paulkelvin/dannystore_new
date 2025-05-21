@@ -311,10 +311,10 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
       {/* Updated styles */}
       <style jsx global>{`
         .swiper-container {
-          width: 100vw;
+          width: 100%;
           max-width: none;
-          margin-left: 50%;
-          transform: translateX(-50%);
+          margin: 0;
+          transform: none;
           padding: 0;
         }
         @media (min-width: 640px) {
