@@ -14,13 +14,15 @@ export async function GET() {
 
     const categories = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
-    // Filter out any null categories before mapping
-    const transformedCategories = (categories || [])
-      .filter((category: any) => !!category)
-      .map((category: any) => ({
-        ...category,
-        image: category.image ? urlFor(category.image).url() : null,
-      }));
+    // Bulletproof null check for categories and images
+    const transformedCategories = Array.isArray(categories)
+      ? categories
+          .filter((category: any) => category && category.image)
+          .map((category: any) => ({
+            ...category,
+            image: urlFor(category.image).url(),
+          }))
+      : [];
 
     return NextResponse.json(transformedCategories);
   } catch (error) {
