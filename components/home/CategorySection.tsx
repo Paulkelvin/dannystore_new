@@ -19,7 +19,7 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  image: any; // Using Sanity image type
+  image: any; // Can be either Sanity image object or URL string
 }
 
 interface CategorySectionProps {
@@ -32,21 +32,47 @@ function SkeletonBox({ className = '' }) {
 
 function CategoryImageWithSkeleton({ src, alt }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const handleImageError = () => {
+    setHasError(true);
+    setIsLoading(false);
+  };
+
   return (
     <div className="relative w-full h-full">
       {isLoading && <SkeletonBox className="absolute inset-0 w-full h-full rounded-lg" />}
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className={`object-cover transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
-        onLoad={() => setIsLoading(false)}
-      />
+      {!hasError ? (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className={`object-cover transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          onLoad={() => setIsLoading(false)}
+          onError={handleImageError}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+          <span className="text-white text-lg font-medium">{alt}</span>
+        </div>
+      )}
     </div>
   );
 }
+
+// Add this helper function before the component
+const getImageUrl = (image: any): string => {
+  if (!image) return '/images/placeholder.png';
+  if (typeof image === 'string') return image;
+  try {
+    return urlFor(image).width(600).height(750).url();
+  } catch (error) {
+    console.error('Error generating image URL:', error);
+    return '/images/placeholder.png';
+  }
+};
 
 export default function CategorySection({ categories = [] }: CategorySectionProps) {
   const router = useRouter();
@@ -67,10 +93,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
     const fetchFeaturedImages = async () => {
       try {
         setIsLoading(true);
+        // Modified queries to get any product if no best seller or latest is found
         const bestSellerQuery = `*[_type == "product" && isBestSeller == true][0] {
+          mainImage
+        } || *[_type == "product"][0] {
           mainImage
         }`;
         const latestQuery = `*[_type == "product"] | order(_createdAt desc)[0] {
+          mainImage
+        } || *[_type == "product"][0] {
           mainImage
         }`;
 
@@ -85,7 +116,11 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
         });
       } catch (err) {
         console.error('Error fetching featured images:', err);
-        setError('Failed to load featured images');
+        // Don't set error state, just use fallback background
+        setFeaturedImages({
+          bestSeller: null,
+          latest: null
+        });
       } finally {
         setIsLoading(false);
       }
@@ -156,7 +191,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
               <Link href={`/category/${category.slug}`} className="block group h-full">
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                   <CategoryImageWithSkeleton
-                    src={urlFor(category.image).width(600).height(750).url()}
+                    src={getImageUrl(category.image)}
                     alt={category.name}
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
@@ -177,11 +212,13 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
                   <CategoryImageWithSkeleton
-                    src={urlFor(featuredImages.bestSeller).width(600).height(750).url()}
+                    src={getImageUrl(featuredImages.bestSeller)}
                     alt="Best Sellers"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-[#C5A467]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                    <span className="text-white text-lg font-medium">Best Sellers</span>
+                  </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                 <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
@@ -210,11 +247,13 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.latest ? (
                   <CategoryImageWithSkeleton
-                    src={urlFor(featuredImages.latest).width(600).height(750).url()}
+                    src={getImageUrl(featuredImages.latest)}
                     alt="Latest Arrivals"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-[#C5A467]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                    <span className="text-white text-lg font-medium">Latest Arrivals</span>
+                  </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                 <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
