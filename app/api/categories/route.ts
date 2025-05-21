@@ -17,10 +17,10 @@ export async function GET() {
     // Bulletproof null check for categories and images
     const transformedCategories = Array.isArray(categories)
       ? categories
-          .filter((category: any) => category && category.image)
+          .filter((category: any) => category)
           .map((category: any) => ({
             ...category,
-            image: urlFor(category.image).url(),
+            image: category.image ? urlFor(category.image)?.url?.() ?? null : null,
           }))
       : [];
 
