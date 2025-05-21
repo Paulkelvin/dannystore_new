@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     const latestOrder = sortedOrders[0];
 
     // If there's a payment intent ID, check its status in Stripe
-    let paymentIntentStatus = null;
+    let paymentIntentStatus: string | null = null;
     let paymentIntentDetails = null;
     if (latestOrder.paymentIntentId) {
       try {
