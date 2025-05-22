@@ -298,4 +298,62 @@ export default function Header() {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={handleUserMenuClick}
-                className={`
+                className={`transition-colors p-1 rounded-full ${
+                  isHomePage && !isScrolled 
+                    ? 'hover:bg-white/10' 
+                    : 'hover:bg-white/20'
+                }`}
+                aria-label={status === 'authenticated' ? 'Open user menu' : 'Sign in'}
+              >
+                <User className="w-6 h-6" />
+              </button>
+              <div
+                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 ease-out
+                  ${isUserMenuOpen && status === 'authenticated'
+                    ? 'opacity-100 translate-y-0 pointer-events-auto'
+                    : 'opacity-0 -translate-y-2 pointer-events-none'
+                  }`}
+                style={{ willChange: 'opacity, transform' }}
+              >
+                {isUserMenuOpen && status === 'authenticated' && (
+                  <>
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {session.user?.name || session.user?.email}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                    <Link
+                      href="/account"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      My Account
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign out
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+            <Link href="/cart" className="relative transition-colors hover:text-white/80">
+              <ShoppingBag className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#FFC300] text-[#333333] text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center border-2 border-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
