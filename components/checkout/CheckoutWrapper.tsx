@@ -89,13 +89,19 @@ export default function CheckoutWrapper() {
                 {cart.map((item: CartItem) => (
                   <li key={item.variantId} className="flex items-center py-4">
                     <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <Image
-                        src={urlFor(item.image).url()}
-                        alt={item.name}
-                        fill
-                        className="object-cover object-center"
-                        sizes="64px"
-                      />
+                      {(() => {
+                        const builder = item.image ? urlFor(item.image) : null;
+                        const imageUrl = builder && typeof builder.url === 'function' ? builder.url() : '';
+                        return (
+                          <Image
+                            src={imageUrl}
+                            alt={item.name}
+                            fill
+                            className="object-cover object-center"
+                            sizes="64px"
+                          />
+                        );
+                      })()}
                     </div>
                     <div className="ml-4 flex flex-1 flex-col">
                       <div>

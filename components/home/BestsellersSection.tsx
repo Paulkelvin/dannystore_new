@@ -323,7 +323,7 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
             {products.map((product) => {
               let imageUrl = '/images/placeholder.png';
               if (product.mainImage && product.mainImage.asset) {
-                const url = urlFor(product.mainImage).width(800).height(800).url();
+                const url = urlFor(product.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png';
                 if (url) imageUrl = url;
               }
               return (
@@ -471,7 +471,7 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg relative" style={{ position: 'relative', height: '400px' }}>
                   {quickViewProduct.mainImage ? (
                     <ProductImageWithSkeleton
-                      src={urlFor(quickViewProduct.mainImage).width(800).height(800).url()}
+                      src={urlFor(quickViewProduct.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png'}
                       alt={quickViewProduct.name}
                       width={800}
                       height={800}

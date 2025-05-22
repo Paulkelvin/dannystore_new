@@ -6,6 +6,19 @@ import { urlFor } from '@/lib/sanityClient';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
+// Type guard for asset
+function hasAsset(obj: any): obj is { asset: { _ref?: string; url?: string } } {
+  return obj && typeof obj === 'object' && 'asset' in obj && obj.asset && typeof obj.asset === 'object';
+}
+
+function hasAssetWithRef(obj: any): obj is { asset: { _ref: string } } {
+  return obj && typeof obj === 'object' && 'asset' in obj && obj.asset && typeof obj.asset === 'object' && typeof obj.asset._ref === 'string';
+}
+
+function hasAssetWithUrl(obj: any): obj is { asset: { url: string } } {
+  return obj && typeof obj === 'object' && 'asset' in obj && obj.asset && typeof obj.asset === 'object' && typeof obj.asset.url === 'string';
+}
+
 export default function OrderHistory({ userEmail }: { userEmail: string }) {
   const { data, error, isLoading, mutate: revalidate } = useSWR(
     userEmail ? `/api/orders?email=${encodeURIComponent(userEmail)}` : null,
@@ -151,8 +164,21 @@ export default function OrderHistory({ userEmail }: { userEmail: string }) {
                                   <div className="flex items-center gap-3">
                                     {item.image && (
                                       <img
-                                        src={item.image?.asset?._ref ? urlFor(item.image).width(200).url() : item.image?.asset?.url || item.image}
-                                        alt={item.name}
+                                        src={(() => {
+                                          if (!item.image) return '';
+                                          if (hasAssetWithRef(item.image)) {
+                                            const builder = urlFor(item.image);
+                                            if (builder && typeof builder.width === 'function') {
+                                              const url = builder.width(200).url();
+                                              return url ?? '';
+                                            }
+                                            return '';
+                                          }
+                                          if (hasAssetWithUrl(item.image)) return item.image.asset.url;
+                                          if (typeof item.image === 'string') return item.image;
+                                          return '';
+                                        })()}
+                                        alt={item.name || 'Product image'}
                                         className="w-12 h-12 object-cover rounded"
                                       />
                                     )}

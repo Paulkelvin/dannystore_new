@@ -42,17 +42,9 @@ export default function ProductImageGallery({ mainImage, gallery = [], productNa
     );
   }
 
-  const mainImageUrl = urlFor(selectedImage)
-    .width(800)
-    .height(800)
-    .quality(85)
-    .url();
+  const mainImageUrl = urlFor(selectedImage)?.width(800).height(800).quality(85).url() ?? '/images/placeholder.png';
 
-  const blurUrl = urlFor(selectedImage)
-    .width(20)
-    .height(20)
-    .quality(30)
-    .url();
+  const blurUrl = urlFor(selectedImage)?.width(20).height(20).quality(30).url() ?? '/images/placeholder.png';
 
   return (
     <div className="flex flex-col gap-4">
@@ -82,11 +74,7 @@ export default function ProductImageGallery({ mainImage, gallery = [], productNa
         <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
           {allImages.map((image, index) => {
             if (!image?.asset) return null;
-            const thumbUrl = urlFor(image)
-              .width(100)
-              .height(100)
-              .quality(75)
-              .url();
+            const thumbUrl = urlFor(image)?.width(100).height(100).quality(75).url() ?? '/images/placeholder.png';
 
             return (
               <button

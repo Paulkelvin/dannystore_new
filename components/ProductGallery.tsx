@@ -31,7 +31,14 @@ export default function ProductGallery({ mainImage, gallery, productName }: Prod
       <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
         {selectedImage && (
           <Image
-            src={urlFor(selectedImage).width(800).height(800).url()}
+            src={(function() {
+              const builder = urlFor(selectedImage);
+              if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                const url = builder.width(800).height(800).url();
+                return url ?? '';
+              }
+              return '';
+            })()}
             alt={`${productName} - Main view`}
             fill
             className="object-cover"
@@ -55,7 +62,14 @@ export default function ProductGallery({ mainImage, gallery, productName }: Prod
               }`}
             >
               <Image
-                src={urlFor(image).width(200).height(200).url()}
+                src={(function() {
+                  const builder = urlFor(image);
+                  if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                    const url = builder.width(200).height(200).url();
+                    return url ?? '';
+                  }
+                  return '';
+                })()}
                 alt={`${productName} - Thumbnail ${index + 1}`}
                 fill
                 className="object-cover"

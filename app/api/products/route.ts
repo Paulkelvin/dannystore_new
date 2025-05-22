@@ -55,13 +55,13 @@ export async function GET(request: Request) {
       ...product,
       mainImage: product.mainImage ? {
         ...product.mainImage,
-        url: urlFor(product.mainImage).url(),
+        url: urlFor(product.mainImage)?.url() ?? '/images/placeholder.png',
       } : null,
       variants: product.variants?.map((variant: any) => ({
         ...variant,
         image: variant.image ? {
           ...variant.image,
-          url: urlFor(variant.image).url(),
+          url: urlFor(variant.image)?.url() ?? '/images/placeholder.png',
         } : null,
       })) || [],
     }));

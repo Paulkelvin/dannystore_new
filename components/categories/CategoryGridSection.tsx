@@ -38,7 +38,17 @@ export default function CategoryGridSection({ categories }: Props) {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
                 style={{
-                  backgroundImage: `url('${featured.image ? urlFor(featured.image).width(800).height(800).url() : '/images/placeholder.png'}')`,
+                  backgroundImage: (() => {
+                    let url = '/images/placeholder.png';
+                    if (featured.image) {
+                      const builder = urlFor(featured.image);
+                      if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                        const builtUrl = builder.width(800).height(800).url();
+                        if (builtUrl) url = builtUrl;
+                      }
+                    }
+                    return `url('${url}')`;
+                  })(),
                 }}
               />
               {/* Gradient scrim for text readability */}
@@ -64,7 +74,17 @@ export default function CategoryGridSection({ categories }: Props) {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
                 style={{
-                  backgroundImage: `url('${cat.image ? urlFor(cat.image).width(600).height(600).url() : '/images/placeholder.png'}')`,
+                  backgroundImage: (() => {
+                    let url = '/images/placeholder.png';
+                    if (cat.image) {
+                      const builder = urlFor(cat.image);
+                      if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                        const builtUrl = builder.width(600).height(600).url();
+                        if (builtUrl) url = builtUrl;
+                      }
+                    }
+                    return `url('${url}')`;
+                  })(),
                 }}
               />
               {/* Gradient scrim for text readability */}

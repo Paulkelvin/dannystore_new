@@ -254,7 +254,7 @@ export default function Header() {
                             <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                               {result.mainImage && (
                                 <Image
-                                  src={urlFor(result.mainImage).width(48).height(48).url()}
+                                  src={urlFor(result.mainImage)?.width(48).height(48).url() ?? '/images/placeholder.png'}
                                   alt={result.name}
                                   fill
                                   className="object-cover"

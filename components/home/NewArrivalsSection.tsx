@@ -239,7 +239,7 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             {products.map((product) => {
               let imageUrl = '/images/placeholder.png';
               if (product.mainImage && product.mainImage.asset) {
-                const url = urlFor(product.mainImage).width(800).height(800).url();
+                const url = urlFor(product.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png';
                 if (url) imageUrl = url;
               }
               return (
@@ -387,7 +387,7 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg relative" style={{ height: '400px' }}>
                   {quickViewProduct.mainImage ? (
                     <ProductImageWithSkeleton
-                      src={urlFor(quickViewProduct.mainImage).width(600).height(600).url()}
+                      src={urlFor(quickViewProduct.mainImage)?.width(600).height(600).url() ?? '/images/placeholder.png'}
                       alt={quickViewProduct.name}
                       width={600}
                       height={600}

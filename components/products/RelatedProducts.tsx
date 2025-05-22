@@ -70,7 +70,7 @@ export default function RelatedProducts({ currentProduct, products = [] }: Relat
               <Link href={`/products/${typeof product.slug === 'string' ? product.slug : product.slug.current}`} className="block">
                 <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
                   <Image
-                    src={urlFor(product.mainImage).url()}
+                    src={urlFor(product.mainImage)?.url() ?? '/images/placeholder.png'}
                     alt={product.name}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

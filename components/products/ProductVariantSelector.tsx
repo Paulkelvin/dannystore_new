@@ -26,7 +26,7 @@ export default function ProductVariantSelector({
       variants
         .filter(
           v =>
-            v.stock > 0 &&
+            typeof v.stock === 'number' && v.stock > 0 &&
             (!selectedSize || v.size?.name === selectedSize)
         )
         .map(v => v.color?.name)
@@ -40,7 +40,7 @@ export default function ProductVariantSelector({
       variants
         .filter(
           v =>
-            v.stock > 0 &&
+            typeof v.stock === 'number' && v.stock > 0 &&
             (!selectedColor || v.color?.name === selectedColor)
         )
         .map(v => v.size?.name)
@@ -76,7 +76,7 @@ export default function ProductVariantSelector({
     setSelectedColor(color);
     // Find first available size for the selected color
     const firstAvailableSize = variants
-      .filter(v => v.color?.name === color && v.stock > 0)
+      .filter(v => v.color?.name === color && typeof v.stock === 'number' && v.stock > 0)
       .sort((a, b) => (a.size?.name || '').localeCompare(b.size?.name || ''))[0]?.size?.name;
     
     if (firstAvailableSize) {
@@ -89,7 +89,7 @@ export default function ProductVariantSelector({
     setSelectedSize(size);
     // Find first available color for the selected size
     const firstAvailableColor = variants
-      .filter(v => v.size?.name === size && v.stock > 0)
+      .filter(v => v.size?.name === size && typeof v.stock === 'number' && v.stock > 0)
       .sort((a, b) => (a.color?.name || '').localeCompare(b.color?.name || ''))[0]?.color?.name;
     
     if (firstAvailableColor) {
@@ -100,7 +100,7 @@ export default function ProductVariantSelector({
   // Get available sizes for a specific color
   const getAvailableSizesForColor = (color: string) => {
     return variants
-      .filter(v => v.color?.name === color && v.stock > 0)
+      .filter(v => v.color?.name === color && typeof v.stock === 'number' && v.stock > 0)
       .map(v => v.size?.name)
       .filter(Boolean);
   };
@@ -108,14 +108,14 @@ export default function ProductVariantSelector({
   // Get available colors for a specific size
   const getAvailableColorsForSize = (size: string) => {
     return variants
-      .filter(v => v.size?.name === size && v.stock > 0)
+      .filter(v => v.size?.name === size && typeof v.stock === 'number' && v.stock > 0)
       .map(v => v.color?.name)
       .filter(Boolean);
   };
 
   // Check if a combination is available
   const isCombinationAvailable = (color: string, size: string) => {
-    return variants.some(v => v.color?.name === color && v.size?.name === size && v.stock > 0);
+    return variants.some(v => v.color?.name === color && v.size?.name === size && typeof v.stock === 'number' && v.stock > 0);
   };
 
   // If no variants have sizes, don't show the size selector

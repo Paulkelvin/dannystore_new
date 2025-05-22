@@ -33,8 +33,20 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
 
   // Extract filter options from products
   const products = category.products || [];
-  let minPrice = Math.min(...products.map(p => p.price).concat(products.flatMap(p => (p.variants || []).map(v => v.price)).filter(Boolean)));
-  let maxPrice = Math.max(...products.map(p => p.price).concat(products.flatMap(p => (p.variants || []).map(v => v.price)).filter(Boolean)));
+  
+  // Get all prices (including variants) and filter out undefined/null values
+  const allPrices = [
+    ...products.map(p => p.price).filter((price): price is number => typeof price === 'number'),
+    ...products.flatMap(p => 
+      (p.variants || [])
+        .map(v => v.price)
+        .filter((price): price is number => typeof price === 'number')
+    )
+  ];
+
+  let minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
+  let maxPrice = allPrices.length > 0 ? Math.max(...allPrices) : 0;
+
   if (!isFinite(minPrice)) minPrice = 0;
   if (!isFinite(maxPrice)) maxPrice = 0;
 

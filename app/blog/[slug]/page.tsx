@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {post.author.image && (
               <div className="relative w-12 h-12 rounded-full overflow-hidden">
                 <Image
-                  src={urlFor(post.author.image).url()}
+                  src={urlFor(post.author.image)?.url() ?? '/images/placeholder.png'}
                   alt={post.author.name}
                   fill
                   className="object-cover"
@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </div>
           <div className="relative h-[400px] w-full rounded-lg overflow-hidden">
             <Image
-              src={urlFor(post.mainImage).url()}
+              src={urlFor(post.mainImage)?.url() ?? '/images/placeholder.png'}
               alt={post.title}
               fill
               className="object-cover"
@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
                     <div className="relative h-48 w-full">
                       <Image
-                        src={urlFor(product.mainImage).url()}
+                        src={urlFor(product.mainImage)?.url() ?? '/images/placeholder.png'}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -174,7 +174,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               {post.author.image && (
                 <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                   <Image
-                    src={urlFor(post.author.image).url()}
+                    src={urlFor(post.author.image)?.url() ?? '/images/placeholder.png'}
                     alt={post.author.name}
                     fill
                     className="object-cover"

@@ -30,7 +30,7 @@ const errorMessages: Record<string, string | ReactNode> = {
 
 export default function AuthErrorPage() {
   const searchParams = useSearchParams();
-  const error = searchParams.get('error');
+  const error = searchParams?.get('error');
   const message = (error && errorMessages[error]) || errorMessages.default;
 
   return (

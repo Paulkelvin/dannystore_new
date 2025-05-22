@@ -70,15 +70,19 @@ export default function OrderSummary({
         {items.map((item) => (
           <div key={`${item.productId}-${item.variantId}`} className="flex items-center space-x-4">
             <div className="relative w-20 h-20 flex-shrink-0">
-              {item.image ? (
-                <Image
-                  src={urlFor(item.image).url()}
-                  alt={item.name || 'Product image'}
-                  fill
-                  className="object-cover rounded-lg"
-                  sizes="80px"
-                />
-              ) : (
+              {item.image ? (() => {
+                const builder = urlFor(item.image);
+                const imageUrl = builder && typeof builder.url === 'function' ? builder.url() : '';
+                return (
+                  <Image
+                    src={imageUrl}
+                    alt={item.name || 'Product image'}
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="80px"
+                  />
+                );
+              })() : (
                 <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
                   <span className="text-gray-400 text-sm">No image</span>
                 </div>

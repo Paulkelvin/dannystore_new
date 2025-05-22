@@ -20,6 +20,13 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!session || !session.user || !session.user.email) {
+    return NextResponse.json(
+      { error: 'Unauthorized: No valid session or user email found' },
+      { status: 401 }
+    );
+  }
+
   const userEmail = session.user.email;
   console.log('Attempting to save address for user:', userEmail);
 

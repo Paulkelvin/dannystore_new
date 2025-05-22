@@ -99,7 +99,7 @@ function BlogGrid({ posts }: { posts: BlogPost[] }) {
       <div className="mb-8 flex flex-col md:flex-row gap-0 md:gap-0 rounded-lg shadow-lg overflow-hidden bg-white">
         <div className="relative w-full md:w-1/2 h-64 md:h-72">
           <Image
-            src={urlFor(featured.mainImage).url()}
+            src={urlFor(featured.mainImage)?.url() ?? '/images/placeholder.png'}
             alt={featured.title}
             fill
             className="object-cover h-full w-full rounded-none md:rounded-l-lg md:rounded-r-none"
@@ -134,7 +134,7 @@ function BlogGrid({ posts }: { posts: BlogPost[] }) {
           <Link key={post._id} href={`/blog/${post.slug.current}`} className="block bg-white rounded-lg shadow overflow-hidden hover:scale-[1.02] transition-transform">
             <div className="relative h-48 w-full">
               <Image
-                src={urlFor(post.mainImage).url()}
+                src={urlFor(post.mainImage)?.url() ?? '/images/placeholder.png'}
                 alt={post.title}
                 fill
                 className="object-cover"

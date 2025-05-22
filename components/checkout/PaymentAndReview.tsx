@@ -66,7 +66,7 @@ function PaymentForm({ onComplete, orderTotal, email, cartItems, shippingAddress
       }) as PaymentIntentResult;
 
       if ('error' in result) {
-        setErrorMessage(result.error.message || 'An error occurred during payment.');
+        setErrorMessage(result.error?.message || 'An error occurred during payment.');
       } else if ('paymentIntent' in result && result.paymentIntent && result.paymentIntent.status === 'succeeded') {
         clearOrderNumber();
         onComplete(result.paymentIntent.id);

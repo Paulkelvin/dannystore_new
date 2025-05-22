@@ -39,7 +39,7 @@ export default function CartPage() {
                 <div className="relative w-36 h-36 bg-gray-100 rounded-lg flex items-center justify-center">
                   {item.image && item.image.asset ? (
                     <Image
-                      src={urlFor(item.image).width(160).height(160).url()}
+                      src={urlFor(item.image)?.width(160).height(160).url() ?? '/images/placeholder.png'}
                       alt={item.name}
                       fill
                       className="object-cover rounded-md"

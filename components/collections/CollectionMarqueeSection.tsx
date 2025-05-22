@@ -37,7 +37,7 @@ export default function CollectionMarqueeSection({ collections }: Props) {
             >
               {col.marqueeImage ? (
                 <img
-                  src={urlFor(col.marqueeImage).width(400).height(300).url()}
+                  src={urlFor(col.marqueeImage)?.width(400).height(300).url() ?? '/images/placeholder.png'}
                   alt={col.title}
                   className="w-full h-48 object-cover"
                   style={{ transform: 'skewX(15deg)' }}

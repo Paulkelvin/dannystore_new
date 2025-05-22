@@ -15,7 +15,7 @@ interface Review {
 
 function AvatarWithSkeleton({ avatar, name }: { avatar: SanityImageReference; name: string }) {
   const [isLoading, setIsLoading] = useState(true);
-  const avatarUrl = urlFor(avatar).width(48).height(48).url();
+  const avatarUrl = urlFor(avatar)?.width(48).height(48).url() ?? '/images/placeholder.png';
   const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=232326&color=fff&size=128`;
 
   return (

@@ -141,7 +141,14 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 >
                   <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
                     <Image
-                      src={urlFor(product.mainImage).width(64).height(64).url()}
+                      src={(function() {
+                        const builder = urlFor(product.mainImage);
+                        if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                          const url = builder.width(64).height(64).url();
+                          return url ?? '';
+                        }
+                        return '';
+                      })()}
                       alt={product.name}
                       fill
                       className="object-cover"

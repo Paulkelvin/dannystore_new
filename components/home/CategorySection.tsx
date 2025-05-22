@@ -68,12 +68,7 @@ const getImageUrl = (image: any): string => {
   if (typeof image === 'string') return image;
   try {
     // Add quality and format optimization
-    return urlFor(image)
-      .width(600)
-      .height(750)
-      .quality(85) // Optimize quality
-      .format('webp') // Use modern format
-      .url();
+    return urlFor(image)?.width(600).height(750).quality(85).format('webp').url() ?? '/images/placeholder.png';
   } catch (error) {
     console.error('Error generating image URL:', error);
     return '/images/placeholder.png';

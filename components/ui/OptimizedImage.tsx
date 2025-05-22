@@ -45,18 +45,10 @@ export default function OptimizedImage({
   }
 
   // Generate blur placeholder
-  const blurUrl = urlFor(image)
-    .width(20)
-    .height(20)
-    .quality(30)
-    .url();
+  const blurUrl = urlFor(image)?.width(20).height(20).quality(30).url() ?? '/images/placeholder.png';
 
   // Generate main image URL
-  const imageUrl = urlFor(image)
-    .width(width || 800)
-    .height(height || 800)
-    .quality(quality)
-    .url();
+  const imageUrl = urlFor(image)?.width(width || 800).height(height || 800).quality(quality).url() ?? '/images/placeholder.png';
 
   const handleLoad = () => {
     setIsLoading(false);

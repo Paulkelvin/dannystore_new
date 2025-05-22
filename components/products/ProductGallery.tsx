@@ -2,24 +2,54 @@
 
 import { useState, useRef, useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import { Product } from '@/types';
+import { Product, SanityImageReference } from '@/types';
 import { urlFor } from '@/lib/sanityClient';
 import { Expand } from 'lucide-react';
 
 interface ProductGalleryProps {
-  mainImage: any; // (or SanityImageReference if you have a type for it)
-  gallery: any[] | null; // (or SanityImageReference[] if you have a type for it)
+  mainImage: SanityImageReference;
+  gallery?: SanityImageReference[];
   productName: string;
 }
 
-export default function ProductGallery({ mainImage, gallery, productName }: ProductGalleryProps) {
+export default function ProductGallery({ mainImage, gallery = [], productName }: ProductGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const mainImgRef = useRef<HTMLDivElement>(null);
 
-  // Memoize images array to prevent unnecessary re-renders
-  const images = useMemo(() => [mainImage, ...(gallery || [])], [mainImage, gallery]);
+  // Combine main image and gallery images, ensuring main image is first and filtering out nulls
+  const images = useMemo(() => 
+    [mainImage, ...(gallery || [])].filter(
+      (img, index, self) => img?.asset?._ref && index === self.findIndex((t) => t?.asset?._ref === img?.asset?._ref)
+    ),
+    [mainImage, gallery]
+  );
+
+  // Safety check for selectedImage
+  const selectedImageIndex = Math.min(selectedImage, images.length - 1);
+  const currentImage = images[selectedImageIndex];
+
+  if (!currentImage?.asset) {
+    return (
+      <div className="aspect-square w-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+        No Image Available
+      </div>
+    );
+  }
+
+  // Generate image URLs with proper type checking
+  const builder = urlFor(currentImage);
+  if (!builder) {
+    return (
+      <div className="aspect-square w-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+        Error loading image
+      </div>
+    );
+  }
+
+  const mainImageUrl = builder.width(800).height(1000).url() || '';
+  const zoomImageUrl = builder.width(1200).height(1600).url() || '';
 
   // Memoize event handlers
   const handleMouseEnter = useCallback(() => setIsZoomed(true), []);
@@ -52,7 +82,14 @@ export default function ProductGallery({ mainImage, gallery, productName }: Prod
             }`}
           >
             <Image
-              src={urlFor(image).width(80).height(80).url()}
+              src={(function() {
+                const builder = urlFor(image);
+                if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                  const url = builder.width(80).height(80).url();
+                  return url ?? '';
+                }
+                return '';
+              })()}
               alt={`${productName} - Thumbnail ${index + 1}`}
               width={80}
               height={80}
@@ -72,8 +109,8 @@ export default function ProductGallery({ mainImage, gallery, productName }: Prod
           onMouseMove={handleMouseMove}
         >
           <Image
-            src={urlFor(images[selectedImage]).width(800).height(1000).url()}
-            alt={productName}
+            src={mainImageUrl}
+            alt={currentImage.alt || productName || 'Product image'}
             width={800}
             height={1000}
             className="h-full w-full object-contain object-center"
@@ -89,7 +126,7 @@ export default function ProductGallery({ mainImage, gallery, productName }: Prod
                 width: '160px',
                 height: '160px',
                 overflow: 'hidden',
-                background: `url(${urlFor(images[selectedImage]).width(1200).height(1600).url()}) no-repeat`,
+                background: `url(${zoomImageUrl}) no-repeat`,
                 backgroundSize: '800px 1000px',
                 backgroundPosition: `${-zoomPos.x * 8 + 80}px ${-zoomPos.y * 10 + 80}px`,
                 boxShadow: '0 4px 16px rgba(66,165,245,0.15)'

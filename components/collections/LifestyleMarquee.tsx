@@ -40,7 +40,7 @@ export default function LifestyleMarquee({ lifestylePackages }: Props) {
               >
                 {pkg.marqueeImage ? (
                   <img
-                    src={urlFor(pkg.marqueeImage).width(600).height(400).url()}
+                    src={urlFor(pkg.marqueeImage)?.width(600).height(400).url() ?? '/images/placeholder.png'}
                     alt={pkg.title}
                     className="w-full h-80 object-cover"
                     style={{ transform: 'skewX(15deg)' }}

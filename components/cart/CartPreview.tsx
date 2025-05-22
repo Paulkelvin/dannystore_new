@@ -53,7 +53,14 @@ export default function CartPreview() {
                       {item.image && (
                         <div className="w-16 h-16 relative flex-shrink-0">
                           <Image
-                            src={urlFor(item.image).width(64).height(64).url()}
+                            src={(function() {
+                              const builder = urlFor(item.image);
+                              if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
+                                const url = builder.width(64).height(64).url();
+                                return url ?? '';
+                              }
+                              return '';
+                            })()}
                             alt={item.name}
                             fill
                             sizes="64px"
