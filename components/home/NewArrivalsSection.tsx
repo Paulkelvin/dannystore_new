@@ -290,8 +290,8 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             })}
           </Swiper>
           {/* Navigation buttons absolutely inside slider, styled round and with brand color */}
-          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
-          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
+          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
+          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
         </div>
       </div>
 
@@ -317,22 +317,38 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
         }
         .newarrivals-swiper .swiper-button-prev,
         .newarrivals-swiper .swiper-button-next {
-          box-shadow: none;
-          border: none;
-          opacity: 0.8;
-          background: #FFC300 !important;
-          color: white !important;
-          transition: opacity 0.2s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          width: 32px !important;
+          height: 32px !important;
+          min-width: 32px !important;
+          min-height: 32px !important;
+          max-width: 32px !important;
+          max-height: 32px !important;
+          border-radius: 50% !important;
+          padding: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background: transparent !important;
+          color: #4B5563 !important;
+          font-size: 1.25rem;
+          transition: all 0.2s ease;
+        }
+        .newarrivals-swiper .swiper-button-prev::after,
+        .newarrivals-swiper .swiper-button-next::after {
+          font-size: 1rem !important;
+          font-weight: bold;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          margin: 0 !important;
+          line-height: 1 !important;
         }
         .newarrivals-swiper .swiper-button-prev:hover,
         .newarrivals-swiper .swiper-button-next:hover {
-          opacity: 1;
-          background: #FFD54F !important;
+          color: #111827 !important;
         }
-        .swiper-button-disabled {
+        .newarrivals-swiper .swiper-button-disabled {
           opacity: 0.5;
           cursor: not-allowed;
         }

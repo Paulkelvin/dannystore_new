@@ -374,8 +374,8 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
             })}
           </Swiper>
           {/* Navigation buttons absolutely inside slider, styled round and with brand color */}
-          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
-          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-14 h-14 bg-[#FFC300] text-[#333] rounded-full shadow-lg border-none flex items-center justify-center opacity-90 hover:opacity-100 transition-all duration-200 text-2xl" />
+          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
+          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
         </div>
       </div>
 
@@ -401,27 +401,25 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
         }
         .bestseller-swiper .swiper-button-prev,
         .bestseller-swiper .swiper-button-next {
-          width: 48px !important;
-          height: 48px !important;
-          min-width: 48px !important;
-          min-height: 48px !important;
-          max-width: 48px !important;
-          max-height: 48px !important;
+          width: 32px !important;
+          height: 32px !important;
+          min-width: 32px !important;
+          min-height: 32px !important;
+          max-width: 32px !important;
+          max-height: 32px !important;
           border-radius: 50% !important;
           padding: 0 !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-          background: #FFC300 !important;
-          color: white !important;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-          font-size: 1.5rem;
-          opacity: 0.9;
+          background: transparent !important;
+          color: #4B5563 !important;
+          font-size: 1.25rem;
           transition: all 0.2s ease;
         }
         .bestseller-swiper .swiper-button-prev::after,
         .bestseller-swiper .swiper-button-next::after {
-          font-size: 1.25rem !important;
+          font-size: 1rem !important;
           font-weight: bold;
           position: absolute !important;
           top: 50% !important;
@@ -429,6 +427,10 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
           transform: translate(-50%, -50%) !important;
           margin: 0 !important;
           line-height: 1 !important;
+        }
+        .bestseller-swiper .swiper-button-prev:hover,
+        .bestseller-swiper .swiper-button-next:hover {
+          color: #111827 !important;
         }
         .bestseller-swiper .swiper-button-disabled {
           opacity: 0.5;

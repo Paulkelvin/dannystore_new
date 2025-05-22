@@ -23,17 +23,16 @@ export default function CategoryGridSection({ categories }: Props) {
     <section id="categories" className="py-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-2">
           <h2 className="text-2xl font-bold text-[#333333]">Explore Our Categories</h2>
         </div>
-        <p className="text-lg text-[#6c757d] mb-8 text-left">Find the perfect toy for every age, interest, and adventure.</p>
         {/* Responsive grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[220px] lg:auto-rows-[260px]">
           {/* Featured card (large) */}
           {featured && (
             <Link
               href={`/category/${featured.slug}`}
-              className="relative rounded-2xl shadow-md overflow-hidden group col-span-1 min-h-[220px] sm:col-span-2 sm:row-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-[540px] flex"
+              className="relative rounded-2xl shadow-md overflow-hidden group sm:col-span-2 sm:row-span-2"
             >
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
@@ -55,12 +54,16 @@ export default function CategoryGridSection({ categories }: Props) {
               <div className="absolute inset-0 pointer-events-none" style={{background: 'linear-gradient(to top, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)'}} />
               <div className="relative z-10 flex flex-col justify-end h-full p-8">
                 <span className="text-2xl lg:text-3xl font-bold text-white mb-2 drop-shadow">{featured.name || featured.title || 'Category'}</span>
-                <span className="inline-flex items-center font-semibold text-[#42A5F5] cursor-pointer transition-colors">
-                  <span className="px-4 py-1 rounded-[6px] bg-white group-hover:bg-[#F8F9FA] transition-all duration-200">
-                    <span className="font-semibold text-[#42A5F5] group-hover:text-[#63b3fa] hover:underline">Shop now</span>
-                    <span className="ml-1 font-semibold text-[#42A5F5] group-hover:text-[#63b3fa]">&gt;</span>
-                  </span>
-                </span>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = `/category/${featured.slug}`;
+                  }}
+                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                >
+                  View Collection
+                </button>
               </div>
             </Link>
           )}
@@ -90,13 +93,17 @@ export default function CategoryGridSection({ categories }: Props) {
               {/* Gradient scrim for text readability */}
               <div className="absolute inset-0 pointer-events-none" style={{background: 'linear-gradient(to top, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%)'}} />
               <div className="relative z-10 flex flex-col justify-end h-full p-6">
-                <span className="text-lg font-bold text-white mb-1 drop-shadow">{cat.name || cat.title || 'Category'}</span>
-                <span className="inline-flex items-center font-semibold text-[#42A5F5] cursor-pointer transition-colors">
-                  <span className="px-4 py-1 rounded-[6px] bg-white group-hover:bg-[#F8F9FA] transition-all duration-200">
-                    <span className="font-semibold text-[#42A5F5] group-hover:text-[#63b3fa] hover:underline">Shop now</span>
-                    <span className="ml-1 font-semibold text-[#42A5F5] group-hover:text-[#63b3fa]">&gt;</span>
-                  </span>
-                </span>
+                <span className="text-lg font-bold text-white mb-2 drop-shadow">{cat.name || cat.title || 'Category'}</span>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = `/category/${cat.slug}`;
+                  }}
+                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                >
+                  View Collection
+                </button>
               </div>
             </Link>
           ))}
