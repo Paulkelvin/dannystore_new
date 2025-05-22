@@ -17,7 +17,9 @@ import { useRouter } from 'next/navigation';
 interface Category {
   _id: string;
   name: string;
-  slug: string;
+  slug: {
+    current: string;
+  };
   description?: string;
   image: any; // Can be either Sanity image object or URL string
 }
@@ -125,7 +127,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           {/* Strategic Categories */}
           {strategicCategories.map((category, index) => (
             <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
-              <Link href={`/category/${category.slug}`} className="block group h-full">
+              <Link href={`/category/${category.slug.current}`} className="block group h-full">
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                   <Image
                     src={getImageUrl(category.image)}
@@ -144,7 +146,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        handleNavigation(`/category/${category.slug}`);
+                        handleNavigation(`/category/${category.slug.current}`);
                       }}
                       className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                     >
@@ -158,7 +160,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
 
           {/* Best Sellers Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link href="/products?filter=best-sellers" className="block group h-full">
+            <Link href="/category/best-sellers" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
                   <Image
@@ -196,7 +198,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
 
           {/* Latest Arrivals Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link href="/products?filter=latest-arrivals" className="block group h-full">
+            <Link href="/category/latest-arrivals" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.latestArrival ? (
                   <Image
