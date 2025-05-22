@@ -354,6 +354,142 @@ export default function Header() {
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      <div 
+        className={`fixed inset-0 z-[100] md:hidden transition-all duration-300 ${
+          isMobileMenuOpen 
+            ? 'opacity-100 pointer-events-auto' 
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Backdrop */}
+        <div 
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300"
+          onClick={toggleMobileMenu}
+        />
+        
+        {/* Menu Panel */}
+        <div 
+          className={`fixed inset-y-0 left-0 w-[280px] bg-white shadow-xl transform transition-transform duration-300 z-[101] ${
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          {/* Menu Header */}
+          <div className="flex items-center justify-between p-4 border-b">
+            <Link 
+              href="/" 
+              className="flex items-center"
+              onClick={toggleMobileMenu}
+            >
+              <Image
+                src="/images/dannystore_logo.png"
+                alt="DannyStore Logo"
+                width={120}
+                height={32}
+                className="h-8 w-auto"
+                priority
+              />
+            </Link>
+            <button
+              onClick={toggleMobileMenu}
+              className="p-2 text-gray-500 hover:text-gray-700"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Menu Items */}
+          <nav className="flex flex-col p-4">
+            <Link 
+              href="/" 
+              className={`px-4 py-3 text-base font-medium rounded-lg ${
+                pathname === '/' ? 'bg-[#42A5F5]/10 text-[#42A5F5]' : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={toggleMobileMenu}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/products" 
+              className={`px-4 py-3 text-base font-medium rounded-lg ${
+                pathname === '/products' ? 'bg-[#42A5F5]/10 text-[#42A5F5]' : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={toggleMobileMenu}
+            >
+              Shop All
+            </Link>
+            <Link 
+              href="/#categories" 
+              className="px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg"
+              onClick={toggleMobileMenu}
+            >
+              Categories
+            </Link>
+            <Link 
+              href="/about" 
+              className={`px-4 py-3 text-base font-medium rounded-lg ${
+                pathname === '/about' ? 'bg-[#42A5F5]/10 text-[#42A5F5]' : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={toggleMobileMenu}
+            >
+              About Us
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`px-4 py-3 text-base font-medium rounded-lg ${
+                pathname === '/contact' ? 'bg-[#42A5F5]/10 text-[#42A5F5]' : 'text-gray-700 hover:bg-gray-50'
+              }`}
+              onClick={toggleMobileMenu}
+            >
+              Contact
+            </Link>
+
+            {/* User Account Section */}
+            <div className="mt-4 pt-4 border-t">
+              {status === 'authenticated' ? (
+                <>
+                  <div className="px-4 py-2">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {session.user?.name || session.user?.email}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {session.user?.email}
+                    </p>
+                  </div>
+                  <Link
+                    href="/account"
+                    className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg"
+                    onClick={toggleMobileMenu}
+                  >
+                    My Account
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSignOut(e);
+                      toggleMobileMenu();
+                    }}
+                    className="w-full text-left px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg flex items-center gap-2"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg"
+                  onClick={toggleMobileMenu}
+                >
+                  Sign in
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
+      </div>
     </>
   );
 }
