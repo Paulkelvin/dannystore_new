@@ -304,7 +304,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           height: 56px !important;
           border-radius: 9999px !important;
           background: #FFC300 !important;
-          color: #333 !important;
+          color: white !important;
           box-shadow: 0 4px 16px rgba(0,0,0,0.10);
           display: flex;
           align-items: center;

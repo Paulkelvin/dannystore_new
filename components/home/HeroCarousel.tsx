@@ -104,7 +104,7 @@ export default function HeroCarousel() {
 
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center"
+      className="relative min-h-screen flex items-center justify-center bg-[#FFC300]"
       role="region"
       aria-label="Hero carousel"
       onMouseEnter={handleMouseEnter}

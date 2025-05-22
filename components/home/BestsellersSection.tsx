@@ -399,31 +399,31 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
             padding: 0;
           }
         }
-        .swiper-button-prev,
-        .swiper-button-next {
+        .bestseller-swiper .swiper-button-prev,
+        .bestseller-swiper .swiper-button-next {
           box-shadow: none;
           border: none;
           opacity: 0.8;
           background: #FFC300 !important;
-          color: #333 !important;
+          color: white !important;
           transition: opacity 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .swiper-button-prev:hover,
-        .swiper-button-next:hover {
+        .bestseller-swiper .swiper-button-prev:hover,
+        .bestseller-swiper .swiper-button-next:hover {
           opacity: 1;
           background: #FFD54F !important;
         }
-        .swiper-button-disabled {
+        .bestseller-swiper .swiper-button-disabled {
           opacity: 0.5;
           cursor: not-allowed;
         }
-        .swiper-slide {
+        .bestseller-swiper .swiper-slide {
           transition: transform 0.3s ease;
         }
-        .swiper-slide > div {
+        .bestseller-swiper .swiper-slide > div {
           width: 100%;
           max-width: 340px;
           margin: 0 auto;

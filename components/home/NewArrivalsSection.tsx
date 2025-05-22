@@ -315,20 +315,20 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             padding: 0;
           }
         }
-        .swiper-button-prev,
-        .swiper-button-next {
+        .newarrivals-swiper .swiper-button-prev,
+        .newarrivals-swiper .swiper-button-next {
           box-shadow: none;
           border: none;
           opacity: 0.8;
           background: #FFC300 !important;
-          color: #333 !important;
+          color: white !important;
           transition: opacity 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .swiper-button-prev:hover,
-        .swiper-button-next:hover {
+        .newarrivals-swiper .swiper-button-prev:hover,
+        .newarrivals-swiper .swiper-button-next:hover {
           opacity: 1;
           background: #FFD54F !important;
         }
