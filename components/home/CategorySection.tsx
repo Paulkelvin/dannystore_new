@@ -77,88 +77,21 @@ const getImageUrl = (image: any): string => {
 
 export default function CategorySection({ categories = [] }: CategorySectionProps) {
   const router = useRouter();
-  SwiperCore.use([Navigation, Pagination, Autoplay]);
-  const [featuredImages, setFeaturedImages] = useState({
-    bestSeller: null,
-    latest: null
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const swiperRef = useRef<SwiperCore>();
 
-  // Ensure categories is an array and has at least one item
-  const safeCategories = Array.isArray(categories) ? categories : [];
-  const strategicCategories = safeCategories.slice(0, 3);
-
-  // Fetch featured images for best sellers and latest arrivals
-  useEffect(() => {
-    const fetchFeaturedImages = async () => {
-      try {
-        setIsLoading(true);
-        // Modified queries to get any product if no best seller or latest is found
-        const bestSellerQuery = `*[_type == "product" && isBestSeller == true][0] {
-          mainImage
-        } || *[_type == "product"][0] {
-          mainImage
-        }`;
-        const latestQuery = `*[_type == "product"] | order(_createdAt desc)[0] {
-          mainImage
-        } || *[_type == "product"][0] {
-          mainImage
-        }`;
-
-        const [bestSeller, latest] = await Promise.all([
-          client.fetch(bestSellerQuery),
-          client.fetch(latestQuery)
-        ]);
-
-        setFeaturedImages({
-          bestSeller: bestSeller?.mainImage,
-          latest: latest?.mainImage
-        });
-      } catch (err) {
-        console.error('Error fetching featured images:', err);
-        // Don't set error state, just use fallback background
-        setFeaturedImages({
-          bestSeller: null,
-          latest: null
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFeaturedImages();
-  }, []);
-
-  if (error) {
-    return (
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-red-600">
-            <p>{error}</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="aspect-[4/5] bg-gray-200 animate-pulse rounded-lg" />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Add a navigation handler
   const handleNavigation = (path: string) => {
     router.push(path);
+  };
+
+  // Filter strategic categories (excluding best sellers and latest arrivals)
+  const strategicCategories = categories.filter(
+    (cat) => !cat.slug?.current?.includes('best-sellers') && !cat.slug?.current?.includes('latest-arrivals')
+  );
+
+  // Get featured images for best sellers and latest arrivals
+  const featuredImages = {
+    bestSeller: categories.find(cat => cat.slug?.current?.includes('best-sellers'))?.image,
+    latestArrival: categories.find(cat => cat.slug?.current?.includes('latest-arrivals'))?.image
   };
 
   return (
@@ -166,23 +99,21 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
       <div className="w-full">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h2 className="text-2xl font-bold text-[#333333]">
-                Discovery Hub
-              </h2>
-              <div className="flex gap-2 items-center">
-                <button className="swiper-button-prev !static !w-8 !h-8 !min-w-8 !min-h-8 !max-w-8 !max-h-8 !m-0 !p-0 !bg-transparent !shadow-none !text-gray-600 hover:!text-gray-900 !opacity-70 hover:!opacity-100" />
-                <button className="swiper-button-next !static !w-8 !h-8 !min-w-8 !min-h-8 !max-w-8 !max-h-8 !m-0 !p-0 !bg-transparent !shadow-none !text-gray-600 hover:!text-gray-900 !opacity-70 hover:!opacity-100" />
-              </div>
-            </div>
+            <h2 className="text-2xl font-bold text-[#333333]">
+              Discovery Hub
+            </h2>
           </div>
         </div>
+        
         <Swiper
+          onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          modules={[Navigation, Pagination, Autoplay]}
           loop={true}
           spaceBetween={16}
           slidesPerView={1.5}
           centeredSlides={false}
-          navigation
           autoplay={{ delay: 3500, disableOnInteraction: false }}
           breakpoints={{
             640: { slidesPerView: 1.5, spaceBetween: 16 },
@@ -202,7 +133,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={index < 2} // Prioritize loading for first two images
+                    priority={index < 2}
                     quality={85}
                     loading={index < 2 ? 'eager' : 'lazy'}
                   />
@@ -226,7 +157,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           ))}
 
           {/* Best Sellers Card */}
-          <SwiperSlide>
+          <SwiperSlide className="mb-6 sm:mb-0">
             <Link href="/products?filter=best-sellers" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
@@ -264,12 +195,12 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           </SwiperSlide>
 
           {/* Latest Arrivals Card */}
-          <SwiperSlide>
-            <Link href="/products?filter=latest" className="block group h-full">
+          <SwiperSlide className="mb-6 sm:mb-0">
+            <Link href="/products?filter=latest-arrivals" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                {featuredImages.latest ? (
+                {featuredImages.latestArrival ? (
                   <Image
-                    src={getImageUrl(featuredImages.latest)}
+                    src={getImageUrl(featuredImages.latestArrival)}
                     alt="Latest Arrivals"
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
@@ -279,7 +210,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     loading="eager"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#42A5F5] to-[#64B5F6] flex items-center justify-center">
                     <span className="text-white text-lg font-medium">Latest Arrivals</span>
                   </div>
                 )}
@@ -302,29 +233,28 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           </SwiperSlide>
         </Swiper>
       </div>
-      {/* If Swiper navigation buttons are present, style them as perfect circles */}
+      {/* Remove the global styles for swiper navigation buttons since we're not using them anymore */}
       <style jsx global>{`
-        .category-swiper .swiper-button-prev,
-        .category-swiper .swiper-button-next {
-          width: 32px !important;
-          height: 32px !important;
+        .category-swiper .swiper-slide {
+          transition: transform 0.3s ease;
+        }
+        .category-swiper .swiper-slide > div {
+          width: 100%;
+          max-width: 340px;
+          margin: 0 auto;
+        }
+        .category-swiper .swiper-button-next,
+        .category-swiper .swiper-button-prev {
+          width: 30px !important;
+          height: 30px !important;
+          background: rgba(255, 255, 255, 0.9) !important;
           border-radius: 50% !important;
-          background-color: rgba(255, 255, 255, 0.8) !important;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        }
+        .category-swiper .swiper-button-next:after,
+        .category-swiper .swiper-button-prev:after {
+          font-size: 14px !important;
           color: #333333 !important;
-          font-size: 16px !important;
-          opacity: 0.7;
-          transition: opacity 0.2s ease;
-        }
-        .category-swiper .swiper-button-next:hover,
-        .category-swiper .swiper-button-prev:hover {
-          opacity: 1;
-        }
-        .category-swiper .swiper-button-next::after,
-        .category-swiper .swiper-button-prev::after {
-          font-size: 16px !important;
-        }
-        .category-swiper .swiper-button-disabled {
-          opacity: 0.35 !important;
         }
       `}</style>
     </section>

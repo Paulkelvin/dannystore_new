@@ -206,143 +206,6 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <button 
-                onClick={toggleSearch}
-                className={`transition-colors ${
-                  isSearchOpen 
-                    ? 'text-[#42A5F5]' 
-                    : isHomePage && !isScrolled 
-                      ? 'text-white hover:text-white/80' 
-                      : 'text-white hover:text-white/80'
-                }`}
-                aria-label="Search"
-              >
-                <Search className="w-6 h-6" />
-              </button>
-              
-              {/* Search Dropdown */}
-              <div 
-                className={`absolute right-0 top-full mt-2 w-[400px] bg-white rounded-lg shadow-lg transition-all duration-200 ${
-                  isSearchOpen 
-                    ? 'opacity-100 translate-y-0 pointer-events-auto' 
-                    : 'opacity-0 -translate-y-2 pointer-events-none'
-                }`}
-              >
-                <div className="p-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      placeholder="Search products..."
-                      className="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:border-[#42A5F5] focus:outline-none focus:ring-1 focus:ring-[#42A5F5]"
-                    />
-                    {searchQuery && (
-                      <button
-                        onClick={() => {
-                          setSearchQuery('');
-                          setSearchResults([]);
-                          if (searchInputRef.current) {
-                            searchInputRef.current.focus();
-                          }
-                        }}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Search Results */}
-                  <div className="mt-4 max-h-[400px] overflow-y-auto">
-                    {isSearching ? (
-                      <div className="flex justify-center py-4">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#42A5F5] border-t-transparent"></div>
-                      </div>
-                    ) : searchResults.length > 0 ? (
-                      <div className="space-y-2">
-                        {searchResults.map((result) => (
-                          <button
-                            key={result._id}
-                            onClick={() => handleResultClick(result.slug.current)}
-                            className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                          >
-                            <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
-                              {result.mainImage && (
-                                <Image
-                                  src={urlFor(result.mainImage)?.width(48).height(48).url() ?? '/images/placeholder.png'}
-                                  alt={result.name}
-                                  fill
-                                  className="object-cover"
-                                />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-medium text-gray-900 truncate">{result.name}</h3>
-                              <p className="text-sm text-gray-500 truncate">{result.category?.name}</p>
-                              <p className="text-sm font-medium text-[#42A5F5]">${result.price?.toFixed(2)}</p>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    ) : searchQuery.length >= 2 ? (
-                      <p className="text-center text-gray-500 py-4">No products found</p>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={handleUserMenuClick}
-                className={`transition-colors p-1 rounded-full ${
-                  isHomePage && !isScrolled 
-                    ? 'hover:bg-white/10' 
-                    : 'hover:bg-white/20'
-                }`}
-                aria-label={status === 'authenticated' ? 'Open user menu' : 'Sign in'}
-              >
-                <User className="w-6 h-6" />
-              </button>
-              <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 ease-out
-                  ${isUserMenuOpen && status === 'authenticated'
-                    ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 -translate-y-2 pointer-events-none'
-                  }`}
-                style={{ willChange: 'opacity, transform' }}
-              >
-                {isUserMenuOpen && status === 'authenticated' && (
-                  <>
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {session.user?.name || session.user?.email}
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {session.user?.email}
-                      </p>
-                    </div>
-                    <Link
-                      href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      My Account
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign out
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
             <Link href="/cart" className="relative transition-colors hover:text-white/80">
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
@@ -446,6 +309,20 @@ export default function Header() {
               Contact
             </Link>
 
+            {/* Search Section */}
+            <div className="mt-4 pt-4 border-t">
+              <button
+                onClick={() => {
+                  toggleSearch();
+                  toggleMobileMenu();
+                }}
+                className="w-full px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg flex items-center gap-2"
+              >
+                <Search className="w-5 h-5" />
+                Search
+              </button>
+            </div>
+
             {/* User Account Section */}
             <div className="mt-4 pt-4 border-t">
               {status === 'authenticated' ? (
@@ -488,6 +365,103 @@ export default function Header() {
               )}
             </div>
           </nav>
+        </div>
+      </div>
+
+      {/* Search Dropdown - Keep this outside the mobile menu */}
+      <div 
+        className={`fixed inset-0 z-[102] transition-all duration-200 ${
+          isSearchOpen 
+            ? 'opacity-100 pointer-events-auto' 
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div 
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300"
+          onClick={toggleSearch}
+        />
+        <div 
+          className={`fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl transform transition-transform duration-300 ${
+            isSearchOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between p-4 border-b">
+            <h2 className="text-lg font-medium text-gray-900">Search</h2>
+            <button
+              onClick={toggleSearch}
+              className="p-2 text-gray-500 hover:text-gray-700"
+              aria-label="Close search"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+          <div className="p-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search products..."
+                className="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:border-[#42A5F5] focus:outline-none focus:ring-1 focus:ring-[#42A5F5]"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSearchResults([]);
+                    if (searchInputRef.current) {
+                      searchInputRef.current.focus();
+                    }
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+
+            {/* Search Results */}
+            <div className="mt-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+              {isSearching ? (
+                <div className="flex justify-center py-4">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#42A5F5] border-t-transparent"></div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="space-y-2">
+                  {searchResults.map((result) => (
+                    <button
+                      key={result._id}
+                      onClick={() => {
+                        handleResultClick(result.slug.current);
+                        toggleSearch();
+                      }}
+                      className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                    >
+                      <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                        {result.mainImage && (
+                          <Image
+                            src={urlFor(result.mainImage)?.width(48).height(48).url() ?? '/images/placeholder.png'}
+                            alt={result.name}
+                            fill
+                            className="object-cover"
+                          />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 truncate">{result.name}</h3>
+                        <p className="text-sm text-gray-500 truncate">{result.category?.name}</p>
+                        <p className="text-sm font-medium text-[#42A5F5]">${result.price?.toFixed(2)}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : searchQuery.length >= 2 ? (
+                <p className="text-center text-gray-500 py-4">No products found</p>
+              ) : null}
+            </div>
+          </div>
         </div>
       </div>
     </>
