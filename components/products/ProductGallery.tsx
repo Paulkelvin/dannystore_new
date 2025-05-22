@@ -30,6 +30,14 @@ export default function ProductGallery({ mainImage, gallery = [], productName }:
   const selectedImageIndex = Math.min(selectedImage, images.length - 1);
   const currentImage = images[selectedImageIndex];
 
+  // Debug log for gallery images
+  console.log('ProductGallery: gallery prop', gallery);
+  (gallery || []).forEach((img, i) => {
+    if (!img?.asset?._ref) {
+      console.warn('ProductGallery: gallery image missing asset._ref', img, i);
+    }
+  });
+
   if (!currentImage?.asset) {
     return (
       <div className="aspect-square w-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
