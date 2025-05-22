@@ -186,10 +186,10 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             <p className="hidden sm:block text-gray-600">Check out our newest products</p>
           </div>
           <Link
-            href="/category/latest-arrivals"
-            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa]"
+            href="/category/new-arrivals"
+            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa] flex items-center gap-1"
           >
-            View All &rarr;
+            View All <span className="text-lg">&rarr;</span>
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}

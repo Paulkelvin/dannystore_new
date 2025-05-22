@@ -271,9 +271,9 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
           </div>
           <Link
             href="/category/best-sellers"
-            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa]"
+            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa] flex items-center gap-1"
           >
-            View All &rarr;
+            View All <span className="text-lg">&rarr;</span>
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}
