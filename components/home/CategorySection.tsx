@@ -306,12 +306,24 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           background: #FFC300 !important;
           color: white !important;
           box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
           font-size: 1.5rem;
           opacity: 0.9;
           transition: all 0.2s ease;
+          margin-top: -20px !important; /* Half of the height to center vertically */
+        }
+        .category-swiper .swiper-button-prev::after,
+        .category-swiper .swiper-button-next::after {
+          font-size: 1.25rem !important;
+          font-weight: bold;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          margin: 0 !important;
+          line-height: 1 !important;
         }
         .category-swiper .swiper-button-prev:hover,
         .category-swiper .swiper-button-next:hover {
@@ -322,11 +334,6 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
         .category-swiper .swiper-button-disabled {
           opacity: 0.5;
           cursor: not-allowed;
-        }
-        .category-swiper .swiper-button-prev::after,
-        .category-swiper .swiper-button-next::after {
-          font-size: 1.25rem !important;
-          font-weight: bold;
         }
       `}</style>
     </section>

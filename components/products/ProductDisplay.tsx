@@ -67,7 +67,7 @@ const ProductDisplay: FC<ProductDisplayProps> = ({ product, relatedProducts, isL
 
   return (
     <>
-      <div className="bg-[#F8F9FA] pt-20 pb-24 min-h-screen">
+      <div className="bg-[#F8F9FA] pt-32 pb-24 min-h-screen">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
             {/* Product gallery */}

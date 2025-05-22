@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+import { FaCcVisa, FaCcMastercard, FaCcPaypal } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -66,10 +67,10 @@ export default function Footer() {
       </div>
       <div className="max-w-7xl mx-auto mt-10 pt-8 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400">
         <div className="mb-2 md:mb-0">© {new Date().getFullYear()} dannystore. All rights reserved.</div>
-        <div className="flex gap-2 items-center">
-          <img src="/visa.svg" alt="Visa" className="h-5" />
-          <img src="/mastercard.svg" alt="Mastercard" className="h-5" />
-          <img src="/paypal.svg" alt="PayPal" className="h-5" />
+        <div className="flex gap-4 items-center">
+          <FaCcVisa className="h-6 w-6 text-gray-400" aria-label="Visa" />
+          <FaCcMastercard className="h-6 w-6 text-gray-400" aria-label="Mastercard" />
+          <FaCcPaypal className="h-6 w-6 text-gray-400" aria-label="PayPal" />
         </div>
       </div>
     </footer>
