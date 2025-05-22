@@ -401,20 +401,34 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
         }
         .bestseller-swiper .swiper-button-prev,
         .bestseller-swiper .swiper-button-next {
-          box-shadow: none;
-          border: none;
-          opacity: 0.8;
+          width: 48px !important;
+          height: 48px !important;
+          min-width: 48px !important;
+          min-height: 48px !important;
+          max-width: 48px !important;
+          max-height: 48px !important;
+          border-radius: 50% !important;
+          padding: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
           background: #FFC300 !important;
           color: white !important;
-          transition: opacity 0.2s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+          font-size: 1.5rem;
+          opacity: 0.9;
+          transition: all 0.2s ease;
         }
-        .bestseller-swiper .swiper-button-prev:hover,
-        .bestseller-swiper .swiper-button-next:hover {
-          opacity: 1;
-          background: #FFD54F !important;
+        .bestseller-swiper .swiper-button-prev::after,
+        .bestseller-swiper .swiper-button-next::after {
+          font-size: 1.25rem !important;
+          font-weight: bold;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          margin: 0 !important;
+          line-height: 1 !important;
         }
         .bestseller-swiper .swiper-button-disabled {
           opacity: 0.5;
