@@ -165,9 +165,17 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
     <section className="py-16 sm:py-24 bg-white">
       <div className="w-full">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center tracking-tight">
-            Discovery Hub
-          </h2>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <h2 className="text-2xl font-bold text-[#333333]">
+                Discovery Hub
+              </h2>
+              <div className="flex gap-2 items-center">
+                <button className="swiper-button-prev !static !w-8 !h-8 !min-w-8 !min-h-8 !max-w-8 !max-h-8 !m-0 !p-0 !bg-transparent !shadow-none !text-gray-600 hover:!text-gray-900 !opacity-70 hover:!opacity-100" />
+                <button className="swiper-button-next !static !w-8 !h-8 !min-w-8 !min-h-8 !max-w-8 !max-h-8 !m-0 !p-0 !bg-transparent !shadow-none !text-gray-600 hover:!text-gray-900 !opacity-70 hover:!opacity-100" />
+              </div>
+            </div>
+          </div>
         </div>
         <Swiper
           loop={true}
@@ -207,7 +215,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                         e.stopPropagation();
                         handleNavigation(`/category/${category.slug}`);
                       }}
-                      className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                      className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                     >
                       View Collection
                     </button>
@@ -246,7 +254,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                       e.stopPropagation();
                       handleNavigation('/category/best-sellers');
                     }}
-                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                   >
                     View Collection
                   </button>
@@ -284,7 +292,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                       e.stopPropagation();
                       handleNavigation('/category/latest-arrivals');
                     }}
-                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                   >
                     Shop Now
                   </button>
@@ -298,40 +306,25 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
       <style jsx global>{`
         .category-swiper .swiper-button-prev,
         .category-swiper .swiper-button-next {
-          width: 40px !important;
-          height: 40px !important;
-          border-radius: 9999px !important;
-          background: #FFC300 !important;
-          color: white !important;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          font-size: 1.5rem;
-          opacity: 0.9;
-          transition: all 0.2s ease;
-          margin-top: -20px !important; /* Half of the height to center vertically */
+          width: 32px !important;
+          height: 32px !important;
+          border-radius: 50% !important;
+          background-color: rgba(255, 255, 255, 0.8) !important;
+          color: #333333 !important;
+          font-size: 16px !important;
+          opacity: 0.7;
+          transition: opacity 0.2s ease;
         }
-        .category-swiper .swiper-button-prev::after,
-        .category-swiper .swiper-button-next::after {
-          font-size: 1.25rem !important;
-          font-weight: bold;
-          position: absolute !important;
-          top: 50% !important;
-          left: 50% !important;
-          transform: translate(-50%, -50%) !important;
-          margin: 0 !important;
-          line-height: 1 !important;
-        }
-        .category-swiper .swiper-button-prev:hover,
-        .category-swiper .swiper-button-next:hover {
+        .category-swiper .swiper-button-next:hover,
+        .category-swiper .swiper-button-prev:hover {
           opacity: 1;
-          background: #F0B300 !important;
-          transform: scale(1.05);
+        }
+        .category-swiper .swiper-button-next::after,
+        .category-swiper .swiper-button-prev::after {
+          font-size: 16px !important;
         }
         .category-swiper .swiper-button-disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+          opacity: 0.35 !important;
         }
       `}</style>
     </section>

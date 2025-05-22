@@ -399,42 +399,27 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
             padding: 0;
           }
         }
-        .bestseller-swiper .swiper-button-prev,
-        .bestseller-swiper .swiper-button-next {
+        .bestseller-swiper .swiper-button-next,
+        .bestseller-swiper .swiper-button-prev {
           width: 32px !important;
           height: 32px !important;
-          min-width: 32px !important;
-          min-height: 32px !important;
-          max-width: 32px !important;
-          max-height: 32px !important;
-          border-radius: 50% !important;
-          padding: 0 !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          background: transparent !important;
-          color: #4B5563 !important;
-          font-size: 1.25rem;
-          transition: all 0.2s ease;
+          background-color: rgba(255, 255, 255, 0.8) !important;
+          border-radius: 50%;
+          color: #333333 !important;
+          font-size: 16px !important;
+          opacity: 0.7;
+          transition: opacity 0.2s ease;
         }
-        .bestseller-swiper .swiper-button-prev::after,
-        .bestseller-swiper .swiper-button-next::after {
-          font-size: 1rem !important;
-          font-weight: bold;
-          position: absolute !important;
-          top: 50% !important;
-          left: 50% !important;
-          transform: translate(-50%, -50%) !important;
-          margin: 0 !important;
-          line-height: 1 !important;
+        .bestseller-swiper .swiper-button-next:hover,
+        .bestseller-swiper .swiper-button-prev:hover {
+          opacity: 1;
         }
-        .bestseller-swiper .swiper-button-prev:hover,
-        .bestseller-swiper .swiper-button-next:hover {
-          color: #111827 !important;
+        .bestseller-swiper .swiper-button-next::after,
+        .bestseller-swiper .swiper-button-prev::after {
+          font-size: 16px !important;
         }
         .bestseller-swiper .swiper-button-disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+          opacity: 0.35 !important;
         }
         .bestseller-swiper .swiper-slide {
           transition: transform 0.3s ease;
