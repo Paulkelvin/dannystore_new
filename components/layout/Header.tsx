@@ -20,6 +20,18 @@ interface SearchResult {
     _id: string;
     name: string;
   };
+  tags?: string[];
+  description?: string;
+}
+
+// Utility: Normalize and basic stemmer
+function normalizeAndStem(str: string): string {
+  if (!str) return '';
+  // Lowercase, remove spaces, basic stemming (remove common suffixes)
+  let s = str.toLowerCase().replace(/\s+/g, '');
+  // Basic stemming: remove 'ing', 'ed', 's' at the end
+  s = s.replace(/(ing|ed|s)$/g, '');
+  return s;
 }
 
 export default function Header() {
@@ -86,18 +98,13 @@ export default function Header() {
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-
-    // Clear previous timeout
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-
     if (query.length < 2) {
       setSearchResults([]);
       return;
     }
-
-    // Set a new timeout for search
     searchTimeoutRef.current = setTimeout(async () => {
       setIsSearching(true);
       try {
@@ -106,7 +113,7 @@ export default function Header() {
           description match $query || 
           category->name match $query || 
           tags[] match $query
-        )] | order(_createdAt desc)[0...5] {
+        )] | order(_createdAt desc)[0...10] {
           _id,
           name,
           price,
@@ -117,10 +124,22 @@ export default function Header() {
             name
           }
         }`;
-
-        const results = await client.fetch<SearchResult[]>(searchQuery, { query: `*${query}*` } as any);
-        console.log('Search results:', results); // Add logging
-        setSearchResults(results || []);
+        const results = await client.fetch<SearchResult[]>(searchQuery, { query: `*${query}*` } as any) || [];
+        // Post-process for typo-tolerance and stemming
+        const normQuery = normalizeAndStem(query);
+        const filtered = results.filter(product => {
+          const fields = [
+            product.name,
+            product.category?.name,
+            product.price?.toString(),
+            product._id,
+            product.slug?.current,
+            ...(product.tags || []),
+            product.description || ''
+          ];
+          return fields.some(field => normalizeAndStem(field).includes(normQuery));
+        });
+        setSearchResults(filtered);
       } catch (error) {
         console.error('Search error:', error);
         setSearchResults([]);
@@ -131,7 +150,7 @@ export default function Header() {
   };
 
   const handleResultClick = (slug: string) => {
-    router.push(`/product/${slug}`);
+    router.push(`/products/${slug}`);
     setIsSearchOpen(false);
     setSearchQuery('');
     setSearchResults([]);
@@ -279,126 +298,4 @@ export default function Header() {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={handleUserMenuClick}
-                className={`transition-colors p-1 rounded-full ${
-                  isHomePage && !isScrolled 
-                    ? 'hover:bg-white/10' 
-                    : 'hover:bg-white/20'
-                }`}
-                aria-label={status === 'authenticated' ? 'Open user menu' : 'Sign in'}
-              >
-                <User className="w-6 h-6" />
-              </button>
-              <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 ease-out
-                  ${isUserMenuOpen && status === 'authenticated'
-                    ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 -translate-y-2 pointer-events-none'
-                  }`}
-                style={{ willChange: 'opacity, transform' }}
-              >
-                {isUserMenuOpen && status === 'authenticated' && (
-                  <>
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {session.user?.name || session.user?.email}
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {session.user?.email}
-                      </p>
-                    </div>
-                    <Link
-                      href="/account"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      My Account
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign out
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-            <Link href="/cart" className="relative transition-colors hover:text-white/80">
-              <ShoppingBag className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#FFC300] text-[#333333] text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center border-2 border-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </div>
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={toggleMobileMenu}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Mobile Menu Panel */}
-        <div 
-          className={`fixed top-0 left-0 h-full w-[280px] bg-white text-gray-900 transform transition-transform duration-300 ease-in-out z-50 md:hidden ${
-            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-semibold">Menu</h2>
-            <button 
-              onClick={toggleMobileMenu}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          <nav className="flex flex-col p-4">
-            <Link 
-              href="/" 
-              className="py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={toggleMobileMenu}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/products" 
-              className="py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={toggleMobileMenu}
-            >
-              Shop All
-            </Link>
-            <Link 
-              href="/#categories" 
-              className="py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={toggleMobileMenu}
-            >
-              Categories
-            </Link>
-            <Link 
-              href="/about" 
-              className="py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={toggleMobileMenu}
-            >
-              About Us
-            </Link>
-            <Link 
-              href="/contact" 
-              className="py-3 px-4 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={toggleMobileMenu}
-            >
-              Contact
-            </Link>
-          </nav>
-        </div>
-      </header>
-    </>
-  );
-} 
+                className={`
