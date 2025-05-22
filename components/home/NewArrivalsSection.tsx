@@ -186,7 +186,7 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             <p className="hidden sm:block text-gray-600">Check out our newest products</p>
           </div>
           <Link
-            href="/category/new-arrivals"
+            href="/category/latest-arrivals"
             className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa] flex items-center gap-1"
           >
             View All <span className="text-lg">&rarr;</span>
@@ -315,42 +315,27 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
             padding: 0;
           }
         }
-        .newarrivals-swiper .swiper-button-prev,
-        .newarrivals-swiper .swiper-button-next {
+        .newarrivals-swiper .swiper-button-next,
+        .newarrivals-swiper .swiper-button-prev {
           width: 32px !important;
           height: 32px !important;
-          min-width: 32px !important;
-          min-height: 32px !important;
-          max-width: 32px !important;
-          max-height: 32px !important;
-          border-radius: 50% !important;
-          padding: 0 !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          background: transparent !important;
-          color: #4B5563 !important;
-          font-size: 1.25rem;
-          transition: all 0.2s ease;
+          background-color: rgba(255, 255, 255, 0.8) !important;
+          border-radius: 50%;
+          color: #333333 !important;
+          font-size: 16px !important;
+          opacity: 0.7;
+          transition: opacity 0.2s ease;
         }
-        .newarrivals-swiper .swiper-button-prev::after,
-        .newarrivals-swiper .swiper-button-next::after {
-          font-size: 1rem !important;
-          font-weight: bold;
-          position: absolute !important;
-          top: 50% !important;
-          left: 50% !important;
-          transform: translate(-50%, -50%) !important;
-          margin: 0 !important;
-          line-height: 1 !important;
+        .newarrivals-swiper .swiper-button-next:hover,
+        .newarrivals-swiper .swiper-button-prev:hover {
+          opacity: 1;
         }
-        .newarrivals-swiper .swiper-button-prev:hover,
-        .newarrivals-swiper .swiper-button-next:hover {
-          color: #111827 !important;
+        .newarrivals-swiper .swiper-button-next::after,
+        .newarrivals-swiper .swiper-button-prev::after {
+          font-size: 16px !important;
         }
         .newarrivals-swiper .swiper-button-disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+          opacity: 0.35 !important;
         }
         .swiper-slide {
           transition: transform 0.3s ease;
