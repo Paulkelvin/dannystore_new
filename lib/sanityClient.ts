@@ -25,11 +25,33 @@ const builder = imageUrlBuilder(sanityConfig);
 
 // Export the urlFor function with proper typing
 export function urlFor(source: SanityImageSource) {
-  if (!source) return null;
+  if (!source) {
+    console.warn('urlFor: No source provided');
+    return null;
+  }
+  
+  // Type guard to check if source has asset property
+  const hasAsset = (src: any): src is { asset: { _ref: string } } => {
+    return typeof src === 'object' && src !== null && 'asset' in src && src.asset?._ref;
+  };
+
+  if (!hasAsset(source)) {
+    console.warn('urlFor: Invalid image source - missing asset reference', source);
+    return null;
+  }
+
   try {
-    return builder.image(source);
+    const builder = imageUrlBuilder(sanityConfig);
+    const imageUrl = builder.image(source);
+    
+    if (!imageUrl) {
+      console.warn('urlFor: Failed to generate image URL', source);
+      return null;
+    }
+    
+    return imageUrl;
   } catch (error) {
-    console.error('Error generating image URL:', error);
+    console.error('Error generating image URL:', error, source);
     return null;
   }
 }

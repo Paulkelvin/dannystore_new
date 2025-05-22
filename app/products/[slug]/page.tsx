@@ -28,17 +28,11 @@ const productQuery = groq`
       value
     },
     mainImage {
-      asset-> {
-        _id,
-        url
-      },
+      asset->,
       alt
     },
     gallery[] {
-      asset-> {
-        _id,
-        url
-      },
+      asset->,
       alt
     },
     variants[] {
