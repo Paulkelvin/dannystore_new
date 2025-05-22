@@ -49,9 +49,6 @@ export default function BrandPillarsSection() {
           <h2 className="text-3xl font-bold tracking-tight text-[#333333] sm:text-4xl">
             Why Choose Us?
           </h2>
-          <p className="mt-4 text-lg text-[#6c757d]">
-            Experience shopping that puts you first
-          </p>
         </div>
 
         {/* Pillars Grid */}
