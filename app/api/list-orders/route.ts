@@ -28,11 +28,7 @@ export async function GET(request: Request) {
           price,
           image{
             _type,
-            asset->{
-              _id,
-              _ref,
-              url
-            }
+            asset,
           },
           color,
           size
