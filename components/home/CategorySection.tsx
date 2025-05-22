@@ -300,8 +300,8 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
       <style jsx global>{`
         .category-swiper .swiper-button-prev,
         .category-swiper .swiper-button-next {
-          width: 56px !important;
-          height: 56px !important;
+          width: 40px !important;
+          height: 40px !important;
           border-radius: 9999px !important;
           background: #FFC300 !important;
           color: white !important;
@@ -309,14 +309,24 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 2rem;
+          font-size: 1.5rem;
           opacity: 0.9;
-          transition: opacity 0.2s;
+          transition: all 0.2s ease;
         }
         .category-swiper .swiper-button-prev:hover,
         .category-swiper .swiper-button-next:hover {
           opacity: 1;
-          background: #FFD54F !important;
+          background: #F0B300 !important;
+          transform: scale(1.05);
+        }
+        .category-swiper .swiper-button-disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        .category-swiper .swiper-button-prev::after,
+        .category-swiper .swiper-button-next::after {
+          font-size: 1.25rem !important;
+          font-weight: bold;
         }
       `}</style>
     </section>
