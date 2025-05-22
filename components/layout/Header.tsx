@@ -167,7 +167,7 @@ export default function Header() {
               <Menu className="w-6 h-6" />
             </button>
             <Link href="/" className={`flex items-center p-2 rounded-lg transition-all duration-300 ${
-              isHomePage && isScrolled ? 'bg-white shadow-sm' : ''
+              isHomePage && !isScrolled ? '' : 'bg-white shadow-sm'
             }`}>
               <Image
                 src="/images/dannystore_logo.png"
@@ -179,11 +179,11 @@ export default function Header() {
               />
             </Link>
             <nav className="hidden md:flex gap-6 ml-8 text-base font-medium">
-              <Link href="/" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Home</Link>
-              <Link href="/products" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Shop All</Link>
-              <Link href="/#categories" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Categories</Link>
-              <Link href="/about" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>About Us</Link>
-              <Link href="/contact" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : isHomePage ? 'text-white' : 'text-[#333333]'}`}>Contact</Link>
+              <Link href="/" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-white'}`}>Home</Link>
+              <Link href="/products" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-white'}`}>Shop All</Link>
+              <Link href="/#categories" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-white'}`}>Categories</Link>
+              <Link href="/about" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-white'}`}>About Us</Link>
+              <Link href="/contact" className={`hover:underline underline-offset-4 ${isHomePage && !isScrolled ? 'text-white' : 'text-white'}`}>Contact</Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
