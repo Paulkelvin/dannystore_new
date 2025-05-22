@@ -54,17 +54,17 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       {/* Hero Section */}
-      <section className="relative h-[60vh] bg-gradient-to-r from-[#42A5F5] to-[#1e88e5] text-white">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative container mx-auto px-4 h-full flex items-center">
+      <section className="relative flex items-center justify-center h-[60vh] bg-gradient-to-r from-[#42A5F5] to-[#1e88e5] text-white shadow-lg rounded-b-3xl">
+        <div className="absolute inset-0 bg-black/20 rounded-b-3xl" />
+        <div className="relative container mx-auto px-4 flex flex-col items-center justify-center h-full">
           <motion.div 
-            className="max-w-2xl"
+            className="max-w-2xl text-center"
             initial="initial"
             animate="animate"
             variants={fadeIn}
           >
-            <h1 className="text-5xl font-bold mb-6">Our Story</h1>
-            <p className="text-xl leading-relaxed text-white/90">
+            <h1 className="text-5xl font-bold mb-8 mt-4 drop-shadow-lg">Our Story</h1>
+            <p className="text-xl leading-relaxed text-white/90 mb-2 md:mb-4">
               Founded in 2020, we've grown from a small local store to a beloved destination for quality products and exceptional service. Our mission is to bring joy and convenience to our customers through carefully curated products and a seamless shopping experience.
             </p>
           </motion.div>
@@ -75,7 +75,7 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <motion.h2 
-            className="text-4xl font-bold text-center mb-4 text-[#333333]"
+            className="text-4xl font-bold text-center mb-8 text-[#333333]"
             initial="initial"
             animate="animate"
             variants={fadeIn}
@@ -94,7 +94,7 @@ export default function AboutPage() {
             {values.map((value, index) => (
               <motion.div
                 key={value.title}
-                className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+                className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 text-center"
                 initial="initial"
                 animate="animate"
                 variants={fadeIn}
@@ -112,7 +112,7 @@ export default function AboutPage() {
       <section className="py-20 bg-[#F8F9FA]">
         <div className="container mx-auto px-4">
           <motion.h2 
-            className="text-4xl font-bold text-center mb-4 text-[#333333]"
+            className="text-4xl font-bold text-center mb-8 text-[#333333]"
             initial="initial"
             animate="animate"
             variants={fadeIn}

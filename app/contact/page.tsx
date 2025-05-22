@@ -59,8 +59,8 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-[#42A5F5] to-[#1e88e5] text-white">
-        <div className="absolute inset-0 bg-black/10" />
+      <section className="relative py-28 md:py-36 bg-[#42A5F5] text-white shadow-lg rounded-b-3xl">
+        <div className="absolute inset-0 bg-black/10 rounded-b-3xl" />
         <div className="relative container mx-auto px-4">
           <motion.div
             initial="initial"
@@ -69,8 +69,8 @@ export default function ContactPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl mx-auto text-center"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Get in Touch</h1>
-            <p className="text-xl text-white/90">
+            <h1 className="text-4xl md:text-5xl font-bold mb-8 mt-4 drop-shadow-lg">Get in Touch</h1>
+            <p className="text-xl text-white/90 mb-2 md:mb-4">
               We're here to help and answer any questions you might have. We look forward to hearing from you.
             </p>
           </motion.div>
