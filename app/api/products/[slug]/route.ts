@@ -90,18 +90,8 @@ export async function GET(
       );
     }
 
-    // Transform the product to include image URLs
-    const transformedProduct = {
-      ...product,
-      image: (product.image && product.image.asset) ? (urlFor(product.image)?.url() ?? null) : null,
-      images: product.images?.map(img => (img && img.asset) ? (urlFor(img)?.url() ?? null) : null).filter(Boolean) ?? [],
-      variants: product.variants?.map(variant => ({
-        ...variant,
-        image: (variant.image && variant.image.asset) ? (urlFor(variant.image)?.url() ?? null) : null,
-      })) ?? [],
-    };
-
-    return NextResponse.json(transformedProduct);
+    // Do not transform the product, just return as-is
+    return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(

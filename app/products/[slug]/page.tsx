@@ -28,11 +28,11 @@ const productQuery = groq`
       value
     },
     mainImage {
-      asset->,
+      asset,
       alt
     },
     gallery[] {
-      asset->,
+      asset,
       alt
     },
     variants[] {
@@ -71,10 +71,7 @@ const relatedProductsQuery = groq`
     reviewCount,
     stock,
     mainImage {
-      asset-> {
-        _id,
-        url
-      },
+      asset,
       alt
     },
     variants[] {

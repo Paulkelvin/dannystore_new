@@ -10,8 +10,8 @@ const allProductsQuery = groq`*[_type == "product"] {
   "slug": slug.current,
   price,
   mainImage {
-    ...,
-    "alt": asset->alt
+    asset,
+    alt
   },
   keyBenefits,
   specifications,

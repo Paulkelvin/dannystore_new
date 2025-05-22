@@ -50,28 +50,13 @@ export async function GET(request: Request) {
       }
     });
 
-    // Transform products to include image URLs
-    const transformedProducts = products.map((product: any) => ({
-      ...product,
-      mainImage: product.mainImage ? {
-        ...product.mainImage,
-        url: urlFor(product.mainImage)?.url() ?? '/images/placeholder.png',
-      } : null,
-      variants: product.variants?.map((variant: any) => ({
-        ...variant,
-        image: variant.image ? {
-          ...variant.image,
-          url: urlFor(variant.image)?.url() ?? '/images/placeholder.png',
-        } : null,
-      })) || [],
-    }));
-
+    // Do not transform products, just return as-is
     // Set cache headers
     const headers = new Headers();
     headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
     headers.set('Content-Type', 'application/json');
 
-    return NextResponse.json(transformedProducts, { headers });
+    return NextResponse.json(products, { headers });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
