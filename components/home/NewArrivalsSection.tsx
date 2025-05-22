@@ -62,15 +62,8 @@ function ProductImageWithSkeleton({ src, alt, width, height }: ProductImageWithS
     setHasLoaded(false);
   }, [src]);
 
-  // Only log on first load
-  useEffect(() => {
-    if (!hasLoaded) {
-      console.log('Loading image:', { src, alt });
-    }
-  }, [src, alt, hasLoaded]);
-
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full" style={{ position: 'relative' }}>
       {isLoading && <SkeletonBox className="absolute inset-0 w-full h-full rounded-lg" />}
       <Image
         src={src}
@@ -81,13 +74,11 @@ function ProductImageWithSkeleton({ src, alt, width, height }: ProductImageWithS
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         priority={true}
-        quality={85}
+        quality={75}
+        loading="eager"
         onLoad={() => {
-          if (!hasLoaded) {
-            console.log('Image loaded successfully:', alt);
-            setHasLoaded(true);
-          }
           setIsLoading(false);
+          setHasLoaded(true);
         }}
         onError={(e) => {
           console.error('Error loading image:', { src, alt, error: e });
@@ -405,7 +396,7 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
                   <p className="text-lg font-medium text-gray-900">
                     ${quickViewProduct.price.toFixed(2)}
                   </p>
-                  {quickViewProduct.salesCount && quickViewProduct.salesCount > 0 && (
+                  {typeof quickViewProduct.salesCount === 'number' && quickViewProduct.salesCount > 0 && (
                     <span className="text-sm text-gray-500">
                       {quickViewProduct.salesCount} sold
                     </span>
