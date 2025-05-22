@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { urlFor } from '@/lib/sanityClient';
 
 interface Category {
@@ -14,10 +17,16 @@ interface Props {
 }
 
 export default function CategoryGridSection({ categories }: Props) {
+  const router = useRouter();
+  
   if (!categories || categories.length === 0) return null;
 
   // Use the first category as the featured (large) card
   const [featured, ...rest] = categories;
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <section id="categories" className="py-16">
@@ -58,7 +67,7 @@ export default function CategoryGridSection({ categories }: Props) {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = `/category/${featured.slug}`;
+                    handleNavigation(`/category/${featured.slug}`);
                   }}
                   className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
                 >
@@ -98,7 +107,7 @@ export default function CategoryGridSection({ categories }: Props) {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location.href = `/category/${cat.slug}`;
+                    handleNavigation(`/category/${cat.slug}`);
                   }}
                   className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
                 >
