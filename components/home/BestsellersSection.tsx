@@ -264,16 +264,16 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
   return (
     <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Best Sellers</h2>
-            <p className="text-gray-600">Our most popular products this month</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Best Sellers</h2>
+            <p className="hidden sm:block text-gray-600">Our most popular products this month</p>
           </div>
           <Link
             href="/category/best-sellers"
-            className="text-lg text-[#42A5F5] font-medium transition-colors hover:underline hover:text-[#63b3fa] focus:underline focus:text-[#63b3fa]"
+            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa]"
           >
-            View All Bestsellers &rarr;
+            View All &rarr;
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}

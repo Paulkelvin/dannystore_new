@@ -146,14 +146,14 @@ export default function HeroCarousel() {
         aria-label={`Slide ${currentIndex + 1} of ${heroImages.length}`}
       >
         <h1
-          className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-8 text-white"
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold mb-4 sm:mb-8 text-white"
           style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}
         >
           DISCOVER YOUR NEXT FAVORITE TOYS
         </h1>
         <Link
           href={heroImages[currentIndex].ctaUrl}
-          className="bg-[#FFC300] text-[#333333] text-lg font-bold py-4 px-8 rounded-[8px] shadow-md transition-all duration-200 hover:bg-[#F0B300] focus:bg-[#F0B300] focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2 hover:scale-105"
+          className="bg-white/90 text-[#333333] text-sm sm:text-base font-medium py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-sm transition-all duration-200 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 hover:scale-105"
           aria-label={`${heroImages[currentIndex].cta} - ${heroImages[currentIndex].alt}`}
         >
           {heroImages[currentIndex].cta}

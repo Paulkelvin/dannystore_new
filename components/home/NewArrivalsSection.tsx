@@ -180,16 +180,16 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Latest Arrivals</h2>
-            <p className="text-gray-600">Check out our newest products</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Latest Arrivals</h2>
+            <p className="hidden sm:block text-gray-600">Check out our newest products</p>
           </div>
           <Link
             href="/category/latest-arrivals"
-            className="text-lg text-[#42A5F5] font-medium transition-colors hover:underline hover:text-[#63b3fa] focus:underline focus:text-[#63b3fa]"
+            className="text-sm sm:text-base text-[#42A5F5] font-medium transition-colors hover:text-[#63b3fa] focus:text-[#63b3fa]"
           >
-            View All New Arrivals &rarr;
+            View All &rarr;
           </Link>
         </div>
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}
