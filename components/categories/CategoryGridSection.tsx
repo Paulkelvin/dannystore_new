@@ -69,7 +69,7 @@ export default function CategoryGridSection({ categories }: Props) {
                     e.stopPropagation();
                     handleNavigation(`/category/${featured.slug}`);
                   }}
-                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                 >
                   View Collection
                 </button>
@@ -109,7 +109,7 @@ export default function CategoryGridSection({ categories }: Props) {
                     e.stopPropagation();
                     handleNavigation(`/category/${cat.slug}`);
                   }}
-                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2"
+                  className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
                 >
                   View Collection
                 </button>
