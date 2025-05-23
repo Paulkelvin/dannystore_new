@@ -13,6 +13,14 @@ import 'swiper/css/pagination';
 import { sanityClientPublic as client } from '@/lib/sanityClient';
 import { useRouter } from 'next/navigation';
 
+// Add style block to hide navigation buttons
+const styles = `
+  .category-swiper .swiper-button-prev,
+  .category-swiper .swiper-button-next {
+    display: none !important;
+  }
+`;
+
 interface Category {
   _id: string;
   name: string;
@@ -165,128 +173,131 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-white">
-      <div className="w-full">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-            Discovery Hub
-          </h2>
-        </div>
-        <Swiper
-          loop={true}
-          spaceBetween={16}
-          slidesPerView={1.5}
-          centeredSlides={false}
-          navigation={false}
-          autoplay={{ delay: 3500, disableOnInteraction: false }}
-          breakpoints={{
-            640: { slidesPerView: 1.5, spaceBetween: 16 },
-            768: { slidesPerView: 2.5, spaceBetween: 24 },
-            1024: { slidesPerView: 3, spaceBetween: 32 },
-          }}
-          className="category-swiper pb-8 px-4"
-        >
-          {/* Strategic Categories */}
-          {strategicCategories.map((category, index) => (
-            <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
-              <Link href={`/category/${category.slug}`} className="block group h-full">
+    <>
+      <style jsx global>{styles}</style>
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+              Discovery Hub
+            </h2>
+          </div>
+          <Swiper
+            loop={true}
+            spaceBetween={16}
+            slidesPerView={1.5}
+            centeredSlides={false}
+            navigation={false}
+            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            breakpoints={{
+              640: { slidesPerView: 1.5, spaceBetween: 16 },
+              768: { slidesPerView: 2.5, spaceBetween: 24 },
+              1024: { slidesPerView: 3, spaceBetween: 32 },
+            }}
+            className="category-swiper pb-8 px-4"
+          >
+            {/* Strategic Categories */}
+            {strategicCategories.map((category, index) => (
+              <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
+                <Link href={`/category/${category.slug}`} className="block group h-full">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
+                    <Image
+                      src={getImageUrl(category.image)}
+                      alt={category.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      priority={index < 2}
+                      quality={85}
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                      <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">{category.name}</h3>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+
+            {/* Best Sellers Card */}
+            <SwiperSlide>
+              <Link href="/products?filter=best-sellers" className="block group h-full">
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                  <Image
-                    src={getImageUrl(category.image)}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={index < 2}
-                    quality={85}
-                    loading={index < 2 ? 'eager' : 'lazy'}
-                  />
+                  {featuredImages.bestSeller ? (
+                    <Image
+                      src={getImageUrl(featuredImages.bestSeller)}
+                      alt="Best Sellers"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      priority={true}
+                      quality={85}
+                      loading="eager"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                      <span className="text-white text-base font-medium">Best Sellers</span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                   <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">{category.name}</h3>
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleNavigation('/category/best-sellers');
+                      }}
+                      className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    >
+                      View Collection
+                    </button>
                   </div>
                 </div>
               </Link>
             </SwiperSlide>
-          ))}
 
-          {/* Best Sellers Card */}
-          <SwiperSlide>
-            <Link href="/products?filter=best-sellers" className="block group h-full">
-              <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                {featuredImages.bestSeller ? (
-                  <Image
-                    src={getImageUrl(featuredImages.bestSeller)}
-                    alt="Best Sellers"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={true}
-                    quality={85}
-                    loading="eager"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
-                    <span className="text-white text-base font-medium">Best Sellers</span>
+            {/* Latest Arrivals Card */}
+            <SwiperSlide>
+              <Link href="/products?filter=latest" className="block group h-full">
+                <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
+                  {featuredImages.latest ? (
+                    <Image
+                      src={getImageUrl(featuredImages.latest)}
+                      alt="Latest Arrivals"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      priority={true}
+                      quality={85}
+                      loading="eager"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                      <span className="text-white text-base font-medium">Latest Arrivals</span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                  <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleNavigation('/category/latest-arrivals');
+                      }}
+                      className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    >
+                      Shop Now
+                    </button>
                   </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavigation('/category/best-sellers');
-                    }}
-                    className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
-                  >
-                    View Collection
-                  </button>
                 </div>
-              </div>
-            </Link>
-          </SwiperSlide>
-
-          {/* Latest Arrivals Card */}
-          <SwiperSlide>
-            <Link href="/products?filter=latest" className="block group h-full">
-              <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                {featuredImages.latest ? (
-                  <Image
-                    src={getImageUrl(featuredImages.latest)}
-                    alt="Latest Arrivals"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={true}
-                    quality={85}
-                    loading="eager"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
-                    <span className="text-white text-base font-medium">Latest Arrivals</span>
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavigation('/category/latest-arrivals');
-                    }}
-                    className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
-                  >
-                    Shop Now
-                  </button>
-                </div>
-              </div>
-            </Link>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-    </section>
+              </Link>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </section>
+    </>
   );
 } 
