@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { sanityClientWrite } from '@/lib/sanityClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { clearCart } from '@/lib/cart';
 
 console.log('Startup: NEXT_PUBLIC_BASE_URL is', process.env.NEXT_PUBLIC_BASE_URL);
 
@@ -344,38 +347,49 @@ export async function POST(request: Request) {
 
               // Update order status
               const updateData = {
-            paymentStatus: 'paid',
-            paymentIntentId: paymentIntent.id,
+                paymentStatus: 'paid',
+                paymentIntentId: paymentIntent.id,
                 paidAt: new Date().toISOString()
               };
 
               console.log(`[${requestId}] 🟦 Updating order status to:`, updateData.paymentStatus);
 
               const updatedOrder = await sanityClientWrite.patch(order._id)
-            .set(updateData)
-            .commit();
+                .set(updateData)
+                .commit();
 
               console.log(`[${requestId}] 🟦 Order after update:`, updatedOrder);
+
+              // Clear cart for the customer
+              if (order.customerEmail) {
+                try {
+                  await clearCart(order.customerEmail);
+                  console.log(`[${requestId}] 🛒 Cart cleared for customer:`, order.customerEmail);
+                } catch (error) {
+                  console.error(`[${requestId}] ❌ Error clearing cart:`, error);
+                  // Don't fail the webhook if cart clearing fails
+                }
+              }
 
               // Clean up other pending orders
               if (order && customerEmail) {
                 console.log(`[${requestId}] 🧹 Cleaning up other pending orders for:`, customerEmail);
-            const otherPendingOrders = await sanityClientWrite.fetch(
+                const otherPendingOrders = await sanityClientWrite.fetch(
                   `*[_type == "order" && customerEmail == $email && _id != $orderId && paymentStatus == "pending"]{_id}`,
                   { email: customerEmail, orderId }
-            );
+                );
                 
                 console.log(`[${requestId}] 📋 Found ${otherPendingOrders.length} pending orders to clean up`);
                 
-            for (const o of otherPendingOrders) {
+                for (const o of otherPendingOrders) {
                   console.log(`[${requestId}] 🗑️ Marking order as obsolete:`, o._id);
-              await sanityClientWrite.patch(o._id)
+                  await sanityClientWrite.patch(o._id)
                     .set({ 
                       paymentStatus: 'obsolete',
                       obsoleteReason: 'New payment completed',
                       obsoleteAt: new Date().toISOString()
                     })
-                .commit();
+                  .commit();
                 }
               }
 

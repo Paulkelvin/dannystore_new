@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useSession, signIn } from 'next-auth/react';
+import { useCart } from '@/hooks/useCart';
 
 export default function SuccessPage() {
   const [status, setStatus] = useState<'processing' | 'succeeded' | 'failed'>('processing');
   const [showActivationPrompt, setShowActivationPrompt] = useState(false);
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
   const { data: session } = useSession();
+  const { clearCart } = useCart();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export default function SuccessPage() {
             case 'succeeded':
               console.log('Setting status to succeeded');
               setStatus('succeeded');
+              clearCart();
               // If user is not logged in, show activation prompt
               if (!session?.user) {
                 // Fetch customer email from the payment intent
