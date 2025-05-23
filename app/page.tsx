@@ -214,8 +214,8 @@ export default async function HomePage() {
         <BestsellersSection products={bestSellers} />
         <NewArrivalsSection products={latestProducts} />
         <CategoryGridSection categories={categories} />
-        <BrandPillarsSection />
         <ReviewSection />
+        <BrandPillarsSection />
         <EmailSignupSection />
       </div>
     );
