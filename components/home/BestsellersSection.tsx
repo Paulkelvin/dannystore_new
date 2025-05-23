@@ -56,9 +56,10 @@ interface ProductImageWithSkeletonProps {
   alt: string;
   width: number;
   height: number;
+  className?: string;
 }
 
-function ProductImageWithSkeleton({ src, alt, width, height }: ProductImageWithSkeletonProps) {
+function ProductImageWithSkeleton({ src, alt, width, height, className = '' }: ProductImageWithSkeletonProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -80,7 +81,7 @@ function ProductImageWithSkeleton({ src, alt, width, height }: ProductImageWithS
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
         className={`object-cover rounded-lg transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        } ${className}`}
         priority={true}
         quality={75}
         loading="eager"
@@ -434,7 +435,7 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
       {/* Quick View Modal */}
       {quickViewProduct && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0">
             {/* Overlay with fade-in transition and click-to-close */}
             <div
               className={`fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-600 ${isClosing ? 'animate-fade-out' : 'animate-fade-in'}`}
@@ -444,13 +445,16 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
 
             {/* Modal with scale and fade transition */}
             <div
-              className={`relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all ${isClosing ? 'duration-400 animate-modal-out' : 'duration-600 animate-modal-in'} sm:my-8 sm:w-full sm:max-w-lg sm:p-6 scale-100 opacity-100`}
+              className={`relative transform overflow-hidden bg-white shadow-xl transition-all ${
+                isClosing ? 'duration-400 animate-modal-out' : 'duration-600 animate-modal-in'
+              } w-full h-[90vh] sm:h-auto sm:max-w-lg sm:rounded-lg sm:my-8 scale-100 opacity-100 flex flex-col`}
               onClick={e => e.stopPropagation()}
             >
-              <div className="absolute right-0 top-0 pr-4 pt-4">
+              {/* Close button */}
+              <div className="absolute right-0 top-0 pr-4 pt-4 z-10">
                 <button
                   type="button"
-                  className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer p-2 min-w-[40px] min-h-[40px] flex items-center justify-center"
+                  className="rounded-md bg-white/80 backdrop-blur-sm text-gray-400 hover:text-gray-500 cursor-pointer p-2 min-w-[40px] min-h-[40px] flex items-center justify-center"
                   onClick={closeQuickView}
                   aria-label="Close"
                 >
@@ -459,22 +463,26 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
                 </button>
               </div>
 
-              <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg relative" style={{ position: 'relative', height: '400px' }}>
-                  {quickViewProduct.mainImage ? (
-                    <ProductImageWithSkeleton
-                      src={urlFor(quickViewProduct.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png'}
-                      alt={quickViewProduct.name}
-                      width={800}
-                      height={800}
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400">No image available</span>
-                    </div>
-                  )}
-                </div>
-                <h3 className="mt-4 text-xl font-semibold text-gray-900">
+              {/* Image container - takes up 60% of height on mobile, fixed height on desktop */}
+              <div className="relative w-full h-[60vh] sm:h-[400px] overflow-hidden">
+                {quickViewProduct.mainImage ? (
+                  <ProductImageWithSkeleton
+                    src={urlFor(quickViewProduct.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png'}
+                    alt={quickViewProduct.name}
+                    width={800}
+                    height={800}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-400">No image available</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Content container - scrollable on mobile */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                <h3 className="text-xl font-semibold text-gray-900">
                   {quickViewProduct.name}
                 </h3>
                 <div className="mt-2 flex items-center justify-between">
@@ -487,11 +495,11 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
                     </span>
                   )}
                 </div>
-                {/* Add to Cart Button in Quick View */}
+                {/* Add to Cart Button */}
                 <button
-                  onClick={() => handleAddToCart(quickViewProduct)}
+                  onClick={(e) => handleAddToCart(quickViewProduct, e)}
                   disabled={isAddingToCart === quickViewProduct._id}
-                  className="mt-4 w-full bg-[#42A5F5] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#1e88e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 w-full bg-[#42A5F5] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#1e88e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAddingToCart === quickViewProduct._id ? 'Adding...' : 'Add to Cart'}
                 </button>

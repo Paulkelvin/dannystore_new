@@ -149,8 +149,9 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     loading={index < 2 ? 'eager' : 'lazy'}
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                  <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
                     <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
+                    <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
                   </div>
                 </div>
               </Link>
@@ -185,18 +186,9 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavigation('/category/best-sellers');
-                    }}
-                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
-                  >
-                    View Collection
-                  </button>
+                  <p className="text-sm sm:text-base text-white/90 mb-4">Discover our most popular products</p>
                 </div>
               </div>
             </Link>
@@ -230,18 +222,9 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Latest Arrivals</h3>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavigation('/category/latest-arrivals');
-                    }}
-                    className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
-                  >
-                    Shop Now
-                  </button>
+                  <p className="text-sm sm:text-base text-white/90 mb-4">Check out our newest products</p>
                 </div>
               </div>
             </Link>
