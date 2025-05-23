@@ -31,7 +31,7 @@ const availableShippingMethods: ShippingMethodType[] = [
 const steps: Step[] = [
   {
     key: 'shipping',
-    label: 'Shipping',
+    label: 'Shipping Information',
     icon: <FaTruck className="inline-block mr-2" />,
   },
   {
@@ -41,7 +41,7 @@ const steps: Step[] = [
   },
   {
     key: 'payment',
-    label: 'Payment',
+    label: 'Payment & Review',
     icon: <FaCreditCard className="inline-block mr-2" />,
   },
 ];
@@ -109,13 +109,13 @@ export default function AccordionCheckout() {
     <div className="min-h-screen w-full bg-gradient-to-br from-[#F8F9FA] via-white to-[#E3F0FF] animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8 sm:pb-16">
         {/* Progress Indicator */}
-        <div className="sticky top-0 z-50 bg-white border-b border-[#DEE2E6] shadow-sm">
+        <div className="sticky top-24 z-50 bg-white border-b border-[#DEE2E6] shadow-sm py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <CheckoutProgress currentStep={currentStep} steps={steps} />
           </div>
         </div>
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
+        <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
             {/* Step 1: Shipping Information */}
@@ -134,6 +134,9 @@ export default function AccordionCheckout() {
             {/* Step 2: Shipping Method */}
             <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
+                <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
+                  Shipping Method
+                </h2>
                 <ShippingMethod
                   methods={availableShippingMethods}
                   onComplete={handleShippingMethodComplete}
@@ -145,6 +148,9 @@ export default function AccordionCheckout() {
             {/* Step 3: Payment & Review */}
             <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
+                <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
+                  Payment & Review
+                </h2>
                 {shippingData && selectedShippingMethod && (
                   <PaymentAndReview
                     shippingData={shippingData}
@@ -159,7 +165,7 @@ export default function AccordionCheckout() {
 
           {/* Order Summary */}
           <div className="mt-8 lg:mt-0 lg:col-span-5">
-            <div className="sticky top-8">
+            <div className="sticky top-32">
               <OrderSummary
                 items={items}
                 shippingMethod={selectedShippingMethod || undefined}
@@ -179,7 +185,7 @@ export default function AccordionCheckout() {
         .animate-fade-in {
           animation: fade-in 0.5s cubic-bezier(0.4,0,0.2,1) both;
         }
-        @media (max-width: 640px) {
+        @media (max-width: 1024px) {
           .sticky {
             position: relative;
             top: 0;
