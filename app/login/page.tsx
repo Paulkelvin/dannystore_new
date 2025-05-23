@@ -18,7 +18,20 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       setError("");
-      const res = await signIn("google");
+      const res = await signIn("google", {
+        callbackUrl,
+        redirect: true
+      });
+      
+      // If we get here, it means the redirect didn't happen automatically
+      // This could happen if there's an error or if the sign-in was successful but the redirect failed
+      if (res?.error) {
+        setError(res.error);
+        toast.error(res.error);
+      } else if (res?.ok) {
+        // If sign-in was successful but we're still here, manually redirect
+        router.push(callbackUrl);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to sign in with Google";
       setError(errorMessage);
