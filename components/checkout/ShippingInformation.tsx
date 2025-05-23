@@ -417,33 +417,22 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-[#495057] mb-1">
-            First Name
+        <div className="sm:col-span-2">
+          <label htmlFor="fullName" className="block text-sm font-medium text-[#495057] mb-1">
+            Full Name
           </label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
+            id="fullName"
+            name="fullName"
+            value={formData.fullName}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
+            className={`w-full px-4 py-2 border ${
+              errors.fullName ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
           />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-[#495057] mb-1">
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
-          />
+          {errors.fullName && <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>}
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-[#495057] mb-1">
@@ -571,23 +560,6 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
             } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
           />
           {errors.zipCode && <p className="mt-1 text-sm text-red-500">{errors.zipCode}</p>}
-        </div>
-        <div className="sm:col-span-2">
-          <label htmlFor="country" className="block text-sm font-medium text-[#495057] mb-1">
-            Country
-          </label>
-          <input
-            type="text"
-            id="country"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            required
-            className={`w-full px-4 py-2 border ${
-              errors.country ? 'border-red-500' : 'border-[#DEE2E6]'
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-          />
-          {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country}</p>}
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="saveAddress" className="flex items-center space-x-2">
