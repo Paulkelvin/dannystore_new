@@ -42,12 +42,13 @@ interface HeroImageWithSkeletonProps {
   src: string;
   alt: string;
   priority?: boolean;
+  className?: string;
 }
 
-function HeroImageWithSkeleton({ src, alt, priority = false }: HeroImageWithSkeletonProps) {
+function HeroImageWithSkeleton({ src, alt, priority = false, className = '' }: HeroImageWithSkeletonProps) {
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <div className="relative w-full h-full">
+    <div className={`relative w-full h-full ${className}`}>
       {isLoading && <SkeletonBox className="absolute inset-0 w-full h-full" />}
       <Image
         src={src}
@@ -104,7 +105,7 @@ export default function HeroCarousel() {
 
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center bg-[#FFC300]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
       role="region"
       aria-label="Hero carousel"
       onMouseEnter={handleMouseEnter}
@@ -113,14 +114,14 @@ export default function HeroCarousel() {
     >
       {/* Background Images with Gradient Overlay */}
       <div 
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full bg-black"
         role="presentation"
       >
         {heroImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === currentIndex ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'
             }`}
             role="img"
             aria-label={image.alt}
@@ -130,9 +131,10 @@ export default function HeroCarousel() {
               src={image.src} 
               alt={image.alt} 
               priority={index === 0 || index === 1}
+              className="w-full h-full object-cover"
             />
             <div 
-              className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30" 
+              className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" 
               aria-hidden="true" 
             />
           </div>
@@ -140,20 +142,20 @@ export default function HeroCarousel() {
       </div>
 
       {/* Content Overlay */}
-      <div 
+      <div
         className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center mt-16"
         role="group"
         aria-label={`Slide ${currentIndex + 1} of ${heroImages.length}`}
       >
         <h1
-          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold mb-8 sm:mb-12 text-white"
-          style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold mb-8 sm:mb-12 text-white transition-opacity duration-1000"
+          style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
         >
           DISCOVER YOUR NEXT FAVORITE TOYS
         </h1>
         <Link
           href={heroImages[currentIndex].ctaUrl}
-          className="bg-[#FFC300]/80 text-[#333333] text-sm sm:text-base font-medium py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-sm transition-all duration-200 hover:bg-[#FFC300] focus:bg-[#FFC300] focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2 hover:scale-105 -mt-4"
+          className="bg-[#FFC300] text-[#333333] text-sm sm:text-base font-medium py-2 sm:py-3 px-6 sm:px-8 rounded-full shadow-lg transition-all duration-300 hover:bg-[#F0B300] focus:bg-[#F0B300] focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2 hover:scale-105 -mt-4"
           aria-label={`${heroImages[currentIndex].cta} - ${heroImages[currentIndex].alt}`}
         >
           {heroImages[currentIndex].cta}
@@ -161,20 +163,20 @@ export default function HeroCarousel() {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 z-20 flex justify-between">
+      <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 z-20 flex justify-between pointer-events-none">
         <button
           onClick={() => setCurrentIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100/40 backdrop-blur-sm shadow-sm hover:bg-gray-100/60 transition-colors pointer-events-auto"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm shadow-lg hover:bg-white/20 transition-all duration-300 pointer-events-auto"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-4 h-4 text-gray-600" />
+          <ChevronLeft className="w-5 h-5 text-white" />
         </button>
         <button
           onClick={() => setCurrentIndex((prev) => (prev + 1) % heroImages.length)}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100/40 backdrop-blur-sm shadow-sm hover:bg-gray-100/60 transition-colors pointer-events-auto"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm shadow-lg hover:bg-white/20 transition-all duration-300 pointer-events-auto"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-4 h-4 text-gray-600" />
+          <ChevronRight className="w-5 h-5 text-white" />
         </button>
       </div>
 
@@ -188,8 +190,8 @@ export default function HeroCarousel() {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentIndex ? 'bg-gray-400' : 'bg-gray-300/50'
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentIndex ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/75'
             }`}
             role="tab"
             aria-selected={index === currentIndex}
