@@ -111,7 +111,7 @@ export default function AccordionCheckout() {
         {/* Progress Indicator */}
         <div className="sticky top-0 z-50 bg-white border-b border-[#DEE2E6] shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <CheckoutProgress currentStep={currentStep} />
+            <CheckoutProgress currentStep={currentStep} steps={steps} />
           </div>
         </div>
 
