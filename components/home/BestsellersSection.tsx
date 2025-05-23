@@ -447,24 +447,24 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
             <div
               className={`relative transform overflow-hidden bg-white shadow-xl transition-all ${
                 isClosing ? 'duration-400 animate-modal-out' : 'duration-600 animate-modal-in'
-              } w-full h-[90vh] sm:h-auto sm:max-w-lg sm:rounded-lg sm:my-8 scale-100 opacity-100 flex flex-col`}
+              } w-full h-[70vh] sm:h-[350px] sm:max-w-md sm:rounded-lg sm:my-8 scale-100 opacity-100 flex flex-col`}
               onClick={e => e.stopPropagation()}
             >
               {/* Close button */}
-              <div className="absolute right-0 top-0 pr-4 pt-4 z-10">
+              <div className="absolute right-0 top-0 pr-3 pt-3 z-10">
                 <button
                   type="button"
-                  className="rounded-md bg-white/80 backdrop-blur-sm text-gray-400 hover:text-gray-500 cursor-pointer p-2 min-w-[40px] min-h-[40px] flex items-center justify-center"
+                  className="rounded-md bg-white/80 backdrop-blur-sm text-gray-400 hover:text-gray-500 cursor-pointer p-1.5 min-w-[32px] min-h-[32px] flex items-center justify-center"
                   onClick={closeQuickView}
                   aria-label="Close"
                 >
                   <span className="sr-only">Close</span>
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* Image container - takes up 60% of height on mobile, fixed height on desktop */}
-              <div className="relative w-full h-[60vh] sm:h-[400px] overflow-hidden">
+              {/* Image container - takes up 50% of height on mobile, fixed height on desktop */}
+              <div className="relative w-full h-[50vh] sm:h-[200px] overflow-hidden">
                 {quickViewProduct.mainImage ? (
                   <ProductImageWithSkeleton
                     src={urlFor(quickViewProduct.mainImage)?.width(800).height(800).url() ?? '/images/placeholder.png'}
@@ -481,16 +481,16 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
               </div>
 
               {/* Content container - scrollable on mobile */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-                <h3 className="text-xl font-semibold text-gray-900">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-4">
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
                   {quickViewProduct.name}
                 </h3>
-                <div className="mt-2 flex items-center justify-between">
-                  <p className="text-lg font-medium text-gray-900">
+                <div className="mt-1.5 flex items-center justify-between">
+                  <p className="text-base font-medium text-gray-900">
                     ${quickViewProduct.price.toFixed(2)}
                   </p>
                   {typeof quickViewProduct.salesCount === 'number' && quickViewProduct.salesCount > 0 && (
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs text-gray-500">
                       {quickViewProduct.salesCount} sold
                     </span>
                   )}
@@ -499,7 +499,7 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
                 <button
                   onClick={(e) => handleAddToCart(quickViewProduct, e)}
                   disabled={isAddingToCart === quickViewProduct._id}
-                  className="mt-4 w-full bg-[#42A5F5] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#1e88e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-3 w-full bg-[#42A5F5] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#1e88e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isAddingToCart === quickViewProduct._id ? 'Adding...' : 'Add to Cart'}
                 </button>

@@ -148,8 +148,8 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     quality={85}
                     loading={index < 2 ? 'eager' : 'lazy'}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                  <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
+                  <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
                     <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
                     <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
                   </div>
@@ -185,10 +185,13 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     <span className="text-white text-lg font-medium">Best Sellers</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
+                <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
                   <p className="text-sm sm:text-base text-white/90 mb-4">Discover our most popular products</p>
+                  <button className="mt-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                    Shop Now
+                  </button>
                 </div>
               </div>
             </Link>
@@ -221,10 +224,13 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     <span className="text-white text-lg font-medium">Latest Arrivals</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
+                <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Latest Arrivals</h3>
                   <p className="text-sm sm:text-base text-white/90 mb-4">Check out our newest products</p>
+                  <button className="mt-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                    Shop Now
+                  </button>
                 </div>
               </div>
             </Link>
