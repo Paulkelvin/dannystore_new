@@ -2,7 +2,7 @@ import { sanityClientPublic } from '@/lib/sanityClient';
 import { urlFor } from '@/lib/sanityClient';
 import Image from 'next/image';
 import Link from 'next/link';
-import PortableTextRenderer from '@/components/PortableTextRenderer';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import type { PortableTextBlock } from '@portabletext/types';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
@@ -41,6 +41,11 @@ interface BlogPost {
   }[];
 }
 
+// Serialize data to ensure it's safe to pass to client components
+function serializeData<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
 async function getBlogPost(slug: string) {
   const query = `*[_type == "blogPost" && slug.current == $slug][0] {
     _id,
@@ -66,8 +71,21 @@ async function getBlogPost(slug: string) {
       price
     }
   }`;
-  return sanityClientPublic.fetch<BlogPost | null>(query, { slug });
+  const post = await sanityClientPublic.fetch<BlogPost | null>(query, { slug });
+  return post ? serializeData(post) : null;
 }
+
+// Create a client component wrapper for PortableTextRenderer
+const ClientPortableText = dynamic(() => import('@/components/ClientPortableText'), {
+  ssr: false,
+  loading: () => (
+    <div className="animate-pulse space-y-4">
+      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+    </div>
+  ),
+});
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const post = await getBlogPost(params.slug);
@@ -142,7 +160,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
         {/* Content */}
         <div className="prose prose-lg max-w-none prose-headings:text-[#333333] prose-a:text-[#42A5F5] prose-a:no-underline hover:prose-a:underline">
-          <PortableTextRenderer 
+          <ClientPortableText 
             value={post.body} 
             className="prose-img:rounded-lg prose-img:shadow-md"
           />

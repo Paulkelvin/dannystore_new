@@ -26,6 +26,11 @@ interface BlogCategory {
   slug: { current: string };
 }
 
+// Serialize data to ensure it's safe to pass to client components
+function serializeData<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
 async function getBlogPosts() {
   const query = `*[_type == "blogPost"] | order(publishedAt desc) {
     _id,
@@ -43,7 +48,8 @@ async function getBlogPosts() {
       slug
     }
   }`;
-  return sanityClientPublic.fetch<BlogPost[]>(query);
+  const posts = await sanityClientPublic.fetch<BlogPost[]>(query);
+  return serializeData(posts);
 }
 
 async function getBlogCategories() {
@@ -51,10 +57,29 @@ async function getBlogCategories() {
     title,
     slug
   }`;
-  return sanityClientPublic.fetch<BlogCategory[]>(query);
+  const categories = await sanityClientPublic.fetch<BlogCategory[]>(query);
+  return serializeData(categories);
 }
 
-const BlogSidebarClient = dynamic(() => import('../../components/blog/BlogSidebarClient'), { ssr: false });
+// Use dynamic import with loading state
+const BlogSidebarClient = dynamic(() => import('../../components/blog/BlogSidebarClient'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full lg:w-1/4 flex-shrink-0 space-y-8">
+      <div className="bg-white rounded-lg shadow p-4 animate-pulse">
+        <div className="h-10 bg-gray-200 rounded"></div>
+      </div>
+      <div className="bg-white rounded-lg shadow p-4 animate-pulse">
+        <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div className="space-y-2">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-4 bg-gray-200 rounded"></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ),
+});
 
 export default async function BlogPage() {
   const posts = await getBlogPosts();
@@ -74,7 +99,11 @@ export default async function BlogPage() {
         </div>
         {/* Sidebar */}
         <aside className="w-full lg:w-1/4 flex-shrink-0">
-          <BlogSidebarClient categories={categories} recentPosts={recentPosts} allPosts={posts} />
+          <BlogSidebarClient 
+            categories={categories} 
+            recentPosts={recentPosts} 
+            allPosts={posts} 
+          />
         </aside>
       </div>
     </main>

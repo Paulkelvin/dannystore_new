@@ -24,14 +24,33 @@ interface BlogCategory {
   slug: { current: string };
 }
 
-export default function BlogSidebarClient({ categories, recentPosts, allPosts }: { categories: BlogCategory[]; recentPosts: BlogPost[]; allPosts: BlogPost[] }) {
+// Serialize the data to ensure it's safe to pass to client components
+function serializeData<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
+export default function BlogSidebarClient({ 
+  categories, 
+  recentPosts, 
+  allPosts 
+}: { 
+  categories: BlogCategory[]; 
+  recentPosts: BlogPost[]; 
+  allPosts: BlogPost[]; 
+}) {
+  // Serialize the data to ensure it's safe to use in client components
+  const serializedCategories = serializeData(categories);
+  const serializedRecentPosts = serializeData(recentPosts);
+  const serializedAllPosts = serializeData(allPosts);
+
   const [search, setSearch] = useState('');
   const filteredPosts = search.length < 2
-    ? allPosts
-    : allPosts.filter(post =>
+    ? serializedAllPosts
+    : serializedAllPosts.filter(post =>
         post.title.toLowerCase().includes(search.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(search.toLowerCase())
       );
+
   return (
     <div className="space-y-8">
       {/* Search */}
@@ -61,7 +80,7 @@ export default function BlogSidebarClient({ categories, recentPosts, allPosts }:
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-semibold mb-2">Categories</h3>
         <div className="flex flex-col gap-2">
-          {categories.map(cat => (
+          {serializedCategories.map(cat => (
             <Link key={cat.slug.current} href={`/blog/category/${cat.slug.current}`} className="text-[#42A5F5] hover:underline text-sm">
               {cat.title}
             </Link>
@@ -72,7 +91,7 @@ export default function BlogSidebarClient({ categories, recentPosts, allPosts }:
       <div className="bg-white rounded-lg shadow p-4">
         <h3 className="font-semibold mb-2">Recent Posts</h3>
         <ul className="space-y-2">
-          {recentPosts.map(post => (
+          {serializedRecentPosts.map(post => (
             <li key={post._id}>
               <Link href={`/blog/${post.slug.current}`} className="text-sm hover:underline">
                 {post.title}
