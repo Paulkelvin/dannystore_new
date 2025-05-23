@@ -114,13 +114,13 @@ export default function AccordionCheckout() {
         </div>
       </div>
 
-      {/* Main Content - Add padding to account for fixed header + progress indicator */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 sm:pt-56 pb-8 sm:pb-16">
+      {/* Main Content - Increased padding for better spacing, especially on mobile */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 sm:pt-72 md:pt-80 lg:pt-56 pb-8 sm:pb-16">
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
             {/* Step 1: Shipping Information */}
-            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
+            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Shipping Information
@@ -133,7 +133,7 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 2: Shipping Method */}
-            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
+            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Shipping Method
@@ -147,7 +147,7 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 3: Payment & Review */}
-            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
+            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Payment & Review
