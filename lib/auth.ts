@@ -124,6 +124,28 @@ export const authOptions: NextAuthOptions = {
         timestamp: new Date().toISOString()
       });
       
+      if (account?.provider === 'google' && user.email) {
+        // Check if user exists with this email
+        const existingUser = await sanityClientWrite.fetch(
+          `*[_type == "user" && email == $email][0]`,
+          { email: user.email }
+        );
+
+        if (existingUser) {
+          // Check if user already has a Google account linked
+          const existingGoogleAccount = await sanityClientWrite.fetch(
+            `*[_type == "account" && provider == "google" && user._ref == $userId][0]`,
+            { userId: existingUser._id }
+          );
+
+          if (!existingGoogleAccount) {
+            // Allow linking the Google account
+            console.log('✅ Allowing Google account linking for existing user:', user.email);
+            return true;
+          }
+        }
+      }
+      
       const result = true;
       console.log('✅ Sign in completed:', {
         success: result,
