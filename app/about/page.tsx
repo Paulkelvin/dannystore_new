@@ -54,7 +54,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       {/* Hero Section */}
-      <section className="relative flex items-center justify-center h-[60vh] bg-gradient-to-r from-[#42A5F5] to-[#1e88e5] text-white shadow-lg rounded-b-3xl">
+      <section className="relative flex items-center justify-center min-h-[60vh] pt-24 sm:pt-32 bg-gradient-to-r from-[#42A5F5] to-[#1e88e5] text-white shadow-lg rounded-b-3xl">
         <div className="absolute inset-0 bg-black/20 rounded-b-3xl" />
         <div className="relative container mx-auto px-4 flex flex-col items-center justify-center h-full">
           <motion.div 
@@ -63,8 +63,8 @@ export default function AboutPage() {
             animate="animate"
             variants={fadeIn}
           >
-            <h1 className="text-5xl font-bold mb-8 mt-4 drop-shadow-lg">Our Story</h1>
-            <p className="text-xl leading-relaxed text-white/90 mb-2 md:mb-4">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6 sm:mb-8 drop-shadow-lg">Our Story</h1>
+            <p className="text-lg sm:text-xl leading-relaxed text-white/90 mb-2 md:mb-4">
               Founded in 2020, we've grown from a small local store to a beloved destination for quality products and exceptional service. Our mission is to bring joy and convenience to our customers through carefully curated products and a seamless shopping experience.
             </p>
           </motion.div>
