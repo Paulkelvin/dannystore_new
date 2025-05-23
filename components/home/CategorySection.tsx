@@ -82,12 +82,21 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
   const swiperRef = useRef<SwiperCore>();
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    try {
+      // Ensure the path is valid before navigation
+      if (path && path.startsWith('/')) {
+        router.push(path);
+      } else {
+        console.error('Invalid navigation path:', path);
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   // Filter strategic categories (excluding best sellers and latest arrivals)
   const strategicCategories = categories.filter(
-    (cat) => !cat.slug?.current?.includes('best-sellers') && !cat.slug?.current?.includes('latest-arrivals')
+    (cat) => cat?.slug?.current && !cat.slug.current.includes('best-sellers') && !cat.slug.current.includes('latest-arrivals')
   );
 
   // Get featured images for best sellers and latest arrivals
@@ -127,11 +136,9 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           {/* Strategic Categories */}
           {strategicCategories.map((category, index) => (
             <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
-              <Link 
-                href={`/category/${category.slug?.current}`} 
-                className="block group h-full"
-                onClick={(e) => {
-                  e.preventDefault();
+              <div 
+                className="block group h-full cursor-pointer"
+                onClick={() => {
                   if (category.slug?.current) {
                     handleNavigation(`/category/${category.slug.current}`);
                   }
@@ -154,19 +161,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
                   </div>
                 </div>
-              </Link>
+              </div>
             </SwiperSlide>
           ))}
 
           {/* Best Sellers Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link 
-              href="/category/best-sellers" 
-              className="block group h-full"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/category/best-sellers');
-              }}
+            <div 
+              className="block group h-full cursor-pointer"
+              onClick={() => handleNavigation('/category/best-sellers')}
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
@@ -194,18 +197,14 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   </button>
                 </div>
               </div>
-            </Link>
+            </div>
           </SwiperSlide>
 
           {/* Latest Arrivals Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link 
-              href="/category/latest-arrivals" 
-              className="block group h-full"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/category/latest-arrivals');
-              }}
+            <div 
+              className="block group h-full cursor-pointer"
+              onClick={() => handleNavigation('/category/latest-arrivals')}
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.latestArrival ? (
@@ -233,7 +232,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   </button>
                 </div>
               </div>
-            </Link>
+            </div>
           </SwiperSlide>
         </Swiper>
       </div>

@@ -31,7 +31,6 @@ export default function Footer() {
           <h3 className="font-bold mb-4">Customer Care</h3>
           <ul className="space-y-2 text-sm text-gray-300">
             <li><Link href="/contact" className="hover:text-[#FFC300]">Contact Us</Link></li>
-            <li><Link href="/faq" className="hover:text-[#FFC300]">FAQ</Link></li>
             <li><Link href="/shipping-policy" className="hover:text-[#FFC300]">Shipping Policy</Link></li>
             <li><Link href="/order-tracking" className="hover:text-[#FFC300]">Order Tracking</Link></li>
             <li><Link href="/gift-cards" className="hover:text-[#FFC300]">Gift Cards</Link></li>
