@@ -193,6 +193,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
             slidesPerView={1.5}
             centeredSlides={false}
             navigation={false}
+            modules={[Pagination, Autoplay]}
             autoplay={{ delay: 3500, disableOnInteraction: false }}
             breakpoints={{
               640: { slidesPerView: 1.5, spaceBetween: 16 },
