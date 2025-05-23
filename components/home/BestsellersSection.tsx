@@ -5,9 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight, X, ShoppingBag, Eye, Heart, BarChart2 } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, FreeMode } from 'swiper/modules';
+import { FreeMode } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 import { urlFor } from '@/lib/sanityClient';
 import { useCart } from '@/context/CartContext';
@@ -280,16 +279,13 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
         {/* Swiper container with no extra px-4, just full width inside max-w-7xl */}
         <div className="relative w-full">
           <Swiper
-            modules={[Navigation]}
+            modules={[FreeMode]}
             spaceBetween={16}
             slidesPerView={1.5}
             centeredSlides={shouldCenter}
             slidesOffsetBefore={0}
             slidesOffsetAfter={0}
-            navigation={{
-              prevEl: '.swiper-button-prev',
-              nextEl: '.swiper-button-next',
-            }}
+            navigation={false}
             breakpoints={{
               640: {
                 slidesPerView: 2.2,
@@ -374,9 +370,6 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
               );
             })}
           </Swiper>
-          {/* Navigation buttons absolutely inside slider, styled round and with brand color */}
-          <button className="swiper-button-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
-          <button className="swiper-button-next absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-transparent text-gray-600 hover:text-gray-900 rounded-full border-none flex items-center justify-center transition-all duration-200 text-lg" />
         </div>
       </div>
 
