@@ -29,4 +29,7 @@ A modern e-commerce platform built with Next.js, featuring a beautiful UI and se
 
 ## Deployment
 
-This project is automatically deployed on Vercel when changes are pushed to the main branch. 
+This project is automatically deployed on Vercel when changes are pushed to the main branch.
+
+## Last Updated
+Last updated: March 19, 2024 - Triggering Vercel deployment 
