@@ -109,7 +109,11 @@ export default function AccordionCheckout() {
     <div className="min-h-screen w-full bg-gradient-to-br from-[#F8F9FA] via-white to-[#E3F0FF] animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8 sm:pb-16">
         {/* Progress Indicator */}
-        <CheckoutProgress steps={steps} currentStep={currentStep} />
+        <div className="sticky top-0 z-50 bg-white border-b border-[#DEE2E6] shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <CheckoutProgress currentStep={currentStep} />
+          </div>
+        </div>
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
@@ -117,6 +121,9 @@ export default function AccordionCheckout() {
             {/* Step 1: Shipping Information */}
             <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
+                <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
+                  Shipping Information
+                </h2>
                 <ShippingInformation
                   onComplete={handleShippingComplete}
                   initialData={shippingData || undefined}

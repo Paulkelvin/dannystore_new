@@ -42,17 +42,17 @@ export default function BrandPillarsSection() {
   const [hoveredPillar, setHoveredPillar] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-[#F8F9FA]">
+    <section className="py-16 bg-[#F8F9FA]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-16">
+        <div className="mb-8">
           <h2 className="text-3xl font-bold tracking-tight text-[#333333] sm:text-4xl">
             Why Choose Us?
           </h2>
         </div>
 
         {/* Pillars Grid */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {pillars.map((pillar, index) => (
             <div
               key={index}

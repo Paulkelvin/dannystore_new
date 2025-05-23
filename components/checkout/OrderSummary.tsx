@@ -104,18 +104,18 @@ export default function OrderSummary({
 
       {/* Discount Code */}
       <div className="mb-6">
-        <div className="flex space-x-2">
+        <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
           <input
             type="text"
             value={discountCode}
             onChange={(e) => setDiscountCode(e.target.value)}
             placeholder="Discount code"
-            className="flex-1 px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
+            className="w-full px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
           />
           <button
             onClick={handleApplyDiscount}
             disabled={isApplyingDiscount || !discountCode.trim()}
-            className="px-4 py-2 bg-[#42A5F5] text-white rounded-lg font-semibold hover:bg-[#63b3fa] transition-all focus:outline-none focus:ring-2 focus:ring-[#42A5F5]/40 disabled:bg-[#DEE2E6] disabled:text-[#6c757d] disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-4 py-2 bg-[#42A5F5] text-white rounded-lg font-semibold hover:bg-[#63b3fa] transition-all focus:outline-none focus:ring-2 focus:ring-[#42A5F5]/40 disabled:bg-[#DEE2E6] disabled:text-[#6c757d] disabled:cursor-not-allowed"
           >
             {isApplyingDiscount ? 'Applying...' : 'Apply'}
           </button>

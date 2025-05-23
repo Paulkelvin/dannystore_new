@@ -166,22 +166,18 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
   };
 
   return (
-    <section className="py-16 sm:py-24 bg-white">
+    <section className="py-12 sm:py-16 bg-white">
       <div className="w-full">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-center tracking-tight">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
             Discovery Hub
           </h2>
-          <p className="mt-4 text-lg sm:text-xl text-gray-600 text-center max-w-2xl mx-auto">
-            Explore our curated collections and discover your next favorite piece
-          </p>
         </div>
         <Swiper
           loop={true}
           spaceBetween={16}
           slidesPerView={1.5}
           centeredSlides={false}
-          navigation
           autoplay={{ delay: 3500, disableOnInteraction: false }}
           breakpoints={{
             640: { slidesPerView: 1.5, spaceBetween: 16 },
@@ -206,11 +202,8 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     loading={index < 2 ? 'eager' : 'lazy'}
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                  <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">{category.name}</h3>
-                    {category.description && (
-                      <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed drop-shadow-sm">{category.description}</p>
-                    )}
+                  <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">{category.name}</h3>
                   </div>
                 </div>
               </Link>
@@ -234,22 +227,19 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
-                    <span className="text-white text-lg font-medium">Best Sellers</span>
+                    <span className="text-white text-base font-medium">Best Sellers</span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
-                  <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
-                    Discover our most popular products
-                  </p>
+                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleNavigation('/category/best-sellers');
                     }}
-                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
                   >
                     View Collection
                   </button>
@@ -275,22 +265,19 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
-                    <span className="text-white text-lg font-medium">Latest Arrivals</span>
+                    <span className="text-white text-base font-medium">Latest Arrivals</span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
-                  <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
-                    Check out our newest additions
-                  </p>
+                <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleNavigation('/category/latest-arrivals');
                     }}
-                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                    className="mt-3 inline-block px-4 py-2 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
                   >
                     Shop Now
                   </button>
@@ -300,37 +287,6 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           </SwiperSlide>
         </Swiper>
       </div>
-      {/* Style Swiper navigation buttons */}
-      <style jsx global>{`
-        .category-swiper .swiper-button-prev,
-        .category-swiper .swiper-button-next {
-          width: 56px !important;
-          height: 56px !important;
-          border-radius: 9999px !important;
-          background: #FFC300 !important;
-          color: #333 !important;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 2rem;
-          opacity: 0.9;
-          transition: opacity 0.2s;
-        }
-        .category-swiper .swiper-button-prev:hover,
-        .category-swiper .swiper-button-next:hover {
-          opacity: 1;
-        }
-        .category-swiper .swiper-button-prev:after,
-        .category-swiper .swiper-button-next:after {
-          font-size: 1.5rem !important;
-          font-weight: bold !important;
-        }
-        .category-swiper .swiper-button-disabled {
-          opacity: 0.35 !important;
-          cursor: not-allowed !important;
-        }
-      `}</style>
     </section>
   );
 } 

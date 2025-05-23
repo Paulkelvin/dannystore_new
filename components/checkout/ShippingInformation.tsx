@@ -416,114 +416,107 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-center mb-6">
-        <FaTruck className="text-2xl text-[#42A5F5] mr-3" />
-        <h2 className="text-3xl font-extrabold text-[#333333] tracking-tight">Shipping Address</h2>
-      </div>
-      <div className="border-b border-[#DEE2E6] mb-6" />
-
-      {/* Dropdown for saved addresses */}
-      {session && addresses.length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="addressDropdown" className="block text-sm font-medium text-[#6c757d] mb-1">
-            Choose a saved address
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="firstName" className="block text-sm font-medium text-[#495057] mb-1">
+            First Name
           </label>
-          <select
-            id="addressDropdown"
-            className="w-full px-4 py-3 rounded-lg border border-[#DEE2E6] focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
-            value={useNewAddress ? 'new' : selectedAddress?.line1 || ''}
-            onChange={handleDropdownChange}
-          >
-            {addresses.map((addr, idx) => (
-              <option key={idx} value={addr.line1}>
-                {addr.name}, {addr.line1}, {addr.city}, {addr.state} {addr.postalCode}
-              </option>
-            ))}
-            <option value="new">+ Add New Address</option>
-          </select>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
+          />
         </div>
-      )}
-
-      {/* Email - Disabled if logged in */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[#6c757d] mb-1">
-          Email address
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          disabled={!!session}
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.email ? 'border-red-500' : 'border-[#DEE2E6]'
-          } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all ${
-            session ? 'bg-gray-100' : ''
-          }`}
-          placeholder="you@example.com"
-        />
-        {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-      </div>
-
-      {/* Full Name */}
-      <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-[#6c757d] mb-1">
-          Full Name
-        </label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.fullName ? 'border-red-500' : 'border-[#DEE2E6]'
-          } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-          placeholder="John Doe"
-        />
-        {errors.fullName && <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>}
-      </div>
-
-      {/* Address Line 1 */}
-      <div>
-        <label htmlFor="address1" className="block text-sm font-medium text-[#6c757d] mb-1">
-          Street Address
-        </label>
-        <input
-          type="text"
-          id="address1"
-          name="address1"
-          value={formData.address1}
-          onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.address1 ? 'border-red-500' : 'border-[#DEE2E6]'
-          } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-          placeholder="123 Main St"
-        />
-        {errors.address1 && <p className="mt-1 text-sm text-red-500">{errors.address1}</p>}
-      </div>
-
-      {/* Address Line 2 */}
-      <div>
-        <label htmlFor="address2" className="block text-sm font-medium text-[#6c757d] mb-1">
-          Apartment, suite, etc. (Optional)
-        </label>
-        <input
-          type="text"
-          id="address2"
-          name="address2"
-          value={formData.address2}
-          onChange={handleChange}
-          className="w-full px-4 py-3 rounded-lg border border-[#DEE2E6] focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
-          placeholder="Apt 123"
-        />
-      </div>
-
-      {/* City, State, ZIP */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
-          <label htmlFor="city" className="block text-sm font-medium text-[#6c757d] mb-1">
+        <div>
+          <label htmlFor="lastName" className="block text-sm font-medium text-[#495057] mb-1">
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-[#DEE2E6] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all"
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-[#495057] mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            disabled={!!session}
+            required
+            className={`w-full px-4 py-2 border ${
+              errors.email ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all ${
+              session ? 'bg-gray-100' : ''
+            }`}
+          />
+          {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+        </div>
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-[#495057] mb-1">
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className={`w-full px-4 py-2 border ${
+              errors.phone ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
+          />
+          {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="address1" className="block text-sm font-medium text-[#495057] mb-1">
+            Address Line 1
+          </label>
+          <input
+            type="text"
+            id="address1"
+            name="address1"
+            value={formData.address1}
+            onChange={handleChange}
+            required
+            className={`w-full px-4 py-2 border ${
+              errors.address1 ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
+          />
+          {errors.address1 && <p className="mt-1 text-sm text-red-500">{errors.address1}</p>}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="address2" className="block text-sm font-medium text-[#495057] mb-1">
+            Address Line 2
+          </label>
+          <input
+            type="text"
+            id="address2"
+            name="address2"
+            value={formData.address2}
+            onChange={handleChange}
+            className={`w-full px-4 py-2 border ${
+              errors.address2 ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
+          />
+          {errors.address2 && <p className="mt-1 text-sm text-red-500">{errors.address2}</p>}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="city" className="block text-sm font-medium text-[#495057] mb-1">
             City
           </label>
           <input
@@ -532,16 +525,15 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
             name="city"
             value={formData.city}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            required
+            className={`w-full px-4 py-2 border ${
               errors.city ? 'border-red-500' : 'border-[#DEE2E6]'
-            } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-            placeholder="City"
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
           />
           {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
         </div>
-
-        <div>
-          <label htmlFor="state" className="block text-sm font-medium text-[#6c757d] mb-1">
+        <div className="sm:col-span-2">
+          <label htmlFor="state" className="block text-sm font-medium text-[#495057] mb-1">
             State
           </label>
           <select
@@ -549,9 +541,10 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
             name="state"
             value={formData.state}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            required
+            className={`w-full px-4 py-2 border ${
               errors.state ? 'border-red-500' : 'border-[#DEE2E6]'
-            } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all bg-white`}
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
           >
             <option value="">Select State</option>
             {US_STATES.map(state => (
@@ -562,10 +555,8 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
           </select>
           {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
         </div>
-
-        {/* ZIP Code input */}
-        <div>
-          <label htmlFor="zipCode" className="block text-sm font-medium text-[#6c757d] mb-1">
+        <div className="sm:col-span-2">
+          <label htmlFor="zipCode" className="block text-sm font-medium text-[#495057] mb-1">
             ZIP Code
           </label>
           <input
@@ -574,58 +565,46 @@ export default function ShippingInformation({ onComplete, initialData }: Shippin
             name="zipCode"
             value={formData.zipCode}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            required
+            className={`w-full px-4 py-2 border ${
               errors.zipCode ? 'border-red-500' : 'border-[#DEE2E6]'
-            } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-            placeholder="12345"
-            maxLength={5}
-            pattern="\d*"
-            inputMode="numeric"
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
           />
-          {errors.zipCode && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.zipCode}
-            </p>
-          )}
+          {errors.zipCode && <p className="mt-1 text-sm text-red-500">{errors.zipCode}</p>}
         </div>
-      </div>
-
-      {/* Phone (Optional) */}
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-[#6c757d] mb-1">
-          Phone Number (Optional - for delivery updates)
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${
-            errors.phone ? 'border-red-500' : 'border-[#DEE2E6]'
-          } focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
-          placeholder="(123) 456-7890"
-        />
-        {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
-      </div>
-
-      {/* Add a checkbox to save address if logged in */}
-      {session && (
-        <div className="mt-6">
-          <label className="flex items-center space-x-2">
+        <div className="sm:col-span-2">
+          <label htmlFor="country" className="block text-sm font-medium text-[#495057] mb-1">
+            Country
+          </label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            required
+            className={`w-full px-4 py-2 border ${
+              errors.country ? 'border-red-500' : 'border-[#DEE2E6]'
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#42A5F5] focus:border-transparent transition-all`}
+          />
+          {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country}</p>}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="saveAddress" className="flex items-center space-x-2">
             <input
               type="checkbox"
+              id="saveAddress"
+              name="saveAddress"
               checked={saveAddress}
               onChange={(e) => setSaveAddress(e.target.checked)}
               className="h-4 w-4 border-[#DEE2E6] text-[#42A5F5] focus:ring-[#42A5F5] rounded"
             />
-            <span className="text-sm text-[#6c757d]">
+            <span className="text-sm text-[#495057]">
               Save this address to my account
             </span>
           </label>
         </div>
-      )}
-
+      </div>
       <button
         type="submit"
         disabled={isSaving}
