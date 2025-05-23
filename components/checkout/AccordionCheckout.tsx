@@ -107,16 +107,16 @@ export default function AccordionCheckout() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#F8F9FA] via-white to-[#E3F0FF] animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8 sm:pb-16">
         {/* Progress Indicator */}
         <CheckoutProgress steps={steps} currentStep={currentStep} />
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-16 lg:items-start">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
             {/* Step 1: Shipping Information */}
-            <div className={`mb-8 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
-              <div className="bg-white rounded-2xl shadow-xl border border-[#DEE2E6] p-12">
+            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <ShippingInformation
                   onComplete={handleShippingComplete}
                   initialData={shippingData || undefined}
@@ -125,8 +125,8 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 2: Shipping Method */}
-            <div className={`mb-8 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
-              <div className="bg-white rounded-2xl shadow-xl border border-[#DEE2E6] p-12">
+            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <ShippingMethod
                   methods={availableShippingMethods}
                   onComplete={handleShippingMethodComplete}
@@ -136,8 +136,8 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 3: Payment & Review */}
-            <div className={`mb-8 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
-              <div className="bg-white rounded-2xl shadow-xl border border-[#DEE2E6] p-12">
+            <div className={`mb-6 sm:mb-8 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 {shippingData && selectedShippingMethod && (
                   <PaymentAndReview
                     shippingData={shippingData}
@@ -151,13 +151,15 @@ export default function AccordionCheckout() {
           </div>
 
           {/* Order Summary */}
-          <div className="mt-12 lg:mt-0 lg:col-span-5">
-            <OrderSummary
-              items={items}
-              shippingMethod={selectedShippingMethod || undefined}
-              subtotal={subtotal}
-              onApplyDiscount={handleApplyDiscount}
-            />
+          <div className="mt-8 lg:mt-0 lg:col-span-5">
+            <div className="sticky top-8">
+              <OrderSummary
+                items={items}
+                shippingMethod={selectedShippingMethod || undefined}
+                subtotal={subtotal}
+                onApplyDiscount={handleApplyDiscount}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -169,6 +171,12 @@ export default function AccordionCheckout() {
         }
         .animate-fade-in {
           animation: fade-in 0.5s cubic-bezier(0.4,0,0.2,1) both;
+        }
+        @media (max-width: 640px) {
+          .sticky {
+            position: relative;
+            top: 0;
+          }
         }
       `}</style>
     </div>
