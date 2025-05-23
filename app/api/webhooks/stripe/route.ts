@@ -4,7 +4,6 @@ import { headers } from 'next/headers';
 import { sanityClientWrite } from '@/lib/sanityClient';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { clearCart } from '@/lib/cart';
 
 console.log('Startup: NEXT_PUBLIC_BASE_URL is', process.env.NEXT_PUBLIC_BASE_URL);
 
@@ -363,7 +362,19 @@ export async function POST(request: Request) {
               // Clear cart for the customer
               if (order.customerEmail) {
                 try {
-                  await clearCart(order.customerEmail);
+                  // Call the cart clear API endpoint
+                  const clearCartResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cart/clear`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: order.customerEmail })
+                  });
+
+                  if (!clearCartResponse.ok) {
+                    throw new Error(`Failed to clear cart: ${clearCartResponse.statusText}`);
+                  }
+
                   console.log(`[${requestId}] 🛒 Cart cleared for customer:`, order.customerEmail);
                 } catch (error) {
                   console.error(`[${requestId}] ❌ Error clearing cart:`, error);
