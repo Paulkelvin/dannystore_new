@@ -14,11 +14,11 @@ interface CheckoutProgressProps {
 
 export default function CheckoutProgress({ steps, currentStep }: CheckoutProgressProps) {
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-center mb-8 sm:mb-12 px-4 sm:px-0">
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
       {steps.map((step, idx) => (
-        <div key={step.key} className="flex items-center w-full sm:w-auto mb-4 sm:mb-0">
+        <div key={step.key} className="flex items-center w-full sm:w-auto">
           <div
-            className={`relative rounded-full w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center font-bold text-sm sm:text-base shadow transition-all duration-300
+            className={`relative rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-bold text-sm sm:text-base shadow transition-all duration-300
               ${
                 idx < currentStep
                   ? 'bg-[#42A5F5] text-white'
@@ -34,22 +34,18 @@ export default function CheckoutProgress({ steps, currentStep }: CheckoutProgres
               idx + 1
             )}
           </div>
-          <span
-            className={`ml-2 mr-4 font-semibold text-base sm:text-lg flex items-center whitespace-nowrap ${
-              idx === currentStep
-                ? 'text-[#42A5F5]'
-                : idx < currentStep
-                ? 'text-[#42A5F5]'
-                : 'text-[#6c757d]'
-            }`}
-          >
-            <span className="hidden sm:inline-block mr-2">{step.icon}</span>
-            <span className="hidden sm:inline">{step.label}</span>
-            <span className="sm:hidden">{step.label.split(' ')[0]}</span>
-          </span>
+          <div className="ml-3 flex flex-col">
+            <span className="font-semibold text-sm sm:text-base flex items-center">
+              <span className="hidden sm:inline-block mr-2">{step.icon}</span>
+              <span>{step.label}</span>
+            </span>
+            {idx === currentStep && (
+              <span className="text-xs text-[#42A5F5] mt-1">Current Step</span>
+            )}
+          </div>
           {idx < steps.length - 1 && (
             <div
-              className={`hidden sm:block w-8 h-1 rounded mx-1 transition-colors duration-300 ${
+              className={`hidden sm:block w-12 h-0.5 mx-4 transition-colors duration-300 ${
                 idx < currentStep ? 'bg-[#42A5F5]' : 'bg-[#DEE2E6]'
               }`}
             />

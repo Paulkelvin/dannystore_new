@@ -107,15 +107,16 @@ export default function AccordionCheckout() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#F8F9FA] via-white to-[#E3F0FF] animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8 sm:pb-16">
-        {/* Progress Indicator */}
-        <div className="sticky top-24 z-50 bg-white border-b border-[#DEE2E6] shadow-sm py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <CheckoutProgress currentStep={currentStep} steps={steps} />
-          </div>
+      {/* Progress Indicator - Fixed at the top */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#DEE2E6] shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <CheckoutProgress currentStep={currentStep} steps={steps} />
         </div>
+      </div>
 
-        <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
+      {/* Main Content - Add padding to account for fixed header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-8 sm:pb-16">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
             {/* Step 1: Shipping Information */}
@@ -165,7 +166,7 @@ export default function AccordionCheckout() {
 
           {/* Order Summary */}
           <div className="mt-8 lg:mt-0 lg:col-span-5">
-            <div className="sticky top-32">
+            <div className="lg:sticky lg:top-40">
               <OrderSummary
                 items={items}
                 shippingMethod={selectedShippingMethod || undefined}
@@ -184,12 +185,6 @@ export default function AccordionCheckout() {
         }
         .animate-fade-in {
           animation: fade-in 0.5s cubic-bezier(0.4,0,0.2,1) both;
-        }
-        @media (max-width: 1024px) {
-          .sticky {
-            position: relative;
-            top: 0;
-          }
         }
       `}</style>
     </div>
