@@ -97,8 +97,14 @@ export default function SuccessPage() {
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-gray-900 mb-4">Payment Successful!</h1>
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-600 mb-4">
             Thank you for your purchase. We'll send you an email confirmation shortly.
+          </p>
+          <p className="text-gray-600 mb-8">
+            You can view your order history and track your order status in your{' '}
+            <Link href="/account" className="text-blue-600 hover:text-blue-800 underline">
+              account dashboard
+            </Link>.
           </p>
           
           {shouldShowActivation && (

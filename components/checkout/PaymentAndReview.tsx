@@ -49,6 +49,7 @@ function PaymentForm({ onComplete, orderTotal, email, cartItems, shippingAddress
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { clearCart } = useCart();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +70,7 @@ function PaymentForm({ onComplete, orderTotal, email, cartItems, shippingAddress
         setErrorMessage(result.error?.message || 'An error occurred during payment.');
       } else if ('paymentIntent' in result && result.paymentIntent && result.paymentIntent.status === 'succeeded') {
         clearOrderNumber();
+        clearCart(); // Clear the cart after successful payment
         onComplete(result.paymentIntent.id);
       }
     } catch (err) {
