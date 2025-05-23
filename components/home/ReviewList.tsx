@@ -53,7 +53,7 @@ function AvatarWithSkeleton({ avatar, name }: { avatar: SanityImageReference; na
   );
 }
 
-export default function ReviewList({ reviews }: { reviews: Review[] }) {
+export default function ReviewList({ reviews, isHomePage = false }: { reviews: Review[], isHomePage?: boolean }) {
   useEffect(() => {
     console.log('📋 ReviewList received reviews:', reviews);
   }, [reviews]);
@@ -76,8 +76,10 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
   return (
     <section className="w-full py-24 bg-[#F8F9FA]">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-[#333333] text-center mb-2">Hear From Our Happy Customers</h2>
-        <p className="text-lg text-[#6c757d] text-center mb-10">Real stories from parents and kids who love our toys!</p>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[#333333]">Hear From Our Happy Customers</h2>
+          <p className="hidden sm:block text-lg text-[#6c757d] mt-2">Real stories from parents and kids who love our toys!</p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {reviews.map((review) => (
             <div
@@ -102,14 +104,16 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
             </div>
           ))}
         </div>
-        <div className="text-center mt-12">
-          <a
-            href="/reviews"
-            className="inline-block px-6 py-3 bg-[#42A5F5] text-white font-semibold rounded-lg shadow hover:bg-[#1e88e5] transition-colors"
-          >
-            Read more reviews
-          </a>
-        </div>
+        {isHomePage && (
+          <div className="text-center mt-12">
+            <a
+              href="/reviews"
+              className="inline-block px-8 py-3 bg-[#FFC300] text-[#333333] font-semibold rounded-full shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+            >
+              Read more reviews
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );
