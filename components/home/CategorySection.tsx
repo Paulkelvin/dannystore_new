@@ -7,9 +7,8 @@ import { useRef, useEffect, useState } from 'react';
 import { urlFor } from '@/lib/sanityClient';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { sanityClientPublic as client } from '@/lib/sanityClient';
 import { useRouter } from 'next/navigation';
@@ -77,7 +76,7 @@ const getImageUrl = (image: any): string => {
 
 export default function CategorySection({ categories = [] }: CategorySectionProps) {
   const router = useRouter();
-  SwiperCore.use([Navigation, Pagination, Autoplay]);
+  SwiperCore.use([Pagination, Autoplay]);
   const [featuredImages, setFeaturedImages] = useState({
     bestSeller: null,
     latest: null
