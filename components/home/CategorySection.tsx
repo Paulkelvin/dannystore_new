@@ -177,6 +177,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           spaceBetween={16}
           slidesPerView={1.5}
           centeredSlides={false}
+          navigation={false}
           autoplay={{ delay: 3500, disableOnInteraction: false }}
           breakpoints={{
             640: { slidesPerView: 1.5, spaceBetween: 16 },
