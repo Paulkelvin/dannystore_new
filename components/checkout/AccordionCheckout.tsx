@@ -107,15 +107,15 @@ export default function AccordionCheckout() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#F8F9FA] via-white to-[#E3F0FF] animate-fade-in">
-      {/* Progress Indicator - Fixed at the top */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#DEE2E6] shadow-sm">
+      {/* Progress Indicator - Fixed below header */}
+      <div className="fixed top-[72px] left-0 right-0 z-40 bg-white border-b border-[#DEE2E6] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <CheckoutProgress currentStep={currentStep} steps={steps} />
         </div>
       </div>
 
-      {/* Main Content - Add padding to account for fixed header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-8 sm:pb-16">
+      {/* Main Content - Add padding to account for fixed header + progress indicator */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 sm:pt-56 pb-8 sm:pb-16">
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-start">
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
@@ -166,7 +166,7 @@ export default function AccordionCheckout() {
 
           {/* Order Summary */}
           <div className="mt-8 lg:mt-0 lg:col-span-5">
-            <div className="lg:sticky lg:top-40">
+            <div className="lg:sticky lg:top-[160px]">
               <OrderSummary
                 items={items}
                 shippingMethod={selectedShippingMethod || undefined}
