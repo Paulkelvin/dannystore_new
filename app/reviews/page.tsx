@@ -1,5 +1,9 @@
 import ReviewSection from '@/components/home/ReviewSection';
 
 export default function ReviewsPage() {
-  return <ReviewSection />;
+  return (
+    <div className="pt-32">
+      <ReviewSection />
+    </div>
+  );
 } 

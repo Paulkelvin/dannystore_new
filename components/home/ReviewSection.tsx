@@ -12,7 +12,7 @@ interface Review {
   _createdAt: string;  // Adding this to help with ordering
 }
 
-async function getReviews() {
+async function getReviews(isHomePage: boolean = false) {
   console.log('🔍 Fetching reviews...');
   const query = groq`*[_type == "review" && isFeatured == true] | order(_createdAt desc) {
     _id,
@@ -21,7 +21,7 @@ async function getReviews() {
     rating,
     text,
     _createdAt
-  }[0...10]`;  // Limit to 10 reviews, ordered by creation date
+  }${isHomePage ? '[0...6]' : ''}`;  // Limit to 6 reviews only on homepage
   try {
     const reviews = await sanityClientPublic.fetch<Review[]>(query);
     console.log('📝 Reviews fetched:', {
@@ -40,9 +40,9 @@ async function getReviews() {
   }
 }
 
-export default async function ReviewSection() {
+export default async function ReviewSection({ isHomePage = false }: { isHomePage?: boolean }) {
   console.log('🎬 ReviewSection component rendering...');
-  const reviews = await getReviews();
+  const reviews = await getReviews(isHomePage);
   console.log('✅ Reviews to display:', {
     total: reviews.length,
     ids: reviews.map(r => r._id)
@@ -58,5 +58,5 @@ export default async function ReviewSection() {
     });
   }
   
-  return <ReviewList reviews={reviews} />;
+  return <ReviewList reviews={reviews} isHomePage={isHomePage} />;
 } 
