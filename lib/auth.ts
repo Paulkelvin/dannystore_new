@@ -138,6 +138,18 @@ export const authOptions: NextAuthOptions = {
             { userId: existingUser._id }
           );
 
+          // Check if user has an email (magic link) account
+          const existingEmailAccount = await sanityClientWrite.fetch(
+            `*[_type == "account" && provider == "email" && user._ref == $userId][0]`,
+            { userId: existingUser._id }
+          );
+
+          if (existingEmailAccount && !existingGoogleAccount) {
+            // User has an email account but no Google account
+            console.log('❌ OAuthAccountNotLinked: User has email account but no Google account:', user.email);
+            return false; // This will trigger the OAuthAccountNotLinked error
+          }
+
           if (!existingGoogleAccount) {
             // Allow linking the Google account
             console.log('✅ Allowing Google account linking for existing user:', user.email);

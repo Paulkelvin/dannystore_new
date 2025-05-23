@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -14,22 +14,34 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams ? searchParams.get("callbackUrl") || "/account" : "/account";
 
+  // Check for error parameters in URL
+  useEffect(() => {
+    const error = searchParams?.get("error");
+    if (error === "OAuthAccountNotLinked") {
+      setError("This email is already registered with a different sign-in method. Please use your original sign-in method (magic link) or contact support if you need help.");
+      toast.error("This email is already registered with a different sign-in method");
+    }
+  }, [searchParams]);
+
   async function handleGoogleSignIn() {
     try {
       setIsLoading(true);
       setError("");
       const res = await signIn("google", {
         callbackUrl,
-        redirect: true
+        redirect: false // Changed to false to handle the response
       });
       
-      // If we get here, it means the redirect didn't happen automatically
-      // This could happen if there's an error or if the sign-in was successful but the redirect failed
       if (res?.error) {
-        setError(res.error);
-        toast.error(res.error);
+        if (res.error === "OAuthAccountNotLinked") {
+          setError("This email is already registered with a different sign-in method. Please use your original sign-in method (magic link) or contact support if you need help.");
+          toast.error("This email is already registered with a different sign-in method");
+        } else {
+          setError(res.error);
+          toast.error(res.error);
+        }
       } else if (res?.ok) {
-        // If sign-in was successful but we're still here, manually redirect
+        // If sign-in was successful, redirect
         router.push(callbackUrl);
       }
     } catch (err) {
