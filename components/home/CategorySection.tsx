@@ -15,9 +15,14 @@ import { useRouter } from 'next/navigation';
 
 // Add style block to hide navigation buttons
 const styles = `
+  .category-swiper .swiper-button-next,
   .category-swiper .swiper-button-prev,
-  .category-swiper .swiper-button-next {
+  .category-swiper button.swiper-button-next,
+  .category-swiper button.swiper-button-prev {
     display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 `;
 
