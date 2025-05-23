@@ -257,9 +257,9 @@ export default function ProductsPageClient({ products, categories }: { products:
           </div>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-6 mt-4 sm:mt-12">
+      <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-6 mt-4 sm:mt-12 mb-16 sm:mb-24">
         {/* Filter Sidebar (Desktop only) */}
-        <aside className="hidden lg:block max-w-[260px] bg-white rounded-xl shadow p-6 space-y-6 mb-8 lg:mb-0 self-start">
+        <aside className="hidden lg:block w-[280px] flex-shrink-0 bg-white rounded-xl shadow p-6 space-y-6 mb-8 lg:mb-0 self-start">
           <ProductFilters
             categories={categories}
             colors={colors}
@@ -272,10 +272,10 @@ export default function ProductsPageClient({ products, categories }: { products:
           />
         </aside>
         {/* Product Grid */}
-        <div className="flex-1">
-          <div className="max-w-7xl mx-auto px-2 sm:px-6">
+        <div className="flex-1 min-w-0">
+          <div className="w-full px-2 sm:px-4">
             {sortedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {sortedProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
