@@ -142,16 +142,6 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                   <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
                     <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleNavigation(`/category/${category.slug.current}`);
-                      }}
-                      className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-[#FFC300]/90 text-[#333333] rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm hover:bg-[#FFC300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300]/50 focus:ring-offset-2"
-                    >
-                      View Collection
-                    </button>
                   </div>
                 </div>
               </Link>
@@ -212,7 +202,7 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     loading="eager"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#42A5F5] to-[#64B5F6] flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
                     <span className="text-white text-lg font-medium">Latest Arrivals</span>
                   </div>
                 )}

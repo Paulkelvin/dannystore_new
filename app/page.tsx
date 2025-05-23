@@ -214,7 +214,6 @@ export default async function HomePage() {
         <BestsellersSection products={bestSellers} />
         <NewArrivalsSection products={latestProducts} />
         <CategoryGridSection categories={categories} />
-        <CollectionMarqueeSection collections={lifestylePackages} />
         <BrandPillarsSection />
         <ReviewSection />
         <EmailSignupSection />
