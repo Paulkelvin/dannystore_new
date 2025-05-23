@@ -4,17 +4,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextRenderer from '@/components/PortableTextRenderer';
 import { notFound } from 'next/navigation';
+import type { PortableTextBlock } from '@portabletext/types';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+
+interface SanityImageReference {
+  _type: 'image';
+  asset: {
+    _ref: string;
+    _type: 'reference';
+  };
+  alt?: string;
+}
 
 interface BlogPost {
   _id: string;
   title: string;
   slug: { current: string };
-  mainImage: any;
+  mainImage: SanityImageReference;
   publishedAt: string;
-  body: any;
+  body: PortableTextBlock[];
   author: {
     name: string;
-    image?: any;
+    image?: SanityImageReference;
     bio?: string;
   };
   blogCategories: {
@@ -25,7 +36,7 @@ interface BlogPost {
     _id: string;
     name: string;
     slug: { current: string };
-    mainImage: any;
+    mainImage: SanityImageReference;
     price: number;
   }[];
 }
@@ -80,7 +91,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <article className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <header className="mb-8">
-          <div className="flex gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4">
             {post.blogCategories.map((category) => (
               <Link
                 key={category.slug.current}
@@ -102,6 +113,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   alt={post.author.name}
                   fill
                   className="object-cover"
+                  sizes="48px"
                 />
               </div>
             )}
@@ -123,13 +135,17 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
             />
           </div>
         </header>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none">
-          <PortableTextRenderer value={post.body} />
+        <div className="prose prose-lg max-w-none prose-headings:text-[#333333] prose-a:text-[#42A5F5] prose-a:no-underline hover:prose-a:underline">
+          <PortableTextRenderer 
+            value={post.body} 
+            className="prose-img:rounded-lg prose-img:shadow-md"
+          />
         </div>
 
         {/* Featured Products */}
@@ -150,6 +166,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                         alt={product.name}
                         fill
                         className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
                     <div className="p-4">
@@ -178,6 +195,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     alt={post.author.name}
                     fill
                     className="object-cover"
+                    sizes="64px"
                   />
                 </div>
               )}
