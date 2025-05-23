@@ -206,6 +206,14 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-4">
+            {/* User Icon - Desktop Only */}
+            <button
+              onClick={handleUserMenuClick}
+              className="hidden md:flex items-center justify-center p-2 rounded-lg transition-colors hover:text-white/80"
+              aria-label={status === 'authenticated' ? 'User menu' : 'Sign in'}
+            >
+              <User className="w-6 h-6" />
+            </button>
             <Link href="/cart" className="relative transition-colors hover:text-white/80">
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
