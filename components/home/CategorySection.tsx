@@ -17,9 +17,7 @@ import { useRouter } from 'next/navigation';
 interface Category {
   _id: string;
   name: string;
-  slug: {
-    current: string;
-  };
+  slug: string;
   description?: string;
   image: any; // Can be either Sanity image object or URL string
 }
@@ -79,109 +77,149 @@ const getImageUrl = (image: any): string => {
 
 export default function CategorySection({ categories = [] }: CategorySectionProps) {
   const router = useRouter();
-  const swiperRef = useRef<SwiperCore>();
+  SwiperCore.use([Navigation, Pagination, Autoplay]);
+  const [featuredImages, setFeaturedImages] = useState({
+    bestSeller: null,
+    latest: null
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleNavigation = (path: string) => {
-    try {
-      if (path && path.startsWith('/')) {
-        router.push(path);
-      } else {
-        console.error('Invalid navigation path:', path);
-      }
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  };
-
-  // Filter strategic categories (excluding best sellers and latest arrivals)
-  const strategicCategories = categories.filter(
-    (cat) => cat?.slug?.current && !cat.slug.current.includes('best-sellers') && !cat.slug.current.includes('latest-arrivals')
+  // Ensure categories is an array and filter out best-sellers and latest-arrivals
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  const strategicCategories = safeCategories.filter(
+    category => category.slug && 
+    !category.slug.includes('best-sellers') && 
+    !category.slug.includes('latest-arrivals')
   );
 
-  // Get featured images for best sellers and latest arrivals
-  const featuredImages = {
-    bestSeller: categories.find(cat => cat.slug?.current?.includes('best-sellers'))?.image,
-    latestArrival: categories.find(cat => cat.slug?.current?.includes('latest-arrivals'))?.image
-  };
+  // Fetch featured images for best sellers and latest arrivals
+  useEffect(() => {
+    const fetchFeaturedImages = async () => {
+      try {
+        setIsLoading(true);
+        // Modified queries to get any product if no best seller or latest is found
+        const bestSellerQuery = `*[_type == "product" && isBestSeller == true][0] {
+          mainImage
+        } || *[_type == "product"][0] {
+          mainImage
+        }`;
+        const latestQuery = `*[_type == "product"] | order(_createdAt desc)[0] {
+          mainImage
+        } || *[_type == "product"][0] {
+          mainImage
+        }`;
 
-  // Calculate total slides for loop mode
-  const totalSlides = strategicCategories.length + 2; // +2 for best sellers and latest arrivals
-  const shouldEnableLoop = totalSlides > 3; // Enable loop only if we have enough slides
+        const [bestSeller, latest] = await Promise.all([
+          client.fetch(bestSellerQuery),
+          client.fetch(latestQuery)
+        ]);
+
+        setFeaturedImages({
+          bestSeller: bestSeller?.mainImage,
+          latest: latest?.mainImage
+        });
+      } catch (err) {
+        console.error('Error fetching featured images:', err);
+        // Don't set error state, just use fallback background
+        setFeaturedImages({
+          bestSeller: null,
+          latest: null
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeaturedImages();
+  }, []);
+
+  if (error) {
+    return (
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-red-600">
+            <p>{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="aspect-[4/5] bg-gray-200 animate-pulse rounded-lg" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Add a navigation handler
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <section className="py-16 sm:py-24 bg-white">
       <div className="w-full">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-[#333333]">
-              Discovery Hub
-            </h2>
-          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-center tracking-tight">
+            Discovery Hub
+          </h2>
+          <p className="mt-4 text-lg sm:text-xl text-gray-600 text-center max-w-2xl mx-auto">
+            Explore our curated collections and discover your next favorite piece
+          </p>
         </div>
-        
         <Swiper
-          onBeforeInit={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-          modules={[Navigation, Pagination, Autoplay]}
-          loop={shouldEnableLoop}
+          loop={true}
           spaceBetween={16}
           slidesPerView={1.5}
           centeredSlides={false}
-          autoplay={shouldEnableLoop ? { delay: 3500, disableOnInteraction: false } : false}
+          navigation
+          autoplay={{ delay: 3500, disableOnInteraction: false }}
           breakpoints={{
-            640: { slidesPerView: Math.min(1.5, totalSlides), spaceBetween: 16 },
-            768: { slidesPerView: Math.min(2.5, totalSlides), spaceBetween: 24 },
-            1024: { slidesPerView: Math.min(3, totalSlides), spaceBetween: 32 },
+            640: { slidesPerView: 1.5, spaceBetween: 16 },
+            768: { slidesPerView: 2.5, spaceBetween: 24 },
+            1024: { slidesPerView: 3, spaceBetween: 32 },
           }}
           className="category-swiper pb-8 px-4"
         >
           {/* Strategic Categories */}
           {strategicCategories.map((category, index) => (
             <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
-              <div 
-                className="block group h-full cursor-pointer"
-                onClick={() => {
-                  if (category.slug?.current) {
-                    handleNavigation(`/category/${category.slug.current}`);
-                  }
-                }}
-              >
+              <Link href={`/category/${category.slug}`} className="block group h-full">
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                  {category.image ? (
-                    <Image
-                      src={getImageUrl(category.image)}
-                      alt={category.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      priority={index < 2}
-                      quality={85}
-                      loading={index < 2 ? 'eager' : 'lazy'}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
-                      <span className="text-white text-lg font-medium">{category.name}</span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
-                  <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
+                  <Image
+                    src={getImageUrl(category.image)}
+                    alt={category.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    priority={index < 2} // Prioritize loading for first two images
+                    quality={85}
+                    loading={index < 2 ? 'eager' : 'lazy'}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                  <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
                     {category.description && (
-                      <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
+                      <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed drop-shadow-sm">{category.description}</p>
                     )}
                   </div>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           ))}
 
           {/* Best Sellers Card */}
-          <SwiperSlide className="mb-6 sm:mb-0">
-            <div 
-              className="block group h-full cursor-pointer"
-              onClick={() => handleNavigation('/category/best-sellers')}
-            >
+          <SwiperSlide>
+            <Link href="/products?filter=best-sellers" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
                   <Image
@@ -199,28 +237,34 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     <span className="text-white text-lg font-medium">Best Sellers</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
-                  <p className="text-sm sm:text-base text-white/90 mb-4">Discover our most popular products</p>
-                  <button className="mt-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
-                    Shop Now
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
+                  <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
+                    Discover our most popular products
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleNavigation('/category/best-sellers');
+                    }}
+                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                  >
+                    View Collection
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
 
           {/* Latest Arrivals Card */}
-          <SwiperSlide className="mb-6 sm:mb-0">
-            <div 
-              className="block group h-full cursor-pointer"
-              onClick={() => handleNavigation('/category/latest-arrivals')}
-            >
+          <SwiperSlide>
+            <Link href="/products?filter=latest" className="block group h-full">
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                {featuredImages.latestArrival ? (
+                {featuredImages.latest ? (
                   <Image
-                    src={getImageUrl(featuredImages.latestArrival)}
+                    src={getImageUrl(featuredImages.latest)}
                     alt="Latest Arrivals"
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
@@ -234,41 +278,57 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     <span className="text-white text-lg font-medium">Latest Arrivals</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
-                <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Latest Arrivals</h3>
-                  <p className="text-sm sm:text-base text-white/90 mb-4">Check out our newest products</p>
-                  <button className="mt-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+                <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
+                  <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
+                    Check out our newest additions
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleNavigation('/category/latest-arrivals');
+                    }}
+                    className="inline-block px-6 py-3 bg-[#FFC300] text-[#333333] rounded-full text-sm font-semibold tracking-wide shadow-lg hover:bg-[#F0B300] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2"
+                  >
                     Shop Now
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         </Swiper>
       </div>
-      {/* Remove the global styles for swiper navigation buttons since we're not using them anymore */}
+      {/* Style Swiper navigation buttons */}
       <style jsx global>{`
-        .category-swiper .swiper-slide {
-          transition: transform 0.3s ease;
+        .category-swiper .swiper-button-prev,
+        .category-swiper .swiper-button-next {
+          width: 56px !important;
+          height: 56px !important;
+          border-radius: 9999px !important;
+          background: #FFC300 !important;
+          color: #333 !important;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          opacity: 0.9;
+          transition: opacity 0.2s;
         }
-        .category-swiper .swiper-slide > div {
-          width: 100%;
-          max-width: 340px;
-          margin: 0 auto;
+        .category-swiper .swiper-button-prev:hover,
+        .category-swiper .swiper-button-next:hover {
+          opacity: 1;
         }
-        .category-swiper .swiper-button-next,
-        .category-swiper .swiper-button-prev {
-          width: 30px !important;
-          height: 30px !important;
-          background: rgba(255, 255, 255, 0.9) !important;
-          border-radius: 50% !important;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        .category-swiper .swiper-button-prev:after,
+        .category-swiper .swiper-button-next:after {
+          font-size: 1.5rem !important;
+          font-weight: bold !important;
         }
-        .category-swiper .swiper-button-next:after,
-        .category-swiper .swiper-button-prev:after {
-          font-size: 14px !important;
-          color: #333333 !important;
+        .category-swiper .swiper-button-disabled {
+          opacity: 0.35 !important;
+          cursor: not-allowed !important;
         }
       `}</style>
     </section>
