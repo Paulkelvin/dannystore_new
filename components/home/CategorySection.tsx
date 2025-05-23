@@ -83,7 +83,6 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
 
   const handleNavigation = (path: string) => {
     try {
-      // Ensure the path is valid before navigation
       if (path && path.startsWith('/')) {
         router.push(path);
       } else {
@@ -105,6 +104,10 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
     latestArrival: categories.find(cat => cat.slug?.current?.includes('latest-arrivals'))?.image
   };
 
+  // Calculate total slides for loop mode
+  const totalSlides = strategicCategories.length + 2; // +2 for best sellers and latest arrivals
+  const shouldEnableLoop = totalSlides > 3; // Enable loop only if we have enough slides
+
   return (
     <section className="py-16 sm:py-24 bg-white">
       <div className="w-full">
@@ -121,15 +124,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
             swiperRef.current = swiper;
           }}
           modules={[Navigation, Pagination, Autoplay]}
-          loop={true}
+          loop={shouldEnableLoop}
           spaceBetween={16}
           slidesPerView={1.5}
           centeredSlides={false}
-          autoplay={{ delay: 3500, disableOnInteraction: false }}
+          autoplay={shouldEnableLoop ? { delay: 3500, disableOnInteraction: false } : false}
           breakpoints={{
-            640: { slidesPerView: 1.5, spaceBetween: 16 },
-            768: { slidesPerView: 2.5, spaceBetween: 24 },
-            1024: { slidesPerView: 3, spaceBetween: 32 },
+            640: { slidesPerView: Math.min(1.5, totalSlides), spaceBetween: 16 },
+            768: { slidesPerView: Math.min(2.5, totalSlides), spaceBetween: 24 },
+            1024: { slidesPerView: Math.min(3, totalSlides), spaceBetween: 32 },
           }}
           className="category-swiper pb-8 px-4"
         >
@@ -145,20 +148,28 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                 }}
               >
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
-                  <Image
-                    src={getImageUrl(category.image)}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={index < 2}
-                    quality={85}
-                    loading={index < 2 ? 'eager' : 'lazy'}
-                  />
+                  {category.image ? (
+                    <Image
+                      src={getImageUrl(category.image)}
+                      alt={category.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      priority={index < 2}
+                      quality={85}
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+                      <span className="text-white text-lg font-medium">{category.name}</span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10" />
                   <div className="absolute inset-x-0 top-0 p-4 sm:p-6 z-20 text-white">
                     <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
-                    <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
+                    {category.description && (
+                      <p className="text-sm sm:text-base text-white/90 line-clamp-2">{category.description}</p>
+                    )}
                   </div>
                 </div>
               </div>

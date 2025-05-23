@@ -20,6 +20,7 @@ import CollectionMarqueeSection from '@/components/collections/CollectionMarquee
 const categoriesQuery = groq`*[_type == "category"] {
   _id,
   name,
+  description,
   "slug": slug.current,
   image
 }`;
