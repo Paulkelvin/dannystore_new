@@ -164,17 +164,17 @@ export default function HeroCarousel() {
       <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 z-20 flex justify-between">
         <button
           onClick={() => setCurrentIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm shadow-sm hover:bg-white/80 transition-colors pointer-events-auto"
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100/40 backdrop-blur-sm shadow-sm hover:bg-gray-100/60 transition-colors pointer-events-auto"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-4 h-4 text-gray-300" />
+          <ChevronLeft className="w-4 h-4 text-gray-600" />
         </button>
         <button
           onClick={() => setCurrentIndex((prev) => (prev + 1) % heroImages.length)}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-white/60 backdrop-blur-sm shadow-sm hover:bg-white/80 transition-colors pointer-events-auto"
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100/40 backdrop-blur-sm shadow-sm hover:bg-gray-100/60 transition-colors pointer-events-auto"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-4 h-4 text-gray-300" />
+          <ChevronRight className="w-4 h-4 text-gray-600" />
         </button>
       </div>
 

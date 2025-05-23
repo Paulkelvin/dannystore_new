@@ -127,7 +127,14 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
           {/* Strategic Categories */}
           {strategicCategories.map((category, index) => (
             <SwiperSlide key={category._id} className="mb-6 sm:mb-0">
-              <Link href={`/category/${category.slug.current}`} className="block group h-full">
+              <Link 
+                href={`/categories/${category.slug.current}`} 
+                className="block group h-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation(`/categories/${category.slug.current}`);
+                }}
+              >
                 <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                   <Image
                     src={getImageUrl(category.image)}
@@ -150,7 +157,14 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
 
           {/* Best Sellers Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link href="/category/best-sellers" className="block group h-full">
+            <Link 
+              href="/categories/best-sellers" 
+              className="block group h-full"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/categories/best-sellers');
+              }}
+            >
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.bestSeller ? (
                   <Image
@@ -188,7 +202,14 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
 
           {/* Latest Arrivals Card */}
           <SwiperSlide className="mb-6 sm:mb-0">
-            <Link href="/category/latest-arrivals" className="block group h-full">
+            <Link 
+              href="/categories/latest-arrivals" 
+              className="block group h-full"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/categories/latest-arrivals');
+              }}
+            >
               <div className="relative aspect-[4/5] w-full overflow-hidden shadow-lg">
                 {featuredImages.latestArrival ? (
                   <Image
