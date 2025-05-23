@@ -164,17 +164,17 @@ export default function HeroCarousel() {
       <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 z-20 flex justify-between pointer-events-none">
         <button
           onClick={() => setCurrentIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFC300] hover:bg-[#F0B300] transition-all duration-200 shadow-md border-none outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2 pointer-events-auto"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white/90 transition-colors"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-6 w-6 text-white" aria-hidden="true" />
+          <ChevronLeft className="w-5 h-5 text-gray-400" />
         </button>
         <button
           onClick={() => setCurrentIndex((prev) => (prev + 1) % heroImages.length)}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFC300] hover:bg-[#F0B300] transition-all duration-200 shadow-md border-none outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2 pointer-events-auto"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white/90 transition-colors"
           aria-label="Next slide"
         >
-          <ChevronRight className="h-6 w-6 text-white" aria-hidden="true" />
+          <ChevronRight className="w-5 h-5 text-gray-400" />
         </button>
       </div>
 
@@ -188,10 +188,9 @@ export default function HeroCarousel() {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-200 border-none outline-none
-              ${index === currentIndex ? 'bg-[#FFC300] scale-110 shadow' : 'bg-white/50 hover:bg-[#FFC300]'}
-              focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2
-            `}
+            className={`w-3 h-3 rounded-full transition-colors ${
+              index === currentIndex ? 'bg-gray-400' : 'bg-gray-300/50'
+            }`}
             role="tab"
             aria-selected={index === currentIndex}
             aria-label={`Go to slide ${index + 1}`}

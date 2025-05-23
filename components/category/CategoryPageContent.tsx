@@ -8,6 +8,7 @@ import ProductFilters, { ProductFilterState } from '@/components/products/Produc
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import React from 'react';
+import { FilterIcon } from 'lucide-react';
 
 interface Category {
   _id: string;
@@ -141,33 +142,33 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
   };
 
   return (
-    <div className="min-h-screen pb-16">
-      {/* Header section */}
-      <div className="pt-20 sm:pt-24">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#333] mb-2 mt-2 sm:mt-0">{category.name}</h1>
+    <div className="min-h-screen bg-white">
+      {/* Header Section */}
+      <div className="pt-24 sm:pt-32 pb-8 sm:pb-12">
+        <div className="container mx-auto px-4 sm:px-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            {category.name}
+          </h1>
           {category.description && (
-            <p className="text-base sm:text-lg text-center text-gray-600 mb-6 sm:mb-10">{category.description}</p>
+            <p className="text-gray-600 max-w-3xl">
+              {category.description}
+            </p>
           )}
         </div>
       </div>
 
       {/* Mobile Filter Button */}
-      <div className="lg:hidden sticky top-16 z-30 mb-4">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6">
-          <div className="flex justify-end mr-4 sm:mr-6">
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={() => setIsFilterOpen(true)}
-              className="border-[#42A5F5] text-[#42A5F5] hover:bg-[#42A5F5]/10"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6.414 6.414A2 2 0 0013 14.586V19a1 1 0 01-1.447.894l-2-1A1 1 0 019 18v-3.414a2 2 0 00-.586-1.414L2 6.707A1 1 0 012 6V4z" /></svg>
-              Show Filters
-            </Button>
-          </div>
+      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm py-4 border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6">
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <FilterIcon className="w-5 h-5" />
+            Filter Products
+          </button>
         </div>
-        </div>
+      </div>
 
       {/* Mobile Filter Bottom Sheet */}
       <div 
