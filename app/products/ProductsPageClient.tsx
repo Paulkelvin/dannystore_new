@@ -275,7 +275,7 @@ export default function ProductsPageClient({ products, categories }: { products:
         <div className="flex-1 min-w-0">
           <div className="w-full px-2 sm:px-4">
             {sortedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
                 {sortedProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
