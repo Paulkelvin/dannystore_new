@@ -201,15 +201,15 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority={index < 2} // Prioritize loading for first two images
+                    priority={index < 2}
                     quality={85}
                     loading={index < 2 ? 'eager' : 'lazy'}
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                   <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                    <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">{category.name}</h3>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">{category.name}</h3>
                     {category.description && (
-                      <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed drop-shadow-sm">{category.description}</p>
+                      <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed drop-shadow-sm">{category.description}</p>
                     )}
                   </div>
                 </div>
@@ -239,8 +239,8 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                 <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
-                  <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">Shop Our Bestsellers</h3>
+                  <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
                     Discover our most popular products
                   </p>
                   <button
@@ -280,8 +280,8 @@ export default function CategorySection({ categories = [] }: CategorySectionProp
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
                 <div className="absolute top-0 left-0 right-0 p-6 z-20 text-white transform transition-transform duration-300 group-hover:translate-y-2">
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
-                  <p className="text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-sm">Explore Latest Arrivals</h3>
+                  <p className="hidden sm:block text-base sm:text-lg font-medium opacity-90 leading-relaxed mb-4 drop-shadow-sm">
                     Check out our newest additions
                   </p>
                   <button
