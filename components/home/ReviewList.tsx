@@ -1,7 +1,7 @@
 'use client';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { urlFor } from '@/lib/sanityClient';
 import type { SanityImageReference } from '@/types';
 
@@ -15,33 +15,63 @@ interface Review {
 
 function AvatarWithSkeleton({ avatar, name }: { avatar: SanityImageReference; name: string }) {
   const [isLoading, setIsLoading] = useState(true);
-  const avatarUrl = urlFor(avatar)?.width(48).height(48).url() ?? '/images/placeholder.png';
-  const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=232326&color=fff&size=128`;
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    console.log('🖼️ Avatar component mounted for:', name);
+  }, [name]);
+
+  const handleImageError = () => {
+    console.error('❌ Error loading avatar for:', name);
+    setHasError(true);
+    setIsLoading(false);
+  };
 
   return (
-    <div className="relative w-12 h-12">
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 rounded-full animate-pulse" />
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      {isLoading && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
+      {!hasError ? (
+        <Image
+          src={urlFor(avatar)?.width(96).height(96).url() ?? '/images/placeholder.png'}
+          alt={`${name}'s avatar`}
+          fill
+          className={`object-cover transition-opacity duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          onLoad={() => {
+            console.log('✅ Avatar loaded for:', name);
+            setIsLoading(false);
+          }}
+          onError={handleImageError}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#C5A467] to-[#E6C78E] flex items-center justify-center">
+          <span className="text-white text-lg font-medium">{name.charAt(0)}</span>
+        </div>
       )}
-      <Image
-        src={avatarUrl}
-        alt={avatar.alt || name}
-        width={48}
-        height={48}
-        className={`rounded-full object-cover transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
-        onLoad={() => setIsLoading(false)}
-        onError={(e) => { 
-          (e.target as HTMLImageElement).src = fallbackUrl;
-        }}
-      />
     </div>
   );
 }
 
 export default function ReviewList({ reviews }: { reviews: Review[] }) {
-  if (!reviews || reviews.length === 0) return null;
+  useEffect(() => {
+    console.log('📋 ReviewList received reviews:', reviews);
+  }, [reviews]);
+
+  if (!reviews || reviews.length === 0) {
+    console.log('⚠️ ReviewList: No reviews to display');
+    return (
+      <section className="w-full py-24 bg-[#F8F9FA]">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-[#333333] mb-2">Customer Reviews</h2>
+          <p className="text-lg text-[#6c757d] mb-10">Be the first to leave a review!</p>
+          <div className="bg-white rounded-2xl border border-[#DEE2E6] p-8">
+            <p className="text-[#4A4A4A]">No reviews yet. Check back soon!</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full py-24 bg-[#F8F9FA]">
@@ -72,7 +102,7 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
             </div>
           ))}
         </div>
-        <div className="flex justify-center mt-10">
+        <div className="text-center mt-12">
           <a
             href="/reviews"
             className="inline-block px-6 py-3 bg-[#42A5F5] text-white font-semibold rounded-lg shadow hover:bg-[#1e88e5] transition-colors"
