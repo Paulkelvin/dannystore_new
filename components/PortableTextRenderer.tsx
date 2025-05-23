@@ -3,7 +3,7 @@ import type { PortableTextReactComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 import Image from 'next/image';
 import { urlFor } from '@/lib/sanityClient';
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 
 interface SanityImageReference {
   _type: 'image';
@@ -125,7 +125,7 @@ export default function PortableText({ value, className = '' }: PortableTextProp
   }
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary fallback={<ErrorFallback error={new Error('Failed to render content')} />}>
       <div className={className}>
         <BasePortableText value={value} components={components} />
       </div>
