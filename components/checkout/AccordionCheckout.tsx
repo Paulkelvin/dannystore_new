@@ -64,24 +64,43 @@ export default function AccordionCheckout() {
       const activeRef = refs[currentStep];
       
       if (activeRef?.current) {
-        // Get the position of the step content relative to the viewport
-        const rect = activeRef.current.getBoundingClientRect();
-        // Get the current scroll position
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        // Calculate the position to scroll to (accounting for the fixed header and progress bar)
-        const targetPosition = rect.top + scrollTop - 400; // 400px accounts for header + progress bar + maximum extra space for optimal visibility
-        
-        // Smooth scroll to the target position
+        // First, scroll to the very top to ensure consistent behavior
         window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
+          top: 0,
+          behavior: 'instant'
         });
+
+        // Small delay to ensure the DOM has updated and scroll reset is complete
+        setTimeout(() => {
+          // Get the position of the step content relative to the viewport
+          const rect = activeRef.current.getBoundingClientRect();
+          // Get the current scroll position
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          // Calculate the position to scroll to (accounting for the fixed header and progress bar)
+          const targetPosition = rect.top + scrollTop - 400; // 400px offset for optimal visibility
+          
+          // Smooth scroll to the target position
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }, 50);
       }
     };
 
-    // Small delay to ensure the DOM has updated
-    setTimeout(scrollToStep, 100);
+    // Execute scroll behavior
+    scrollToStep();
   }, [currentStep]);
+
+  // Add a cleanup effect to reset scroll position when component unmounts
+  useEffect(() => {
+    return () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+    };
+  }, []);
 
   // Calculate subtotal from items
   const subtotal = items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
