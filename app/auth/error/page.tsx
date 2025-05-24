@@ -2,7 +2,7 @@
 
 // Updated for Vercel deployment
 import { useSearchParams } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 
 const errorMessages: Record<string, string | ReactNode> = {
   AccountNotLinked: (
@@ -77,7 +77,7 @@ const errorMessages: Record<string, string | ReactNode> = {
   )
 };
 
-export default function AuthErrorPage() {
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams?.get('error');
   const message = (error && errorMessages[error]) || errorMessages.default;
@@ -94,5 +94,13 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto my-16 p-8">Loading...</div>}>
+      <ErrorContent />
+    </Suspense>
   );
 } 

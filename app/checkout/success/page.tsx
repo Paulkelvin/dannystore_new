@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useSession, signIn } from 'next-auth/react';
 import { useCart } from '@/hooks/useCart';
 
-export default function SuccessPage() {
+function SuccessContent() {
   const [status, setStatus] = useState<'processing' | 'succeeded' | 'failed'>('processing');
   const [showActivationPrompt, setShowActivationPrompt] = useState(false);
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
@@ -188,5 +188,13 @@ export default function SuccessPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto my-16 p-8">Loading payment status...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 } 
