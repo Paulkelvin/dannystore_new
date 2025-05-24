@@ -25,6 +25,7 @@ export interface ProductVariantColor {
   value: string;
   price?: number;
   images?: SanityImageReference[];
+  sizes?: string[];
 }
 
 export interface ProductVariantSize {
@@ -38,8 +39,8 @@ export interface ProductVariantSize {
 export interface ProductVariant {
   _key: string;
   sku: string;
-  color?: ProductVariantColor;
-  size?: ProductVariantSize;
+  color?: ProductVariantColor | null;
+  size?: ProductVariantSize | null;
   price?: number;
   stock?: number;
 }
@@ -76,10 +77,11 @@ export interface Product {
   benefits?: string[];
   keyBenefits?: string[];
   specifications?: Specification[];
-  variants?: ProductVariant[];
+  variants?: ProductVariant[] | null;
   variantType?: string;
   stock: number;
   salesCount?: number;
+  _createdAt?: string;
 }
 
 // Review Types
@@ -114,16 +116,18 @@ export interface Pillar {
 }
 
 export interface CartItem {
+  id: string;
   productId: string;
+  productSlug: string;
   variantId: string;
   name: string;
   variantTitle?: string;
   price: number;
   sku: string;
   image: SanityImageReference;
+  quantity: number;
   color?: string;
   size?: string;
-  quantity?: number;
 }
 
 // --- User Type for Auth ---

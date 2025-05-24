@@ -112,25 +112,34 @@ export default function ProductsPageClient({ products, categories }: { products:
   const filteredProducts = products.filter((product) => {
     // Category
     if (filterState.category && product.category?._id !== filterState.category) return false;
+
     // Price
     const price = product.price;
     if (typeof filterState.priceMin === 'number' && price < filterState.priceMin) return false;
     if (typeof filterState.priceMax === 'number' && price > filterState.priceMax) return false;
-    // Color
+
+    // Color - Only filter if product has variants with colors
     if (filterState.color) {
-      const hasColor = (product.variants || []).some((v: any) => v.color === filterState.color);
+      const hasColor = product.variants?.some((v: any) => 
+        v.color === filterState.color && (!filterState.inStock || v.stock > 0)
+      );
       if (!hasColor) return false;
     }
-    // Size
+
+    // Size - Only filter if product has variants with sizes
     if (filterState.size) {
-      const hasSize = (product.variants || []).some((v: any) => v.size === filterState.size);
+      const hasSize = product.variants?.some((v: any) => 
+        v.size === filterState.size && (!filterState.inStock || v.stock > 0)
+      );
       if (!hasSize) return false;
     }
-    // In Stock
+
+    // In Stock - Check both product stock and variant stock
     if (filterState.inStock) {
-      const inStock = (product.variants || []).some((v: any) => v.stock > 0) || product.stock > 0;
-      if (!inStock) return false;
+      const hasStock = product.variants?.some((v: any) => v.stock > 0) || product.stock > 0;
+      if (!hasStock) return false;
     }
+
     return true;
   });
 

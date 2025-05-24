@@ -55,7 +55,8 @@ const productQuery = groq`
       _id,
       name,
       slug
-    }
+    },
+    _createdAt
   }
 `;
 
@@ -89,7 +90,8 @@ const relatedProductsQuery = groq`
         name,
         value
       }
-    }
+    },
+    _createdAt
   }
 `;
 

@@ -25,7 +25,8 @@ const allProductsQuery = groq`*[_type == "product"] {
   category-> {
     _id,
     name
-  }
+  },
+  _createdAt
 }`;
 
 const allCategoriesQuery = groq`*[_type == "category"]{ 

@@ -1,39 +1,46 @@
 import { useCallback } from 'react';
 import { useCartContext } from '@/context/CartContext';
-import type { CartItem } from '@/types';
+import type { CartItem, SanityImageReference } from '@/types';
 
-interface AddToCartParams {
+export interface AddToCartParams {
   productId: string;
-  quantity: number;
-  variant?: {
-    color?: string;
-    size?: string;
-  };
+  productSlug: string;
+  variantId: string;
+  name: string;
+  variantTitle?: string;
+  price: number;
+  sku: string;
+  image: SanityImageReference;
+  color?: string;
+  size?: string;
+  quantity?: number;
 }
 
 export function useCart() {
   const { cart, addItem, removeItem, updateItemQuantity, clearCart } = useCartContext();
 
-  const addToCart = useCallback(async ({ productId, quantity, variant }: AddToCartParams) => {
+  const addToCart = useCallback(async (params: AddToCartParams) => {
     try {
       // Fetch product details
-      const response = await fetch(`/api/products/${productId}`);
+      const response = await fetch(`/api/products/${params.productId}`);
       if (!response.ok) throw new Error('Failed to fetch product');
       
       const product = await response.json();
       
       // Create cart item
       const cartItem: CartItem = {
-        productId,
-        variantId: `${productId}-${variant?.color || 'default'}-${variant?.size || 'default'}`,
-        name: product.name,
-        price: product.price,
-        sku: product.sku || `${productId}-${variant?.color || 'default'}-${variant?.size || 'default'}`,
-        image: product.mainImage,
-        color: variant?.color,
-        size: variant?.size,
-        quantity: quantity,
-        variantTitle: variant ? `${variant.color || ''} ${variant.size || ''}`.trim() : undefined
+        id: `${params.productId}-${params.variantId}-${params.color ?? ''}-${params.size ?? ''}`,
+        productId: params.productId,
+        productSlug: params.productSlug,
+        variantId: params.variantId,
+        name: params.name,
+        price: params.price,
+        sku: params.sku,
+        image: params.image,
+        color: params.color,
+        size: params.size,
+        quantity: params.quantity ?? 1,
+        variantTitle: params.variantTitle
       };
 
       // Add to cart

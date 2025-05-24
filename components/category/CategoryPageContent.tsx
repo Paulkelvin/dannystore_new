@@ -57,37 +57,52 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
     const price = product.price;
     if (typeof filterState.priceMin === 'number' && price < filterState.priceMin) return false;
     if (typeof filterState.priceMax === 'number' && price > filterState.priceMax) return false;
-    // Color
+
+    // Color - Only filter if product has variants with colors
     if (filterState.color) {
-      const hasColor = (product.variants || []).some((v: any) => v.color === filterState.color);
+      const hasColor = product.variants?.some((v: any) => 
+        v.color === filterState.color && (!filterState.inStock || v.stock > 0)
+      );
       if (!hasColor) return false;
     }
-    // Size
+
+    // Size - Only filter if product has variants with sizes
     if (filterState.size) {
-      const hasSize = (product.variants || []).some((v: any) => v.size === filterState.size);
+      const hasSize = product.variants?.some((v: any) => 
+        v.size === filterState.size && (!filterState.inStock || v.stock > 0)
+      );
       if (!hasSize) return false;
     }
-    // In Stock
+
+    // In Stock - Check both product stock and variant stock
     if (filterState.inStock) {
-      const inStock = (product.variants || []).some((v: any) => v.stock > 0) || product.stock > 0;
-      if (!inStock) return false;
+      const hasStock = product.variants?.some((v: any) => v.stock > 0) || product.stock > 0;
+      if (!hasStock) return false;
     }
+
     return true;
   });
 
   // Sort logic
   let sortedProducts = [...filteredProducts];
-    switch (sortOption) {
-      case 'price-low':
+  switch (filterState.sort) {
+    case 'price-low':
       sortedProducts.sort((a, b) => a.price - b.price);
       break;
-      case 'price-high':
+    case 'price-high':
       sortedProducts.sort((a, b) => b.price - a.price);
       break;
-      case 'name':
+    case 'name':
       sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
       break;
-      default:
+    case 'newest':
+      sortedProducts.sort((a, b) => {
+        const dateA = new Date(a._createdAt ?? 0).getTime();
+        const dateB = new Date(b._createdAt ?? 0).getTime();
+        return dateB - dateA;
+      });
+      break;
+    default:
       break;
   }
 

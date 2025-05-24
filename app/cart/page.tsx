@@ -26,93 +26,103 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pt-40 pb-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-10 py-12">
-        <h1 className="text-3xl font-extrabold text-[#333333] mb-10">Shopping Cart</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14">
-          <div className="lg:col-span-8">
-            {items.map((item, idx) => (
-              <div 
-                key={`${item.productId}-${item.variantId}`}
-                className="flex gap-6 py-6 border-b border-[#DEE2E6]"
-              >
-                <div className="relative w-36 h-36 bg-gray-100 rounded-lg flex items-center justify-center">
-                  {item.image && item.image.asset ? (
+    <div className="min-h-screen bg-[#F8F9FA] p-6 pt-32">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-[#333333] mb-8">Shopping Cart</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2 space-y-4">
+            {items.map((item) => {
+              const imageUrlBuilder = urlFor(item.image);
+              return (
+                <div key={item.variantId} className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-4">
+                  {/* Product Image */}
+                  <div className="relative w-24 h-24 flex-shrink-0">
                     <Image
-                      src={urlFor(item.image)?.width(160).height(160).url() ?? '/images/placeholder.png'}
+                      src={imageUrlBuilder ? imageUrlBuilder.url() : '/placeholder.png'}
                       alt={item.name}
                       fill
                       className="object-cover rounded-md"
                     />
-                  ) : (
-                    <div className="text-gray-400 text-sm text-center p-4">
-                      No image available
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-semibold text-[#333333] text-lg leading-tight">{item.name}</h3>
-                      <p className="text-sm text-[#6c757d] mt-1">{item.variantTitle}</p>
-                    </div>
-                    <p className="font-bold text-[#333333] text-lg">${item.price.toFixed(2)}</p>
                   </div>
-                  <div className="mt-4 flex items-center gap-4">
-                    <div className="flex items-center border rounded px-2 py-1 bg-white">
+
+                  {/* Product Details */}
+                  <div className="flex-grow">
+                    <h3 className="font-semibold text-[#333333]">{item.name}</h3>
+                    {/* Only show variant info if it exists */}
+                    {(item.color || item.size) && (
+                      <p className="text-sm text-gray-600">
+                        {[item.color, item.size].filter(Boolean).join(' - ')}
+                      </p>
+                    )}
+                    <p className="text-sm text-gray-600">SKU: {item.sku}</p>
+                    <div className="flex items-center gap-4 mt-2">
+                      {/* Quantity Controls */}
+                      <div className="flex items-center border rounded-md">
+                        <button
+                          onClick={() => updateQuantity(item.variantId, (item.quantity || 1) - 1)}
+                          className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                        >
+                          -
+                        </button>
+                        <span className="px-3 py-1">{item.quantity || 1}</span>
+                        <button
+                          onClick={() => updateQuantity(item.variantId, (item.quantity || 1) + 1)}
+                          className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                        >
+                          +
+                        </button>
+                      </div>
+                      {/* Remove Button */}
                       <button
-                        onClick={() => updateQuantity(item.variantId, (item.quantity || 1) - 1)}
-                        className="px-2 text-[#42A5F5] text-lg font-bold focus:outline-none disabled:opacity-50"
-                        disabled={item.quantity === 1}
-                        aria-label="Decrease quantity"
-                      >-</button>
-                      <span className="mx-2 w-6 text-center select-none">{item.quantity || 1}</span>
-                      <button
-                        onClick={() => updateQuantity(item.variantId, (item.quantity || 1) + 1)}
-                        className="px-2 text-[#42A5F5] text-lg font-bold focus:outline-none"
-                        aria-label="Increase quantity"
-                      >+</button>
+                        onClick={() => removeItem(item.variantId)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => removeItem(item.variantId)}
-                      className="ml-2 text-[#6c757d] hover:text-[#42A5F5] transition-colors focus:outline-none"
-                      aria-label="Remove item"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
+                  </div>
+
+                  {/* Price */}
+                  <div className="text-right">
+                    <p className="font-semibold text-[#333333]">
+                      ${(item.price * (item.quantity || 1)).toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      ${item.price.toFixed(2)} each
+                    </p>
                   </div>
                 </div>
-              </div>
-            ))}
-            <Link
-              href="/products"
-              className="inline-block mt-8 px-6 py-3 border border-[#42A5F5] text-[#42A5F5] font-semibold rounded-lg hover:bg-[#42A5F5] hover:text-white transition-colors text-center"
-            >
-              Continue Shopping
-            </Link>
+              );
+            })}
           </div>
-          <div className="lg:col-span-4">
-            <div className="bg-white rounded-xl p-10 shadow border border-[#E5E7EB]">
-              <h2 className="text-xl font-bold text-[#333333] mb-6">Order Summary</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between text-[#4A4A4A]">
-                  <span>Subtotal</span>
-                  <span className="font-semibold text-[#333333]">${total.toFixed(2)}</span>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold text-[#333333] mb-4">Order Summary</h2>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-semibold">${total.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-[#6c757d]">
-                  <span>Shipping</span>
-                  <span>Calculated at checkout</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="font-semibold">Calculated at checkout</span>
+                </div>
+                <div className="border-t pt-2 mt-2">
+                  <div className="flex justify-between">
+                    <span className="font-semibold">Total</span>
+                    <span className="font-semibold">${total.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
-              <div className="border-t border-[#DEE2E6] mt-6 pt-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-[#333333]">Total</span>
-                  <span className="text-2xl font-extrabold text-[#333333]">${total.toFixed(2)}</span>
-                </div>
-              </div>
-              <Link href="/checkout" className="w-full block bg-[#FFC300] text-[#333333] text-lg font-bold py-4 rounded-lg mt-8 shadow hover:bg-[#FFD740] transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFC300] focus:ring-offset-2 text-center">
+              <button
+                className="w-full mt-6 px-6 py-3 bg-[#FFC300] text-[#333333] font-semibold rounded-lg shadow hover:bg-[#FFD740] transition-colors"
+              >
                 Proceed to Checkout
-              </Link>
+              </button>
             </div>
           </div>
         </div>

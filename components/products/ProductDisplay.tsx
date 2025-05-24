@@ -36,7 +36,9 @@ const ProductDisplay: FC<ProductDisplayProps> = ({ product, relatedProducts, isL
       }
       // Create cart item with consistent structure
       const cartItem = {
+        id: `${product._id}-${selectedVariant?._key || 'default'}`,
         productId: product._id,
+        productSlug: typeof product.slug === 'string' ? product.slug : product.slug.current,
         variantId: selectedVariant?._key || `${product._id}-default`,
         name: product.name,
         variantTitle: selectedVariant 

@@ -43,55 +43,68 @@ export default function CartPreview() {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50">
           <div className="p-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Shopping Cart</h3>
             {cart.length === 0 ? (
               <p className="text-gray-500 text-center py-4">Your cart is empty</p>
             ) : (
               <>
-                <div className="max-h-96 overflow-y-auto">
-                  {cart.map((item) => (
-                    <div key={item.variantId} className="flex items-center py-2 border-b">
-                      {item.image && (
-                        <div className="w-16 h-16 relative flex-shrink-0">
+                <div className="max-h-96 overflow-y-auto space-y-4">
+                  {cart.map((item) => {
+                    const imageUrlBuilder = urlFor(item.image);
+                    return (
+                      <div key={item.variantId} className="flex items-center gap-4 py-2 border-b last:border-b-0">
+                        <div className="relative w-16 h-16 flex-shrink-0">
                           <Image
-                            src={(function() {
-                              const builder = urlFor(item.image);
-                              if (builder && typeof builder.width === 'function' && typeof builder.height === 'function') {
-                                const url = builder.width(64).height(64).url();
-                                return url ?? '';
-                              }
-                              return '';
-                            })()}
+                            src={imageUrlBuilder ? imageUrlBuilder.url() : '/placeholder.png'}
                             alt={item.name}
                             fill
-                            sizes="64px"
-                            className="object-cover rounded"
+                            className="object-cover rounded-md"
                           />
                         </div>
-                      )}
-                      <div className="ml-4 flex-grow">
-                        <h4 className="text-sm font-medium text-gray-900">{item.name}</h4>
-                        <p className="text-sm text-gray-500">
-                          {item.color} / {item.size}
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          ${item.price.toFixed(2)} x {item.quantity}
-                        </p>
+                        <div className="flex-grow min-w-0">
+                          <h4 className="text-sm font-medium text-gray-900 truncate">
+                            {item.name}
+                          </h4>
+                          {/* Only show variant info if it exists */}
+                          {(item.color || item.size) && (
+                            <p className="text-xs text-gray-500 truncate">
+                              {[item.color, item.size].filter(Boolean).join(' - ')}
+                            </p>
+                          )}
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-sm text-gray-600">
+                              Qty: {item.quantity || 1}
+                            </span>
+                            <span className="text-sm font-medium text-gray-900">
+                              ${(item.price * (item.quantity || 1)).toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-                <div className="mt-4 pt-4 border-t">
-                  <div className="flex justify-between text-base font-medium text-gray-900">
-                    <p>Subtotal</p>
-                    <p>${total.toFixed(2)}</p>
+                <div className="border-t border-gray-200 mt-4 pt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-base font-medium text-gray-900">Total</span>
+                    <span className="text-lg font-semibold text-gray-900">
+                      ${total.toFixed(2)}
+                    </span>
                   </div>
-                  <div className="mt-4">
+                  <div className="space-y-2">
                     <Link
                       href="/cart"
-                      className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                      className="block w-full px-4 py-2 text-center text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       View Cart
+                    </Link>
+                    <Link
+                      href="/checkout"
+                      className="block w-full px-4 py-2 text-center text-sm font-medium text-white bg-[#FFC300] hover:bg-[#FFD740] rounded-md transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Checkout
                     </Link>
                   </div>
                 </div>

@@ -30,7 +30,9 @@ export default function RelatedProducts({ currentProduct, products = [] }: Relat
     try {
       // Create cart item
       const cartItem = {
+        id: `${product._id}-${product.variants?.[0]?._key || 'default'}`,
         productId: product._id,
+        productSlug: typeof product.slug === 'string' ? product.slug : product.slug.current,
         // For products without variants, use the product ID as both variantId and sku
         variantId: product.variants?.[0]?._key || `${product._id}-default`,
         name: product.name,

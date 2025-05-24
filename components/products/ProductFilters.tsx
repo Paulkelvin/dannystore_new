@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export interface ProductFiltersProps {
   categories: { _id: string; name: string }[];
@@ -9,6 +9,7 @@ export interface ProductFiltersProps {
   onChange: (filters: ProductFilterState) => void;
   filterState: ProductFilterState;
   showCategory?: boolean;
+  products?: any[]; // Add products prop to check variant availability
 }
 
 export interface ProductFilterState {
@@ -40,9 +41,41 @@ export default function ProductFilters({
   onChange,
   filterState,
   showCategory = false,
+  products = [],
 }: ProductFiltersProps) {
   const [priceMin, setPriceMin] = useState(filterState.priceMin ?? minPrice);
   const [priceMax, setPriceMax] = useState(filterState.priceMax ?? maxPrice);
+
+  // Compute available colors and sizes based on products
+  const availableColors = useMemo(() => {
+    if (!products.length) return colors;
+    const colorSet = new Set<string>();
+    products.forEach(product => {
+      if (product.variants) {
+        product.variants.forEach((variant: any) => {
+          if (variant.color && variant.stock > 0) {
+            colorSet.add(variant.color);
+          }
+        });
+      }
+    });
+    return Array.from(colorSet);
+  }, [products, colors]);
+
+  const availableSizes = useMemo(() => {
+    if (!products.length) return sizes;
+    const sizeSet = new Set<string>();
+    products.forEach(product => {
+      if (product.variants) {
+        product.variants.forEach((variant: any) => {
+          if (variant.size && variant.stock > 0) {
+            sizeSet.add(variant.size);
+          }
+        });
+      }
+    });
+    return Array.from(sizeSet);
+  }, [products, sizes]);
 
   // Handlers
   const handleChange = (key: keyof ProductFilterState, value: any) => {
@@ -108,7 +141,7 @@ export default function ProductFilters({
           <label htmlFor="inStock" className="text-sm">In Stock Only</label>
         </div>
       </div>
-      {colors.length > 0 && (
+      {availableColors.length > 0 && (
         <div>
           <label className="block text-sm font-semibold mb-2">Color</label>
           <select
@@ -117,13 +150,13 @@ export default function ProductFilters({
             onChange={e => handleChange('color', e.target.value === 'all-colors' ? '' : e.target.value)}
           >
             <option key="color-select-all" value="all-colors">All</option>
-            {colors.map(color => (
+            {availableColors.map(color => (
               <option key={color} value={color}>{color}</option>
             ))}
           </select>
         </div>
       )}
-      {sizes.length > 0 && (
+      {availableSizes.length > 0 && (
         <div>
           <label className="block text-sm font-semibold mb-2">Size</label>
           <select
@@ -132,7 +165,7 @@ export default function ProductFilters({
             onChange={e => handleChange('size', e.target.value === 'all-sizes' ? '' : e.target.value)}
           >
             <option key="size-select-all" value="all-sizes">All</option>
-            {sizes.map(size => (
+            {availableSizes.map(size => (
               <option key={size} value={size}>{size}</option>
             ))}
           </select>

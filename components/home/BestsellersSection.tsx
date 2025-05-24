@@ -215,8 +215,10 @@ export default function BestsellersSection({ products = [] }: BestsellersSection
       // For products with variants, use the first variant
       const variant = product.variants?.[0];
       const cartItem = {
+        id: `${product._id}-${variant?._key || 'default'}`,
         productId: product._id,
-        variantId: variant?._key || `${product._id}-default`,
+        productSlug: product.slug,
+        variantId: variant?._key || 'default',
         name: product.name,
         variantTitle: variant 
           ? `${variant.color} / ${variant.size}`.trim()

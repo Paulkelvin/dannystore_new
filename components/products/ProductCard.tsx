@@ -54,7 +54,9 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
       setIsAddingToCart(true);
       // Create cart item with consistent structure
       const cartItem = {
+        id: `${product._id}-${product.variants?.[0]?._key || 'default'}`,
         productId: product._id,
+        productSlug: typeof product.slug === 'string' ? product.slug : product.slug.current,
         variantId: product.variants?.[0]?._key || `${product._id}-default`,
         name: product.name,
         variantTitle: product.variants?.[0] 

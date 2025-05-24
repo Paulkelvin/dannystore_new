@@ -2,10 +2,13 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SanityImageReference } from '@/types';
+import { useStock } from '@/hooks/useStock';
 
 // Types
 export interface CartItem {
+  id: string;
   productId: string;
+  productSlug: string;
   variantId: string;
   name: string;
   variantTitle?: string;
@@ -33,121 +36,136 @@ const CART_STORAGE_KEY = 'dannys-store-cart';
 
 // Provider component
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [items, setItems] = useState<CartItem[]>([]);
+  const { reserveStock, releaseStock } = useStock();
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-      if (savedCart) {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
         const parsedCart = JSON.parse(savedCart);
-        // Validate cart items
-        const validItems = parsedCart.filter((item: any) => {
-          const isValid = 
-            typeof item.productId === 'string' &&
-            typeof item.variantId === 'string' &&
-            typeof item.name === 'string' &&
-            typeof item.price === 'number' &&
-            typeof item.sku === 'string';
-          
-          if (!isValid) {
-            console.warn('Invalid cart item found:', item);
-          }
-          return isValid;
-        });
-        setCart(validItems);
+        setItems(parsedCart);
+      } catch (error) {
+        console.error('Failed to parse cart from localStorage:', error);
       }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
-      setCart([]);
-    } finally {
-      setIsInitialized(true);
     }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    if (isInitialized) {
-      try {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-      } catch (error) {
-        console.error('Error saving cart to localStorage:', error);
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
+
+  const addItem = async (item: Omit<CartItem, 'quantity'>) => {
+    try {
+      // Reserve stock when adding to cart
+      await reserveStock(item.productSlug, item.variantId, 1);
+
+      setItems(prevItems => {
+        const existingItemIndex = prevItems.findIndex(
+          i => i.productId === item.productId && 
+               i.variantId === item.variantId &&
+               (!i.color || i.color === item.color) &&
+               (!i.size || i.size === item.size)
+        );
+
+        if (existingItemIndex > -1) {
+          // Update quantity of existing item
+          const updatedItems = [...prevItems];
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + 1,
+          };
+          return updatedItems;
+        }
+
+        // Add new item with quantity 1
+        return [...prevItems, { ...item, quantity: 1 }];
+      });
+    } catch (error) {
+      console.error('Failed to add item to cart:', error);
+      throw error;
+    }
+  };
+
+  const removeItem = async (itemId: string) => {
+    try {
+      const itemToRemove = items.find(item => item.id === itemId);
+      if (itemToRemove) {
+        // Release stock when removing from cart
+        await releaseStock(
+          itemToRemove.productSlug,
+          itemToRemove.variantId,
+          itemToRemove.quantity
+        );
       }
-    }
-  }, [cart, isInitialized]);
 
-  const addItem = (newItem: Omit<CartItem, 'quantity'>) => {
-    console.log('CartContext: Adding item:', newItem);
-    
-    // Validate required fields
-    if (!newItem.productId || !newItem.variantId || !newItem.name || 
-        typeof newItem.price !== 'number' || !newItem.sku) {
-      console.error('Invalid cart item:', newItem);
-      throw new Error('Invalid cart item: missing required fields');
+      setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+    } catch (error) {
+      console.error('Failed to remove item from cart:', error);
+      throw error;
     }
+  };
 
-    setCart(currentItems => {
-      console.log('Current cart items:', currentItems);
-      
-      const existingItemIndex = currentItems.findIndex(
-        item => item.productId === newItem.productId && item.variantId === newItem.variantId
+  const updateItemQuantity = async (itemId: string, quantity: number) => {
+    try {
+      const itemToUpdate = items.find(item => item.id === itemId);
+      if (!itemToUpdate) return;
+
+      const quantityDiff = quantity - itemToUpdate.quantity;
+
+      if (quantityDiff > 0) {
+        // Reserve additional stock
+        await reserveStock(
+          itemToUpdate.productSlug,
+          itemToUpdate.variantId,
+          quantityDiff
+        );
+      } else if (quantityDiff < 0) {
+        // Release excess stock
+        await releaseStock(
+          itemToUpdate.productSlug,
+          itemToUpdate.variantId,
+          Math.abs(quantityDiff)
+        );
+      }
+
+      setItems(prevItems =>
+        prevItems.map(item =>
+          item.id === itemId ? { ...item, quantity } : item
+        )
       );
-
-      console.log('Existing item index:', existingItemIndex);
-
-      if (existingItemIndex > -1) {
-        // Update quantity if item exists
-        const updatedItems = [...currentItems];
-        updatedItems[existingItemIndex] = {
-          ...updatedItems[existingItemIndex],
-          quantity: (updatedItems[existingItemIndex].quantity || 1) + 1
-        };
-        console.log('Updated cart items:', updatedItems);
-        return updatedItems;
-      }
-
-      // Add new item with quantity 1
-      const newItems = [...currentItems, { ...newItem, quantity: 1 }];
-      console.log('New cart items:', newItems);
-      return newItems;
-    });
-  };
-
-  const removeItem = (variantId: string) => {
-    setCart(currentItems => 
-      currentItems.filter(item => item.variantId !== variantId)
-    );
-  };
-
-  const updateItemQuantity = (variantId: string, quantity: number) => {
-    if (quantity < 1) {
-      removeItem(variantId);
-      return;
+    } catch (error) {
+      console.error('Failed to update item quantity:', error);
+      throw error;
     }
-
-    setCart(currentItems =>
-      currentItems.map(item =>
-        item.variantId === variantId
-          ? { ...item, quantity }
-          : item
-      )
-    );
   };
 
-  const clearCart = () => {
-    setCart([]);
+  const clearCart = async () => {
+    try {
+      // Release all reserved stock
+      await Promise.all(
+        items.map(item =>
+          releaseStock(item.productSlug, item.variantId, item.quantity)
+        )
+      );
+      setItems([]);
+    } catch (error) {
+      console.error('Failed to clear cart:', error);
+      throw error;
+    }
   };
 
   // Only render children after cart is initialized
-  if (!isInitialized) {
+  if (items.length === 0) {
     return null; // Or a loading spinner if you prefer
   }
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cart: items,
         addItem,
         removeItem,
         updateItemQuantity,

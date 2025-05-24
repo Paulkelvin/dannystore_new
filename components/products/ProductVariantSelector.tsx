@@ -17,31 +17,31 @@ export default function ProductVariantSelector({
   basePrice,
 }: ProductVariantSelectorProps) {
   // Local state for selected color and size
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  // Only show colors that are present in the denormalized variants (for the selected size, if any) and have stock
+  // Only show colors that are present in the denormalized variants and have stock
   const allColors = Array.from(
     new Set(
       variants
         .filter(
           v =>
             typeof v.stock === 'number' && v.stock > 0 &&
-            (!selectedSize || v.size?.name === selectedSize)
+            (!selectedSize || !v.size || v.size.name === selectedSize)
         )
         .map(v => v.color?.name)
         .filter(Boolean)
     )
   );
 
-  // Only show sizes that are present in the denormalized variants (for the selected color, if any) and have stock
+  // Only show sizes that are present in the denormalized variants and have stock
   const allSizes = Array.from(
     new Set(
       variants
         .filter(
           v =>
             typeof v.stock === 'number' && v.stock > 0 &&
-            (!selectedColor || v.color?.name === selectedColor)
+            (!selectedColor || !v.color || v.color.name === selectedColor)
         )
         .map(v => v.size?.name)
         .filter(Boolean)
@@ -61,6 +61,13 @@ export default function ProductVariantSelector({
 
   // Update selected variant when color or size changes
   useEffect(() => {
+    // If no variants have colors or sizes, select the first variant
+    if (!allColors.length && !allSizes.length && variants.length > 0) {
+      onVariantSelect(variants[0]);
+      return;
+    }
+
+    // If we have a color and size selection
     if (selectedColor && selectedSize) {
       const variant = variants.find(
         v => v.color?.name === selectedColor && v.size?.name === selectedSize
@@ -69,7 +76,21 @@ export default function ProductVariantSelector({
         onVariantSelect(variant);
       }
     }
-  }, [selectedColor, selectedSize, variants, onVariantSelect]);
+    // If we only have a color selection
+    else if (selectedColor && !allSizes.length) {
+      const variant = variants.find(v => v.color?.name === selectedColor);
+      if (variant) {
+        onVariantSelect(variant);
+      }
+    }
+    // If we only have a size selection
+    else if (selectedSize && !allColors.length) {
+      const variant = variants.find(v => v.size?.name === selectedSize);
+      if (variant) {
+        onVariantSelect(variant);
+      }
+    }
+  }, [selectedColor, selectedSize, variants, onVariantSelect, allColors.length, allSizes.length]);
 
   // Handle color selection
   const handleColorChange = (color: string) => {
@@ -81,6 +102,8 @@ export default function ProductVariantSelector({
     
     if (firstAvailableSize) {
       setSelectedSize(firstAvailableSize);
+    } else {
+      setSelectedSize(null);
     }
   };
 
@@ -94,6 +117,8 @@ export default function ProductVariantSelector({
     
     if (firstAvailableColor) {
       setSelectedColor(firstAvailableColor);
+    } else {
+      setSelectedColor(null);
     }
   };
 
@@ -118,12 +143,11 @@ export default function ProductVariantSelector({
     return variants.some(v => v.color?.name === color && v.size?.name === size && typeof v.stock === 'number' && v.stock > 0);
   };
 
-  // If no variants have sizes, don't show the size selector
-  const hasSizes = allSizes.length > 0;
-  // If no variants have colors, don't show the color selector
-  const hasColors = allColors.length > 0;
+  // If no variants have colors or sizes, don't show any selectors
+  if (!allColors.length && !allSizes.length) {
+    return null;
+  }
 
-  // Always show selectors if there are any colors or sizes
   return (
     <div className="mt-2 space-y-8">
       {/* Color selector */}
@@ -134,7 +158,7 @@ export default function ProductVariantSelector({
             {allColors.map((colorName) => (
               <button
                 key={colorName}
-                onClick={() => setSelectedColor(colorName || '')}
+                onClick={() => handleColorChange(colorName || '')}
                 className={`relative h-8 w-8 rounded-full border ${selectedColor === colorName ? 'ring-2 ring-indigo-600 ring-offset-2' : 'ring-1 ring-gray-200'}`}
                 style={{ backgroundColor: variants.find(v => v.color?.name === colorName)?.color?.value || '#ccc' }}
                 aria-label={colorName}
@@ -153,7 +177,7 @@ export default function ProductVariantSelector({
             {allSizes.map((sizeName) => (
               <button
                 key={sizeName}
-                onClick={() => setSelectedSize(sizeName || '')}
+                onClick={() => handleSizeChange(sizeName || '')}
                 className={`flex items-center justify-center border py-3 px-6 text-sm font-medium uppercase ${selectedSize === sizeName ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50'} rounded-none`}
               >
                 {sizeName}

@@ -133,7 +133,9 @@ export default function NewArrivalsSection({ products }: NewArrivalsSectionProps
 
       // Create cart item with consistent structure
       const cartItem = {
+        id: `${product._id}-${variant?._key || 'default'}`,
         productId: product._id,
+        productSlug: product.slug,
         variantId: variant?._key || `${product._id}-default`,
         name: product.name,
         variantTitle: variant 
