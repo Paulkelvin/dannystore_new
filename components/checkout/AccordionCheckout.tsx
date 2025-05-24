@@ -72,6 +72,9 @@ export default function AccordionCheckout() {
 
         // Small delay to ensure the DOM has updated and scroll reset is complete
         setTimeout(() => {
+          // Check if the ref still exists after the timeout
+          if (!activeRef.current) return;
+          
           // Get the position of the step content relative to the viewport
           const rect = activeRef.current.getBoundingClientRect();
           // Get the current scroll position
