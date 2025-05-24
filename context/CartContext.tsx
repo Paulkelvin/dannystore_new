@@ -157,11 +157,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Only render children after cart is initialized
-  if (items.length === 0) {
-    return null; // Or a loading spinner if you prefer
-  }
-
   return (
     <CartContext.Provider
       value={{
