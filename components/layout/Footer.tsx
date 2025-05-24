@@ -41,7 +41,7 @@ export default function Footer() {
           <h3 className="font-bold mb-4">Our Company</h3>
           <ul className="space-y-2 text-sm text-gray-300">
             <li><Link href="/about" className="hover:text-[#FFC300]">About Us</Link></li>
-            <li><Link href="/blog" className="hover:text-[#FFC300]">Blog</Link></li>
+            {/* <li><Link href="/blog" className="hover:text-[#FFC300]">Blog</Link></li> */}
             <li><Link href="/careers" className="hover:text-[#FFC300]">Careers</Link></li>
             </ul>
           </div>

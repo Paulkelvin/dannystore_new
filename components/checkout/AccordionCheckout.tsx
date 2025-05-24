@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaTruck, FaCreditCard } from 'react-icons/fa';
 import { useCart } from '@/context/CartContext';
 import ShippingInformation, { ShippingData } from './ShippingInformation';
@@ -51,6 +51,37 @@ export default function AccordionCheckout() {
   const [currentStep, setCurrentStep] = useState(0);
   const [shippingData, setShippingData] = useState<ShippingData | null>(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState<ShippingMethodType | null>(null);
+  
+  // Add refs for each step's content
+  const shippingInfoRef = useRef<HTMLDivElement>(null);
+  const shippingMethodRef = useRef<HTMLDivElement>(null);
+  const paymentReviewRef = useRef<HTMLDivElement>(null);
+
+  // Add effect to scroll to the top of the active step
+  useEffect(() => {
+    const scrollToStep = () => {
+      const refs = [shippingInfoRef, shippingMethodRef, paymentReviewRef];
+      const activeRef = refs[currentStep];
+      
+      if (activeRef?.current) {
+        // Get the position of the step content relative to the viewport
+        const rect = activeRef.current.getBoundingClientRect();
+        // Get the current scroll position
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        // Calculate the position to scroll to (accounting for the fixed header and progress bar)
+        const targetPosition = rect.top + scrollTop - 200; // 200px accounts for header + progress bar + extra space
+        
+        // Smooth scroll to the target position
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Small delay to ensure the DOM has updated
+    setTimeout(scrollToStep, 100);
+  }, [currentStep]);
 
   // Calculate subtotal from items
   const subtotal = items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
@@ -120,7 +151,10 @@ export default function AccordionCheckout() {
           {/* Checkout Steps */}
           <div className="lg:col-span-7">
             {/* Step 1: Shipping Information */}
-            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}>
+            <div 
+              ref={shippingInfoRef}
+              className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 0 ? 'block' : 'hidden'}`}
+            >
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Shipping Information
@@ -133,7 +167,10 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 2: Shipping Method */}
-            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}>
+            <div 
+              ref={shippingMethodRef}
+              className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 1 ? 'block' : 'hidden'}`}
+            >
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Shipping Method
@@ -147,7 +184,10 @@ export default function AccordionCheckout() {
             </div>
 
             {/* Step 3: Payment & Review */}
-            <div className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}>
+            <div 
+              ref={paymentReviewRef}
+              className={`mb-8 sm:mb-12 transition-all duration-300 ${currentStep === 2 ? 'block' : 'hidden'}`}
+            >
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-[#DEE2E6] p-4 sm:p-8 lg:p-12">
                 <h2 className="text-xl sm:text-2xl font-semibold text-[#212529] mb-6">
                   Payment & Review

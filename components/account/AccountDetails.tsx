@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import useSWR, { mutate } from "swr";
 import { fetchUserProfile } from "@/lib/sanityUser";
-import { FaUser, FaEnvelope, FaLock, FaCheckCircle, FaTimesCircle, FaGoogle } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaCheckCircle, FaTimesCircle, FaGoogle } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { signIn } from "next-auth/react";
 
@@ -14,11 +14,6 @@ export default function AccountDetails({ userEmail }: { userEmail: string }) {
 
   const [name, setName] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,35 +42,6 @@ export default function AccountDetails({ userEmail }: { userEmail: string }) {
       toast.error('Failed to update profile');
     } finally {
       setIsUpdating(false);
-    }
-  };
-
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error('New passwords do not match');
-      return;
-    }
-    setIsChangingPassword(true);
-    try {
-      const response = await fetch('/api/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to change password');
-      }
-      toast.success('Password changed successfully');
-      setShowPasswordModal(false);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to change password');
-    } finally {
-      setIsChangingPassword(false);
     }
   };
 
@@ -149,7 +115,7 @@ export default function AccountDetails({ userEmail }: { userEmail: string }) {
         <span className="text-gray-500 text-sm">{data?.email}</span>
       </div>
 
-      <form onSubmit={handleUpdateProfile} className="space-y-6">
+      <form onSubmit={handleUpdateProfile} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
             <FaUser className="text-gray-400" /> Name
@@ -181,18 +147,11 @@ export default function AccountDetails({ userEmail }: { userEmail: string }) {
           >
             {isUpdating ? 'Saving...' : 'Save Changes'}
           </button>
-          <button
-            type="button"
-            onClick={() => setShowPasswordModal(true)}
-            className="border border-blue-600 text-blue-600 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition flex items-center gap-2"
-          >
-            <FaLock className="text-sm" /> Change Password
-          </button>
         </div>
       </form>
 
       {/* Linked Accounts Section */}
-      <div className="mt-8 border-t pt-6">
+      <div className="mt-8 pt-8 border-t border-gray-200">
         <h3 className="text-lg font-bold mb-3 flex items-center gap-2"><FaUser className="text-blue-500" /> Linked Accounts</h3>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -217,71 +176,6 @@ export default function AccountDetails({ userEmail }: { userEmail: string }) {
           </div>
         </div>
       </div>
-
-      {/* Password Change Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4">Change Password</h3>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
-                  required
-                  minLength={8}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
-                  required
-                  minLength={8}
-                />
-              </div>
-              <div className="flex justify-end gap-4 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isChangingPassword}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
-                >
-                  {isChangingPassword ? 'Changing...' : 'Change Password'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 } 
