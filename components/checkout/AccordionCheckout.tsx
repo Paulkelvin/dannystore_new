@@ -69,7 +69,7 @@ export default function AccordionCheckout() {
         // Get the current scroll position
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         // Calculate the position to scroll to (accounting for the fixed header and progress bar)
-        const targetPosition = rect.top + scrollTop - 200; // 200px accounts for header + progress bar + extra space
+        const targetPosition = rect.top + scrollTop - 400; // 400px accounts for header + progress bar + maximum extra space for optimal visibility
         
         // Smooth scroll to the target position
         window.scrollTo({
