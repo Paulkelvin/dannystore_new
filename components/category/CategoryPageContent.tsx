@@ -158,7 +158,7 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
       </div>
 
       {/* Mobile Filter Button */}
-      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm py-4 border-b border-gray-100">
+      <div className="lg:hidden sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm py-4 border-b border-gray-100">
         <div className="container mx-auto px-4 sm:px-6">
           <button
             onClick={() => setIsFilterOpen(true)}
@@ -171,7 +171,7 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
       </div>
 
       {/* Mobile Filter Bottom Sheet */}
-      <div 
+      <div
         className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${isFilterOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
         {/* Backdrop */}
@@ -182,7 +182,7 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
         {/* Bottom Sheet */}
         <div 
           ref={bottomSheetRef}
-          className="fixed inset-x-0 bottom-0 z-50 h-[45%] transform"
+          className="fixed inset-x-0 bottom-0 z-50 h-[45%] transform bg-white rounded-t-2xl"
           style={{
             transform: isFilterOpen ? 'translateY(0)' : 'translateY(100%)',
             touchAction: 'none',
@@ -192,8 +192,8 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="relative h-full w-full overflow-hidden rounded-t-2xl bg-white shadow-xl">
-            {/* Drag Handle - Made larger for better touch target */}
+          <div className="h-full overflow-y-auto">
+            {/* Drag Handle */}
             <div 
               className="absolute left-1/2 top-0 -translate-x-1/2 w-full h-12 flex items-center justify-center cursor-grab active:cursor-grabbing"
               onTouchStart={handleTouchStart}
@@ -211,19 +211,21 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
               <X className="h-6 w-6" />
             </button>
             {/* Filter Content */}
-            <div className="h-full overflow-y-auto px-4 sm:px-6 pt-12 pb-6">
+            <div className="p-6 pt-16">
               <h2 className="text-xl font-semibold text-[#333333] mb-6">Filters</h2>
               <div className="max-w-2xl mx-auto">
-                <ProductFilters
-                  categories={[]}
-                  colors={colors.map(color => color.value)}
-                  sizes={sizes.map(size => size.value)}
-                  minPrice={minPrice}
-                  maxPrice={maxPrice}
-                  onChange={setFilterState}
-                  filterState={filterState}
-                  showCategory={false}
-                />
+                <div className="lg:hidden">
+                  <ProductFilters
+                    categories={[]}
+                    colors={colors.map(color => color.value)}
+                    sizes={sizes.map(size => size.value)}
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                    onChange={setFilterState}
+                    filterState={filterState}
+                    showCategory={false}
+                  />
+                </div>
                 <div className="sticky bottom-0 mt-6 flex gap-3 bg-white pt-4">
                   <Button 
                     variant="outline" 
@@ -245,27 +247,29 @@ export default function CategoryPageContent({ category, colors, sizes }: Categor
               </div>
             </div>
           </div>
-          </div>
         </div>
+      </div>
 
-      {/* Main content area - MATCH PRODUCTS PAGE STRUCTURE */}
-      <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-6 mt-4 sm:mt-12">
-        {/* Filter Sidebar (Desktop only) */}
-        <aside className="hidden lg:block max-w-[260px] bg-white rounded-xl shadow p-6 space-y-6 mb-8 lg:mb-0 self-start">
-          <ProductFilters
-            categories={[]}
-            colors={colors.map(color => color.value)}
-            sizes={sizes.map(size => size.value)}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            onChange={setFilterState}
-            filterState={filterState}
-            showCategory={false}
-          />
-        </aside>
-        {/* Product Grid */}
-        <div className="flex-1">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* Main content area */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filter Sidebar (Desktop only) */}
+          <aside className="hidden lg:block w-[260px] bg-white rounded-xl shadow p-6 space-y-6 mb-8 lg:mb-0 self-start">
+            <div className="lg:block">
+              <ProductFilters
+                categories={[]}
+                colors={colors.map(color => color.value)}
+                sizes={sizes.map(size => size.value)}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                onChange={setFilterState}
+                filterState={filterState}
+                showCategory={false}
+              />
+            </div>
+          </aside>
+          {/* Product Grid */}
+          <div className="flex-1">
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
               {sortedProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />

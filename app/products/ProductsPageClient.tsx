@@ -168,7 +168,7 @@ export default function ProductsPageClient({ products, categories }: { products:
       </div>
 
       {/* Mobile Filter Button */}
-      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm py-4 border-b border-gray-100">
+      <div className="lg:hidden sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm py-4 border-b border-gray-100">
         <div className="container mx-auto px-4 sm:px-6">
           <button
             onClick={() => setIsFilterOpen(true)}

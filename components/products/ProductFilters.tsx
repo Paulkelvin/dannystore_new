@@ -56,10 +56,10 @@ export default function ProductFilters({
           <label className="block text-sm font-semibold mb-2">Category</label>
           <select
             className="w-full border rounded px-3 py-2"
-            value={filterState.category || ''}
-            onChange={e => handleChange('category', e.target.value)}
+            value={filterState.category || 'all-categories'}
+            onChange={e => handleChange('category', e.target.value === 'all-categories' ? '' : e.target.value)}
           >
-            <option value="">All</option>
+            <option key="category-select-all" value="all-categories">All</option>
             {categories.map(cat => (
               <option key={cat._id} value={cat._id}>{cat.name}</option>
             ))}
@@ -113,10 +113,10 @@ export default function ProductFilters({
           <label className="block text-sm font-semibold mb-2">Color</label>
           <select
             className="w-full border rounded px-3 py-2"
-            value={filterState.color || ''}
-            onChange={e => handleChange('color', e.target.value)}
+            value={filterState.color || 'all-colors'}
+            onChange={e => handleChange('color', e.target.value === 'all-colors' ? '' : e.target.value)}
           >
-            <option value="">All</option>
+            <option key="color-select-all" value="all-colors">All</option>
             {colors.map(color => (
               <option key={color} value={color}>{color}</option>
             ))}
@@ -128,10 +128,10 @@ export default function ProductFilters({
           <label className="block text-sm font-semibold mb-2">Size</label>
           <select
             className="w-full border rounded px-3 py-2"
-            value={filterState.size || ''}
-            onChange={e => handleChange('size', e.target.value)}
+            value={filterState.size || 'all-sizes'}
+            onChange={e => handleChange('size', e.target.value === 'all-sizes' ? '' : e.target.value)}
           >
-            <option value="">All</option>
+            <option key="size-select-all" value="all-sizes">All</option>
             {sizes.map(size => (
               <option key={size} value={size}>{size}</option>
             ))}

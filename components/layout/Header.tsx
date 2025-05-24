@@ -34,6 +34,25 @@ function normalizeAndStem(str: string): string {
   return s;
 }
 
+function getInitials(nameOrEmail: string): string {
+  if (!nameOrEmail) return '';
+  
+  // If it's an email, use the first two characters before the @
+  if (nameOrEmail.includes('@')) {
+    const username = nameOrEmail.split('@')[0];
+    return username.slice(0, 2).toUpperCase();
+  }
+  
+  // If it's a name, use the first letter of first and last name
+  const parts = nameOrEmail.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  
+  // If it's a single word, use first two letters
+  return nameOrEmail.slice(0, 2).toUpperCase();
+}
+
 export default function Header() {
   const { data: session, status } = useSession();
   const { cart } = useCart();
@@ -206,14 +225,65 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            {/* User Icon - Desktop Only */}
-            <button
-              onClick={handleUserMenuClick}
-              className="hidden md:flex items-center justify-center p-2 rounded-lg transition-colors hover:text-white/80"
-              aria-label={status === 'authenticated' ? 'User menu' : 'Sign in'}
-            >
-              <User className="w-6 h-6" />
-            </button>
+            {/* User Icon with Dropdown - Desktop Only */}
+            <div className="hidden md:block relative" ref={userMenuRef}>
+              <button
+                onClick={handleUserMenuClick}
+                className="flex items-center justify-center p-2 rounded-lg transition-colors hover:text-white/80"
+                aria-label={status === 'authenticated' ? 'User menu' : 'Sign in'}
+              >
+                {status === 'authenticated' && session.user?.image ? (
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name || 'User avatar'}
+                    className="w-8 h-8 rounded-full object-cover border-2 border-white transition-transform duration-200 hover:scale-105"
+                  />
+                ) : status === 'authenticated' ? (
+                  <div className="w-8 h-8 rounded-full bg-[#42A5F5] flex items-center justify-center text-white font-medium border-2 border-white transition-transform duration-200 hover:scale-105">
+                    {getInitials(session.user?.name || session.user?.email || '')}
+                  </div>
+                ) : (
+                  <User className="w-6 h-6" />
+                )}
+              </button>
+              
+              {/* User Dropdown Menu */}
+              {isUserMenuOpen && status === 'authenticated' && (
+                <div 
+                  className="absolute right-0 mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transform transition-all duration-200 ease-out origin-top-right"
+                  style={{
+                    opacity: isUserMenuOpen ? 1 : 0,
+                    transform: isUserMenuOpen ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(-10px)',
+                  }}
+                >
+                  <div className="p-3 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {session.user?.name || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {session.user?.email}
+                    </p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      href="/account"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      My Account
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
             <Link href="/cart" className="relative transition-colors hover:text-white/80">
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
